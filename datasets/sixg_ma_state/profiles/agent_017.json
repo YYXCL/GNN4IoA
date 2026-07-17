@@ -1,0 +1,35 @@
+{
+  "agent_id": 17,
+  "capabilities": [
+    {
+      "name": "多模态视觉分析",
+      "description": "多模态视觉分析",
+      "usage_count": 3,
+      "task_success_rate": 0.8380000000000001,
+      "mean_execution_time_ms": 4578.35861505266,
+      "tool_call_failure_rate": 0.08100000000000002,
+      "hallucination_rate": 0.08100000000000002
+    },
+    {
+      "name": "判断单个视频帧是否有火灾",
+      "description": "判断单个视频帧是否有火灾",
+      "usage_count": 1,
+      "task_success_rate": 0.7200000000000001,
+      "mean_execution_time_ms": 5317.088969251312,
+      "tool_call_failure_rate": 0.09000000000000001,
+      "hallucination_rate": 0.09000000000000001
+    },
+    {
+      "name": "检索领域文档证据",
+      "description": "检索领域文档证据",
+      "usage_count": 1,
+      "task_success_rate": 0.7200000000000001,
+      "mean_execution_time_ms": 3675.567905169015,
+      "tool_call_failure_rate": 0.09000000000000001,
+      "hallucination_rate": 0.19
+    }
+  ],
+  "metadata": {
+    "role": "vision"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "agent_id": 94,
+  "capabilities": [
+    {
+      "name": "代码生成与执行",
+      "description": "代码生成与执行",
+      "usage_count": 1,
+      "task_success_rate": 0.8,
+      "mean_execution_time_ms": 2000.0,
+      "tool_call_failure_rate": 0.1,
+      "hallucination_rate": 0.1
+    },
+    {
+      "name": "判断单个视频帧是否有火灾",
+      "description": "判断单个视频帧是否有火灾",
+      "usage_count": 1,
+      "task_success_rate": 0.8200000000000001,
+      "mean_execution_time_ms": 1911.7438167570408,
+      "tool_call_failure_rate": 0.09000000000000001,
+      "hallucination_rate": 0.09000000000000001
+    }
+  ],
+  "metadata": {
+    "role": "coding"
+  }
+}

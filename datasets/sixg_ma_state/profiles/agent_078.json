@@ -1,0 +1,26 @@
+{
+  "agent_id": 78,
+  "capabilities": [
+    {
+      "name": "知识检索",
+      "description": "知识检索",
+      "usage_count": 1,
+      "task_success_rate": 0.8,
+      "mean_execution_time_ms": 2000.0,
+      "tool_call_failure_rate": 0.1,
+      "hallucination_rate": 0.1
+    },
+    {
+      "name": "检索领域文档证据",
+      "description": "检索领域文档证据",
+      "usage_count": 1,
+      "task_success_rate": 0.7200000000000001,
+      "mean_execution_time_ms": 1915.8777632140575,
+      "tool_call_failure_rate": 0.09000000000000001,
+      "hallucination_rate": 0.09000000000000001
+    }
+  ],
+  "metadata": {
+    "role": "retrieval"
+  }
+}

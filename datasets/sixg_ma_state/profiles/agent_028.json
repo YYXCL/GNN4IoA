@@ -1,0 +1,17 @@
+{
+  "agent_id": 28,
+  "capabilities": [
+    {
+      "name": "6G 网络控制",
+      "description": "6G 网络控制",
+      "usage_count": 1,
+      "task_success_rate": 0.8,
+      "mean_execution_time_ms": 2000.0,
+      "tool_call_failure_rate": 0.1,
+      "hallucination_rate": 0.1
+    }
+  ],
+  "metadata": {
+    "role": "network"
+  }
+}

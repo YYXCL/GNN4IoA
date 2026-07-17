@@ -1,0 +1,167 @@
+{
+  "dataset": "6G-Agent-Compute-Heterogeneous-State",
+  "version": "2.0",
+  "num_agents": 100,
+  "num_compute_nodes": 12,
+  "compute_node_distribution": {
+    "cloud": 4,
+    "edge": 8
+  },
+  "samples": 48,
+  "update_interval_ms": 100,
+  "scenario_duration_minutes": 30,
+  "virtual_probe_ticks": 18000,
+  "splits": {
+    "train": 36,
+    "val": 6,
+    "test": 6
+  },
+  "task_distribution": {
+    "knowledge_answer": 14,
+    "network_diagnosis": 8,
+    "fire_frame": 8,
+    "code_fix": 7,
+    "task_planning": 11
+  },
+  "profile_format": "profiles/agent_NNN.json",
+  "design_constraints": {
+    "queue_batch_in_graph": true,
+    "queue_batch_used_for_decision": false,
+    "link_path_type_encoded": false,
+    "capability_slots": 8,
+    "capability_growth": "append on unmatched task capability; evict least-used slot at capacity"
+  },
+  "schema": {
+    "node_types": [
+      "agent",
+      "compute"
+    ],
+    "compute_kinds": [
+      "cloud",
+      "edge"
+    ],
+    "agent_context_metrics": [
+      "context_window_tokens",
+      "context_utilization"
+    ],
+    "agent_environment_metrics": [
+      "tool_api_rate_limit_remaining",
+      "tool_api_request_occupancy",
+      "knowledge_api_rate_limit_remaining",
+      "knowledge_api_request_occupancy",
+      "user_context_available",
+      "physical_sensor_available",
+      "physical_environment_match"
+    ],
+    "capability_reliability_metrics": [
+      "task_success_rate",
+      "mean_execution_time_ms",
+      "tool_call_failure_rate",
+      "hallucination_rate"
+    ],
+    "compute_metrics": [
+      "gpu_total_tflops",
+      "gpu_remaining_tflops",
+      "vram_total_gb",
+      "vram_used_gb",
+      "gpu_memory_bandwidth_total_mbps",
+      "gpu_memory_bandwidth_used_mbps",
+      "task_queue_length",
+      "active_batch_size",
+      "max_batch_size"
+    ],
+    "compute_decision_metrics": [
+      "gpu_total_tflops",
+      "gpu_remaining_tflops",
+      "vram_total_gb",
+      "vram_used_gb",
+      "gpu_memory_bandwidth_total_mbps",
+      "gpu_memory_bandwidth_used_mbps"
+    ],
+    "compute_observability_only_metrics": [
+      "task_queue_length",
+      "active_batch_size",
+      "max_batch_size"
+    ],
+    "edge_metrics": [
+      "latency_ms",
+      "bandwidth_mbps",
+      "packet_loss_rate",
+      "jitter_ms"
+    ],
+    "task_qos_metrics": [
+      "latency",
+      "accuracy",
+      "cost",
+      "reliability",
+      "privacy",
+      "context",
+      "tool",
+      "multimodal"
+    ],
+    "units": {
+      "context_window_tokens": "token",
+      "gpu_total_tflops": "TFLOPS",
+      "gpu_remaining_tflops": "TFLOPS",
+      "vram_total_gb": "GB",
+      "vram_used_gb": "GB",
+      "gpu_memory_bandwidth_total_mbps": "Mbps",
+      "gpu_memory_bandwidth_used_mbps": "Mbps",
+      "latency_ms": "ms",
+      "bandwidth_mbps": "Mbps",
+      "jitter_ms": "ms",
+      "mean_execution_time_ms": "ms"
+    },
+    "confidence": {
+      "applies_to": [
+        "agent_context",
+        "agent_environment",
+        "compute",
+        "edge"
+      ],
+      "excluded_from": [
+        "capability",
+        "capability_reliability"
+      ],
+      "decay": "effective_confidence = observed_confidence * exp(-age_seconds / tau_seconds)"
+    },
+    "normalization_scales": {
+      "agent_context": [
+        262144.0,
+        1.0
+      ],
+      "agent_environment": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "compute": [
+        10000.0,
+        10000.0,
+        512.0,
+        512.0,
+        10000000.0,
+        10000000.0,
+        256.0,
+        128.0,
+        128.0
+      ],
+      "edge": [
+        1000.0,
+        100000.0,
+        1.0,
+        200.0
+      ],
+      "reliability": [
+        1.0,
+        120000.0,
+        1.0,
+        1.0
+      ]
+    }
+  }
+}

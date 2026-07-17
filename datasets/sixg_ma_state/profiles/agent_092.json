@@ -1,0 +1,17 @@
+{
+  "agent_id": 92,
+  "capabilities": [
+    {
+      "name": "复杂任务规划",
+      "description": "复杂任务规划",
+      "usage_count": 1,
+      "task_success_rate": 0.8,
+      "mean_execution_time_ms": 2000.0,
+      "tool_call_failure_rate": 0.1,
+      "hallucination_rate": 0.1
+    }
+  ],
+  "metadata": {
+    "role": "planning"
+  }
+}

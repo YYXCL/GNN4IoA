@@ -1,0 +1,26 @@
+{
+  "agent_id": 27,
+  "capabilities": [
+    {
+      "name": "工具调用",
+      "description": "工具调用",
+      "usage_count": 1,
+      "task_success_rate": 0.8,
+      "mean_execution_time_ms": 2000.0,
+      "tool_call_failure_rate": 0.1,
+      "hallucination_rate": 0.1
+    },
+    {
+      "name": "拆分复杂任务",
+      "description": "拆分复杂任务",
+      "usage_count": 1,
+      "task_success_rate": 0.7200000000000001,
+      "mean_execution_time_ms": 2176.542511395853,
+      "tool_call_failure_rate": 0.19,
+      "hallucination_rate": 0.09000000000000001
+    }
+  ],
+  "metadata": {
+    "role": "tool"
+  }
+}

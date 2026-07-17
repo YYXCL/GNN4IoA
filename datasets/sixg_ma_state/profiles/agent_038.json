@@ -1,0 +1,17 @@
+{
+  "agent_id": 38,
+  "capabilities": [
+    {
+      "name": "知识检索",
+      "description": "知识检索",
+      "usage_count": 2,
+      "task_success_rate": 0.8200000000000001,
+      "mean_execution_time_ms": 1923.580736833385,
+      "tool_call_failure_rate": 0.09000000000000001,
+      "hallucination_rate": 0.09000000000000001
+    }
+  ],
+  "metadata": {
+    "role": "retrieval"
+  }
+}

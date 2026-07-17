@@ -1,0 +1,26 @@
+{
+  "agent_id": 57,
+  "capabilities": [
+    {
+      "name": "多模态视觉分析",
+      "description": "多模态视觉分析",
+      "usage_count": 2,
+      "task_success_rate": 0.8200000000000001,
+      "mean_execution_time_ms": 1907.8665314728798,
+      "tool_call_failure_rate": 0.09000000000000001,
+      "hallucination_rate": 0.09000000000000001
+    },
+    {
+      "name": "检索领域文档证据",
+      "description": "检索领域文档证据",
+      "usage_count": 1,
+      "task_success_rate": 0.8200000000000001,
+      "mean_execution_time_ms": 1920.4120891354316,
+      "tool_call_failure_rate": 0.19,
+      "hallucination_rate": 0.09000000000000001
+    }
+  ],
+  "metadata": {
+    "role": "vision"
+  }
+}

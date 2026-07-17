@@ -1,0 +1,44 @@
+{
+  "agent_id": 81,
+  "capabilities": [
+    {
+      "name": "知识检索",
+      "description": "知识检索",
+      "usage_count": 1,
+      "task_success_rate": 0.8,
+      "mean_execution_time_ms": 2000.0,
+      "tool_call_failure_rate": 0.1,
+      "hallucination_rate": 0.1
+    },
+    {
+      "name": "检索领域文档证据",
+      "description": "检索领域文档证据",
+      "usage_count": 1,
+      "task_success_rate": 0.8200000000000001,
+      "mean_execution_time_ms": 2201.1274524511637,
+      "tool_call_failure_rate": 0.19,
+      "hallucination_rate": 0.09000000000000001
+    },
+    {
+      "name": "判断单个视频帧是否有火灾",
+      "description": "判断单个视频帧是否有火灾",
+      "usage_count": 1,
+      "task_success_rate": 0.8200000000000001,
+      "mean_execution_time_ms": 2112.354601708482,
+      "tool_call_failure_rate": 0.09000000000000001,
+      "hallucination_rate": 0.09000000000000001
+    },
+    {
+      "name": "诊断链路拥塞",
+      "description": "诊断链路拥塞",
+      "usage_count": 1,
+      "task_success_rate": 0.8200000000000001,
+      "mean_execution_time_ms": 2037.530731700127,
+      "tool_call_failure_rate": 0.09000000000000001,
+      "hallucination_rate": 0.09000000000000001
+    }
+  ],
+  "metadata": {
+    "role": "retrieval"
+  }
+}

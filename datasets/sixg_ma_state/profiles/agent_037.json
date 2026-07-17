@@ -1,0 +1,35 @@
+{
+  "agent_id": 37,
+  "capabilities": [
+    {
+      "name": "复杂任务规划",
+      "description": "复杂任务规划",
+      "usage_count": 2,
+      "task_success_rate": 0.8200000000000001,
+      "mean_execution_time_ms": 1876.9741028731812,
+      "tool_call_failure_rate": 0.09000000000000001,
+      "hallucination_rate": 0.09000000000000001
+    },
+    {
+      "name": "检索领域文档证据",
+      "description": "检索领域文档证据",
+      "usage_count": 2,
+      "task_success_rate": 0.8380000000000001,
+      "mean_execution_time_ms": 1815.4333295261176,
+      "tool_call_failure_rate": 0.08100000000000002,
+      "hallucination_rate": 0.08100000000000002
+    },
+    {
+      "name": "拆分复杂任务",
+      "description": "拆分复杂任务",
+      "usage_count": 1,
+      "task_success_rate": 0.8200000000000001,
+      "mean_execution_time_ms": 1868.9642894535054,
+      "tool_call_failure_rate": 0.19,
+      "hallucination_rate": 0.09000000000000001
+    }
+  ],
+  "metadata": {
+    "role": "planning"
+  }
+}

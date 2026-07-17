@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ma-tgn"
+version = "0.2.0"
+description = "Task-conditioned heterogeneous continuous-time graph attention network for 6G multi-agent collaboration"
+requires-python = ">=3.9"
+dependencies = ["torch>=2.1", "numpy>=1.23"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

@@ -1,0 +1,26 @@
+{
+  "agent_id": 72,
+  "capabilities": [
+    {
+      "name": "复杂任务规划",
+      "description": "复杂任务规划",
+      "usage_count": 1,
+      "task_success_rate": 0.8,
+      "mean_execution_time_ms": 2000.0,
+      "tool_call_failure_rate": 0.1,
+      "hallucination_rate": 0.1
+    },
+    {
+      "name": "修复代码缺陷",
+      "description": "修复代码缺陷",
+      "usage_count": 1,
+      "task_success_rate": 0.8200000000000001,
+      "mean_execution_time_ms": 1893.3065181764032,
+      "tool_call_failure_rate": 0.09000000000000001,
+      "hallucination_rate": 0.09000000000000001
+    }
+  ],
+  "metadata": {
+    "role": "planning"
+  }
+}

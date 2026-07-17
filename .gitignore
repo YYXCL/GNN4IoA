@@ -1,0 +1,25 @@
+# Python bytecode and test caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Packaging metadata
+*.egg-info/
+build/
+dist/
+
+# Local environments and editor settings
+.venv/
+venv/
+.idea/
+.vscode/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# The following are reproducible experiment outputs. They are kept in this
+# project as ready-to-run examples; uncomment them for a source-only repository.
+# datasets/
+# checkpoints/
+# artifacts/
