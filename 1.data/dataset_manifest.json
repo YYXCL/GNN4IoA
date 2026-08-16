@@ -1,0 +1,46 @@
+{
+  "dataset_version": "1.0.0",
+  "generation_seed": 20260814,
+  "counts": {
+    "agents": 120,
+    "source_agent_types": 24,
+    "compute_nodes": 12,
+    "compute_load_rows": 17292,
+    "links": 480,
+    "tasks": 72,
+    "events": 360
+  },
+  "agent_generation": {
+    "source": "D:\\Beiyou\\研究生\\小论文\\代码文件\\GNN4IoA\\1.data\\实验室的智能体能力列表\\part1_24_revised_descriptions_skills.json",
+    "source_type_count": 24,
+    "variants_per_source_type": 5,
+    "agent_count": 120,
+    "seed": 20260814,
+    "scenario_mapping_note": "源文件没有 emergency/rescue 标签；应急救援智能体仅从源文件中的火灾、跌倒、入侵、告警、泄漏和交通事故等技能派生，未使用 part2 或外部技能。",
+    "column_6_interpretation": "用户列说明跳过第6列；本数据集将其定义为运行环境。",
+    "knowledge_base_access_rate": 0.14166666666666666
+  },
+  "compute_load_processing": {
+    "virtual_compute_nodes": 12,
+    "node_mapping": "sha256(container_ip) mod N; this is not a recovered physical server mapping",
+    "server_load_rate_proxy": "max(memory_utilization, estimated_gpu_memory_utilization)",
+    "cpu_metric": "source data does not contain CPU utilization; no CPU value was fabricated",
+    "memory_capacity": "synthetic fixed capacities 512/768/1024 GB, used only to estimate used memory",
+    "gpu_memory_capacity": "per-node maximum observed aggregate rounded up to a multiple of 64 GiB",
+    "interpolation": "only missing memory utilization and GPU memory usage are interpolated within each node"
+  },
+  "link_column_6_interpretation": "用户重复写了网络丢包；按模型现有 EDGE_METRICS 将第6列定义为网络抖动(ms)。",
+  "files": {
+    "agents_csv": "3.智能体能力数据(包括智能体环境和知识库、API权限)\\agent_capabilities.csv",
+    "agents_json": "3.智能体能力数据(包括智能体环境和知识库、API权限)\\agent_capabilities.json",
+    "reliability_csv": "4.智能体可靠性\\agent_reliability.csv",
+    "compute_load_csv": "1.负载数据\\compute_node_load_timeseries.csv",
+    "compute_inventory_csv": "1.负载数据\\compute_node_inventory.csv",
+    "links_csv": "2.链路数据\\communication_links.csv",
+    "tasks_csv": "5.任务数据\\tasks.csv",
+    "tasks_json": "5.任务数据\\tasks.json",
+    "event_types_csv": "6.事件数据\\event_type_codebook.csv",
+    "relations_csv": "6.事件数据\\relation_type_codebook.csv",
+    "events_csv": "6.事件数据\\event_stream.csv"
+  }
+}

@@ -6,13 +6,14 @@ from pathlib import Path
 import torch
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "src"))
+sys.path.insert(0, str(ROOT / "2.模型"))
+sys.path.insert(0, str(ROOT / "1.data"))
 
 from ma_tgn import ModelConfig, TaskConditionedHeterogeneousTGN  # noqa: E402
 from ma_tgn.capabilities import CapabilityRegistry  # noqa: E402
 from ma_tgn.encoders import HeterogeneousStateEncoder, decayed_confidence  # noqa: E402
 from ma_tgn.state_schema import COMPUTE_METRICS, EDGE_METRICS, schema_dict  # noqa: E402
-from ma_tgn.synthetic import make_synthetic_case  # noqa: E402
+from ma_tgn_data.synthetic import make_synthetic_case  # noqa: E402
 
 
 def small_config(**kwargs):

@@ -20,6 +20,6 @@ Thumbs.db
 
 # The following are reproducible experiment outputs. They are kept in this
 # project as ready-to-run examples; uncomment them for a source-only repository.
-# datasets/
-# checkpoints/
-# artifacts/
+# data/datasets/
+# outputs/checkpoints/
+# outputs/artifacts/

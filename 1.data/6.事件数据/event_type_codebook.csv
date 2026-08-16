@@ -1,0 +1,7 @@
+﻿事件类型编码,事件类型名称,含义,主要作用对象
+0,context_update,智能体上下文窗口占用率或会话状态变化,agent
+1,environment_update,工具、知识库或物理传感器可用状态变化,agent
+2,compute_update,算力节点负载、内存或显存状态变化,compute
+3,link_update,链路时延、带宽、丢包或抖动变化,link
+4,task_result,任务完成并产生成功率、耗时和工具失败反馈,task
+5,capability_update,智能体新增、移除或更新 skill,agent
