@@ -2,25 +2,73 @@
   "agent_id": 47,
   "capabilities": [
     {
-      "name": "复杂任务规划",
-      "description": "复杂任务规划",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_home.automation.energy_saving.optimize",
+      "description": "smart_home.automation.energy_saving.optimize",
+      "usage_count": 286,
+      "task_success_rate": 0.8864,
+      "mean_execution_time_ms": 7387.0,
+      "tool_call_failure_rate": 0.0369,
+      "hallucination_rate": 0.03976000000000001
     },
     {
-      "name": "拆分复杂任务",
-      "description": "拆分复杂任务",
-      "usage_count": 1,
-      "task_success_rate": 0.8200000000000001,
-      "mean_execution_time_ms": 1896.3959472206266,
-      "tool_call_failure_rate": 0.09000000000000001,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_home.automation.action.execute",
+      "description": "smart_home.automation.action.execute",
+      "usage_count": 286,
+      "task_success_rate": 0.8864,
+      "mean_execution_time_ms": 7387.0,
+      "tool_call_failure_rate": 0.0369,
+      "hallucination_rate": 0.03976000000000001
+    },
+    {
+      "name": "smart_home.automation.execution_log.summarize",
+      "description": "smart_home.automation.execution_log.summarize",
+      "usage_count": 286,
+      "task_success_rate": 0.8864,
+      "mean_execution_time_ms": 7387.0,
+      "tool_call_failure_rate": 0.0369,
+      "hallucination_rate": 0.03976000000000001
+    },
+    {
+      "name": "smart_home.automation.schedule.create",
+      "description": "smart_home.automation.schedule.create",
+      "usage_count": 286,
+      "task_success_rate": 0.8864,
+      "mean_execution_time_ms": 7387.0,
+      "tool_call_failure_rate": 0.0369,
+      "hallucination_rate": 0.03976000000000001
+    },
+    {
+      "name": "smart_home.automation.routine.recommend",
+      "description": "smart_home.automation.routine.recommend",
+      "usage_count": 286,
+      "task_success_rate": 0.8864,
+      "mean_execution_time_ms": 7387.0,
+      "tool_call_failure_rate": 0.0369,
+      "hallucination_rate": 0.03976000000000001
+    },
+    {
+      "name": "smart_home.automation.sleep_mode.activate",
+      "description": "smart_home.automation.sleep_mode.activate",
+      "usage_count": 286,
+      "task_success_rate": 0.8864,
+      "mean_execution_time_ms": 7387.0,
+      "tool_call_failure_rate": 0.0369,
+      "hallucination_rate": 0.03976000000000001
+    },
+    {
+      "name": "smart_home.automation.priority.resolve",
+      "description": "smart_home.automation.priority.resolve",
+      "usage_count": 286,
+      "task_success_rate": 0.8864,
+      "mean_execution_time_ms": 7387.0,
+      "tool_call_failure_rate": 0.0369,
+      "hallucination_rate": 0.03976000000000001
     }
   ],
   "metadata": {
-    "role": "planning"
+    "agent_key": "A048",
+    "scenario": "智慧家居",
+    "source_agent_type_id": "agent-010",
+    "source_agent_type_name": "Smart Home Automation Agent"
   }
 }

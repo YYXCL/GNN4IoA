@@ -2,16 +2,64 @@
   "agent_id": 41,
   "capabilities": [
     {
-      "name": "6G 网络控制",
-      "description": "6G 网络控制",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_home.environment.noise.assess",
+      "description": "smart_home.environment.noise.assess",
+      "usage_count": 71,
+      "task_success_rate": 0.9386,
+      "mean_execution_time_ms": 9554.0,
+      "tool_call_failure_rate": 0.0172,
+      "hallucination_rate": 0.021490000000000002
+    },
+    {
+      "name": "smart_home.environment.child_room.assess",
+      "description": "smart_home.environment.child_room.assess",
+      "usage_count": 71,
+      "task_success_rate": 0.9386,
+      "mean_execution_time_ms": 9554.0,
+      "tool_call_failure_rate": 0.0172,
+      "hallucination_rate": 0.021490000000000002
+    },
+    {
+      "name": "smart_home.environment.pet_environment.assess",
+      "description": "smart_home.environment.pet_environment.assess",
+      "usage_count": 71,
+      "task_success_rate": 0.9386,
+      "mean_execution_time_ms": 9554.0,
+      "tool_call_failure_rate": 0.0172,
+      "hallucination_rate": 0.021490000000000002
+    },
+    {
+      "name": "smart_home.environment.dust_risk.assess",
+      "description": "smart_home.environment.dust_risk.assess",
+      "usage_count": 71,
+      "task_success_rate": 0.9386,
+      "mean_execution_time_ms": 9554.0,
+      "tool_call_failure_rate": 0.0172,
+      "hallucination_rate": 0.021490000000000002
+    },
+    {
+      "name": "smart_home.environment.elderly_room.assess",
+      "description": "smart_home.environment.elderly_room.assess",
+      "usage_count": 71,
+      "task_success_rate": 0.9386,
+      "mean_execution_time_ms": 9554.0,
+      "tool_call_failure_rate": 0.0172,
+      "hallucination_rate": 0.021490000000000002
+    },
+    {
+      "name": "smart_home.environment.air_quality.assess",
+      "description": "smart_home.environment.air_quality.assess",
+      "usage_count": 71,
+      "task_success_rate": 0.9386,
+      "mean_execution_time_ms": 9554.0,
+      "tool_call_failure_rate": 0.0172,
+      "hallucination_rate": 0.021490000000000002
     }
   ],
   "metadata": {
-    "role": "network"
+    "agent_key": "A042",
+    "scenario": "智慧家居",
+    "source_agent_type_id": "agent-009",
+    "source_agent_type_name": "Smart Home Environment Optimization Agent"
   }
 }

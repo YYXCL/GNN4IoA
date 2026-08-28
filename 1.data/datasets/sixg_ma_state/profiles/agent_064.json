@@ -2,25 +2,64 @@
   "agent_id": 64,
   "capabilities": [
     {
-      "name": "6G 网络控制",
-      "description": "6G 网络控制",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_factory.quality.inspection_report.generate",
+      "description": "smart_factory.quality.inspection_report.generate",
+      "usage_count": 840,
+      "task_success_rate": 0.9132,
+      "mean_execution_time_ms": 10298.0,
+      "tool_call_failure_rate": 0.0449,
+      "hallucination_rate": 0.030379999999999994
     },
     {
-      "name": "检索领域文档证据",
-      "description": "检索领域文档证据",
-      "usage_count": 1,
-      "task_success_rate": 0.8200000000000001,
-      "mean_execution_time_ms": 1934.1331632220852,
-      "tool_call_failure_rate": 0.09000000000000001,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_factory.quality.audit_record.generate",
+      "description": "smart_factory.quality.audit_record.generate",
+      "usage_count": 840,
+      "task_success_rate": 0.9132,
+      "mean_execution_time_ms": 10298.0,
+      "tool_call_failure_rate": 0.0449,
+      "hallucination_rate": 0.030379999999999994
+    },
+    {
+      "name": "smart_factory.quality.qa.answer",
+      "description": "smart_factory.quality.qa.answer",
+      "usage_count": 840,
+      "task_success_rate": 0.9132,
+      "mean_execution_time_ms": 10298.0,
+      "tool_call_failure_rate": 0.0449,
+      "hallucination_rate": 0.030379999999999994
+    },
+    {
+      "name": "smart_factory.quality.defect_root_cause.analyze",
+      "description": "smart_factory.quality.defect_root_cause.analyze",
+      "usage_count": 840,
+      "task_success_rate": 0.9132,
+      "mean_execution_time_ms": 10298.0,
+      "tool_call_failure_rate": 0.0449,
+      "hallucination_rate": 0.030379999999999994
+    },
+    {
+      "name": "smart_factory.quality.spc.analyze",
+      "description": "smart_factory.quality.spc.analyze",
+      "usage_count": 840,
+      "task_success_rate": 0.9132,
+      "mean_execution_time_ms": 10298.0,
+      "tool_call_failure_rate": 0.0449,
+      "hallucination_rate": 0.030379999999999994
+    },
+    {
+      "name": "smart_factory.quality.pass_rate.calculate",
+      "description": "smart_factory.quality.pass_rate.calculate",
+      "usage_count": 840,
+      "task_success_rate": 0.9132,
+      "mean_execution_time_ms": 10298.0,
+      "tool_call_failure_rate": 0.0449,
+      "hallucination_rate": 0.030379999999999994
     }
   ],
   "metadata": {
-    "role": "network"
+    "agent_key": "A065",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-013",
+    "source_agent_type_name": "Smart Factory Quality Control Agent"
   }
 }

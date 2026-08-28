@@ -104,4 +104,7 @@ def schema_dict() -> dict:
             "decay": "effective_confidence = observed_confidence * exp(-age_seconds / tau_seconds)",
         },
         "normalization_scales": {key: list(value) for key, value in NORMALIZATION_SCALES.items()},
+        "v2_normalization": "train-split-only typewise z-score; statistics stored in checkpoint",
+        "relation_types": ["compute_access", "communication", "task_dependency"],
+        "task_representation": "DAG query sequence conditioned outside the agent-compute system graph",
     }

@@ -2,16 +2,64 @@
   "agent_id": 89,
   "capabilities": [
     {
-      "name": "代码生成与执行",
-      "description": "代码生成与执行",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_factory.energy.monthly_report.generate",
+      "description": "smart_factory.energy.monthly_report.generate",
+      "usage_count": 451,
+      "task_success_rate": 0.9323,
+      "mean_execution_time_ms": 8764.0,
+      "tool_call_failure_rate": 0.0171,
+      "hallucination_rate": 0.023694999999999994
+    },
+    {
+      "name": "smart_factory.energy.qa.answer",
+      "description": "smart_factory.energy.qa.answer",
+      "usage_count": 451,
+      "task_success_rate": 0.9323,
+      "mean_execution_time_ms": 8764.0,
+      "tool_call_failure_rate": 0.0171,
+      "hallucination_rate": 0.023694999999999994
+    },
+    {
+      "name": "smart_factory.energy.consumption.monitor",
+      "description": "smart_factory.energy.consumption.monitor",
+      "usage_count": 451,
+      "task_success_rate": 0.9323,
+      "mean_execution_time_ms": 8764.0,
+      "tool_call_failure_rate": 0.0171,
+      "hallucination_rate": 0.023694999999999994
+    },
+    {
+      "name": "smart_factory.energy.machine_energy.analyze",
+      "description": "smart_factory.energy.machine_energy.analyze",
+      "usage_count": 451,
+      "task_success_rate": 0.9323,
+      "mean_execution_time_ms": 8764.0,
+      "tool_call_failure_rate": 0.0171,
+      "hallucination_rate": 0.023694999999999994
+    },
+    {
+      "name": "smart_factory.energy.energy_efficiency.score",
+      "description": "smart_factory.energy.energy_efficiency.score",
+      "usage_count": 451,
+      "task_success_rate": 0.9323,
+      "mean_execution_time_ms": 8764.0,
+      "tool_call_failure_rate": 0.0171,
+      "hallucination_rate": 0.023694999999999994
+    },
+    {
+      "name": "smart_factory.energy.process_energy.optimize",
+      "description": "smart_factory.energy.process_energy.optimize",
+      "usage_count": 451,
+      "task_success_rate": 0.9323,
+      "mean_execution_time_ms": 8764.0,
+      "tool_call_failure_rate": 0.0171,
+      "hallucination_rate": 0.023694999999999994
     }
   ],
   "metadata": {
-    "role": "coding"
+    "agent_key": "A090",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-018",
+    "source_agent_type_name": "Smart Factory Energy Management Agent"
   }
 }

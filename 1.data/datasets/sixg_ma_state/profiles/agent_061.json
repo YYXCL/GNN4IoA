@@ -2,16 +2,64 @@
   "agent_id": 61,
   "capabilities": [
     {
-      "name": "复杂任务规划",
-      "description": "复杂任务规划",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_factory.quality.defect_root_cause.analyze",
+      "description": "smart_factory.quality.defect_root_cause.analyze",
+      "usage_count": 1066,
+      "task_success_rate": 0.8653,
+      "mean_execution_time_ms": 10669.0,
+      "tool_call_failure_rate": 0.0518,
+      "hallucination_rate": 0.04714500000000001
+    },
+    {
+      "name": "smart_factory.quality.spc.analyze",
+      "description": "smart_factory.quality.spc.analyze",
+      "usage_count": 1066,
+      "task_success_rate": 0.8653,
+      "mean_execution_time_ms": 10669.0,
+      "tool_call_failure_rate": 0.0518,
+      "hallucination_rate": 0.04714500000000001
+    },
+    {
+      "name": "smart_factory.quality.defect_trend.analyze",
+      "description": "smart_factory.quality.defect_trend.analyze",
+      "usage_count": 1066,
+      "task_success_rate": 0.8653,
+      "mean_execution_time_ms": 10669.0,
+      "tool_call_failure_rate": 0.0518,
+      "hallucination_rate": 0.04714500000000001
+    },
+    {
+      "name": "smart_factory.quality.rework_risk.assess",
+      "description": "smart_factory.quality.rework_risk.assess",
+      "usage_count": 1066,
+      "task_success_rate": 0.8653,
+      "mean_execution_time_ms": 10669.0,
+      "tool_call_failure_rate": 0.0518,
+      "hallucination_rate": 0.04714500000000001
+    },
+    {
+      "name": "smart_factory.quality.process_capability.analyze",
+      "description": "smart_factory.quality.process_capability.analyze",
+      "usage_count": 1066,
+      "task_success_rate": 0.8653,
+      "mean_execution_time_ms": 10669.0,
+      "tool_call_failure_rate": 0.0518,
+      "hallucination_rate": 0.04714500000000001
+    },
+    {
+      "name": "smart_factory.quality.tolerance_check.perform",
+      "description": "smart_factory.quality.tolerance_check.perform",
+      "usage_count": 1066,
+      "task_success_rate": 0.8653,
+      "mean_execution_time_ms": 10669.0,
+      "tool_call_failure_rate": 0.0518,
+      "hallucination_rate": 0.04714500000000001
     }
   ],
   "metadata": {
-    "role": "planning"
+    "agent_key": "A062",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-013",
+    "source_agent_type_name": "Smart Factory Quality Control Agent"
   }
 }

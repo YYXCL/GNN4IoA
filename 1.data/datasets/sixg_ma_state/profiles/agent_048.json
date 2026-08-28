@@ -2,16 +2,55 @@
   "agent_id": 48,
   "capabilities": [
     {
-      "name": "多模态视觉分析",
-      "description": "多模态视觉分析",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_home.automation.security_mode.activate",
+      "description": "smart_home.automation.security_mode.activate",
+      "usage_count": 693,
+      "task_success_rate": 0.8403,
+      "mean_execution_time_ms": 6786.0,
+      "tool_call_failure_rate": 0.0318,
+      "hallucination_rate": 0.05589499999999998
+    },
+    {
+      "name": "smart_home.automation.rule.create",
+      "description": "smart_home.automation.rule.create",
+      "usage_count": 693,
+      "task_success_rate": 0.8403,
+      "mean_execution_time_ms": 6786.0,
+      "tool_call_failure_rate": 0.0318,
+      "hallucination_rate": 0.05589499999999998
+    },
+    {
+      "name": "smart_home.automation.condition.evaluate",
+      "description": "smart_home.automation.condition.evaluate",
+      "usage_count": 693,
+      "task_success_rate": 0.8403,
+      "mean_execution_time_ms": 6786.0,
+      "tool_call_failure_rate": 0.0318,
+      "hallucination_rate": 0.05589499999999998
+    },
+    {
+      "name": "smart_home.automation.schedule.create",
+      "description": "smart_home.automation.schedule.create",
+      "usage_count": 693,
+      "task_success_rate": 0.8403,
+      "mean_execution_time_ms": 6786.0,
+      "tool_call_failure_rate": 0.0318,
+      "hallucination_rate": 0.05589499999999998
+    },
+    {
+      "name": "smart_home.automation.away_mode.activate",
+      "description": "smart_home.automation.away_mode.activate",
+      "usage_count": 693,
+      "task_success_rate": 0.8403,
+      "mean_execution_time_ms": 6786.0,
+      "tool_call_failure_rate": 0.0318,
+      "hallucination_rate": 0.05589499999999998
     }
   ],
   "metadata": {
-    "role": "vision"
+    "agent_key": "A049",
+    "scenario": "智慧家居",
+    "source_agent_type_id": "agent-010",
+    "source_agent_type_name": "Smart Home Automation Agent"
   }
 }

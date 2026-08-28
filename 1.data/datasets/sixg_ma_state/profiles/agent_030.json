@@ -2,25 +2,55 @@
   "agent_id": 30,
   "capabilities": [
     {
-      "name": "6G 网络控制",
-      "description": "6G 网络控制",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_home.healthcare.child_care.monitor",
+      "description": "smart_home.healthcare.child_care.monitor",
+      "usage_count": 1179,
+      "task_success_rate": 0.8172,
+      "mean_execution_time_ms": 7259.0,
+      "tool_call_failure_rate": 0.0636,
+      "hallucination_rate": 0.06397999999999998
     },
     {
-      "name": "修复代码缺陷",
-      "description": "修复代码缺陷",
-      "usage_count": 2,
-      "task_success_rate": 0.8380000000000001,
-      "mean_execution_time_ms": 1835.5839783555339,
-      "tool_call_failure_rate": 0.08100000000000002,
-      "hallucination_rate": 0.08100000000000002
+      "name": "smart_home.healthcare.elderly_activity.monitor",
+      "description": "smart_home.healthcare.elderly_activity.monitor",
+      "usage_count": 1179,
+      "task_success_rate": 0.8172,
+      "mean_execution_time_ms": 7259.0,
+      "tool_call_failure_rate": 0.0636,
+      "hallucination_rate": 0.06397999999999998
+    },
+    {
+      "name": "smart_home.healthcare.long_inactivity.detect",
+      "description": "smart_home.healthcare.long_inactivity.detect",
+      "usage_count": 1179,
+      "task_success_rate": 0.8172,
+      "mean_execution_time_ms": 7259.0,
+      "tool_call_failure_rate": 0.0636,
+      "hallucination_rate": 0.06397999999999998
+    },
+    {
+      "name": "smart_home.healthcare.abnormal_routine.detect",
+      "description": "smart_home.healthcare.abnormal_routine.detect",
+      "usage_count": 1179,
+      "task_success_rate": 0.8172,
+      "mean_execution_time_ms": 7259.0,
+      "tool_call_failure_rate": 0.0636,
+      "hallucination_rate": 0.06397999999999998
+    },
+    {
+      "name": "smart_home.healthcare.vital_sign.monitor",
+      "description": "smart_home.healthcare.vital_sign.monitor",
+      "usage_count": 1179,
+      "task_success_rate": 0.8172,
+      "mean_execution_time_ms": 7259.0,
+      "tool_call_failure_rate": 0.0636,
+      "hallucination_rate": 0.06397999999999998
     }
   ],
   "metadata": {
-    "role": "network"
+    "agent_key": "A031",
+    "scenario": "智慧家居",
+    "source_agent_type_id": "agent-007",
+    "source_agent_type_name": "Smart Home Healthcare Agent"
   }
 }

@@ -1,0 +1,65 @@
+{
+  "agent_id": 119,
+  "capabilities": [
+    {
+      "name": "smart_campus.vehicle.accident.detect",
+      "description": "smart_campus.vehicle.accident.detect",
+      "usage_count": 214,
+      "task_success_rate": 0.8454,
+      "mean_execution_time_ms": 9873.0,
+      "tool_call_failure_rate": 0.0429,
+      "hallucination_rate": 0.054109999999999984
+    },
+    {
+      "name": "smart_campus.vehicle.traffic_report.generate",
+      "description": "smart_campus.vehicle.traffic_report.generate",
+      "usage_count": 214,
+      "task_success_rate": 0.8454,
+      "mean_execution_time_ms": 9873.0,
+      "tool_call_failure_rate": 0.0429,
+      "hallucination_rate": 0.054109999999999984
+    },
+    {
+      "name": "smart_campus.vehicle.forklift_safety.monitor",
+      "description": "smart_campus.vehicle.forklift_safety.monitor",
+      "usage_count": 214,
+      "task_success_rate": 0.8454,
+      "mean_execution_time_ms": 9873.0,
+      "tool_call_failure_rate": 0.0429,
+      "hallucination_rate": 0.054109999999999984
+    },
+    {
+      "name": "smart_campus.vehicle.pedestrian_conflict.detect",
+      "description": "smart_campus.vehicle.pedestrian_conflict.detect",
+      "usage_count": 214,
+      "task_success_rate": 0.8454,
+      "mean_execution_time_ms": 9873.0,
+      "tool_call_failure_rate": 0.0429,
+      "hallucination_rate": 0.054109999999999984
+    },
+    {
+      "name": "smart_campus.vehicle.whitelist.manage",
+      "description": "smart_campus.vehicle.whitelist.manage",
+      "usage_count": 214,
+      "task_success_rate": 0.8454,
+      "mean_execution_time_ms": 9873.0,
+      "tool_call_failure_rate": 0.0429,
+      "hallucination_rate": 0.054109999999999984
+    },
+    {
+      "name": "smart_campus.vehicle.qa.answer",
+      "description": "smart_campus.vehicle.qa.answer",
+      "usage_count": 214,
+      "task_success_rate": 0.8454,
+      "mean_execution_time_ms": 9873.0,
+      "tool_call_failure_rate": 0.0429,
+      "hallucination_rate": 0.054109999999999984
+    }
+  ],
+  "metadata": {
+    "agent_key": "A120",
+    "scenario": "应急救援",
+    "source_agent_type_id": "agent-024",
+    "source_agent_type_name": "Smart Campus Vehicle & Traffic Agent"
+  }
+}

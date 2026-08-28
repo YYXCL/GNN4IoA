@@ -2,16 +2,73 @@
   "agent_id": 42,
   "capabilities": [
     {
-      "name": "多模态视觉分析",
-      "description": "多模态视觉分析",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_home.environment.sleep_environment.optimize",
+      "description": "smart_home.environment.sleep_environment.optimize",
+      "usage_count": 336,
+      "task_success_rate": 0.9369,
+      "mean_execution_time_ms": 8628.0,
+      "tool_call_failure_rate": 0.0818,
+      "hallucination_rate": 0.022085000000000014
+    },
+    {
+      "name": "smart_home.environment.temperature.adjust",
+      "description": "smart_home.environment.temperature.adjust",
+      "usage_count": 336,
+      "task_success_rate": 0.9369,
+      "mean_execution_time_ms": 8628.0,
+      "tool_call_failure_rate": 0.0818,
+      "hallucination_rate": 0.022085000000000014
+    },
+    {
+      "name": "smart_home.environment.child_room.assess",
+      "description": "smart_home.environment.child_room.assess",
+      "usage_count": 336,
+      "task_success_rate": 0.9369,
+      "mean_execution_time_ms": 8628.0,
+      "tool_call_failure_rate": 0.0818,
+      "hallucination_rate": 0.022085000000000014
+    },
+    {
+      "name": "smart_home.environment.air_quality.optimize",
+      "description": "smart_home.environment.air_quality.optimize",
+      "usage_count": 336,
+      "task_success_rate": 0.9369,
+      "mean_execution_time_ms": 8628.0,
+      "tool_call_failure_rate": 0.0818,
+      "hallucination_rate": 0.022085000000000014
+    },
+    {
+      "name": "smart_home.environment.ventilation.recommend",
+      "description": "smart_home.environment.ventilation.recommend",
+      "usage_count": 336,
+      "task_success_rate": 0.9369,
+      "mean_execution_time_ms": 8628.0,
+      "tool_call_failure_rate": 0.0818,
+      "hallucination_rate": 0.022085000000000014
+    },
+    {
+      "name": "smart_home.environment.comfort_index.calculate",
+      "description": "smart_home.environment.comfort_index.calculate",
+      "usage_count": 336,
+      "task_success_rate": 0.9369,
+      "mean_execution_time_ms": 8628.0,
+      "tool_call_failure_rate": 0.0818,
+      "hallucination_rate": 0.022085000000000014
+    },
+    {
+      "name": "smart_home.environment.elderly_room.assess",
+      "description": "smart_home.environment.elderly_room.assess",
+      "usage_count": 336,
+      "task_success_rate": 0.9369,
+      "mean_execution_time_ms": 8628.0,
+      "tool_call_failure_rate": 0.0818,
+      "hallucination_rate": 0.022085000000000014
     }
   ],
   "metadata": {
-    "role": "vision"
+    "agent_key": "A043",
+    "scenario": "智慧家居",
+    "source_agent_type_id": "agent-009",
+    "source_agent_type_name": "Smart Home Environment Optimization Agent"
   }
 }

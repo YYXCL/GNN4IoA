@@ -2,16 +2,55 @@
   "agent_id": 35,
   "capabilities": [
     {
-      "name": "多模态视觉分析",
-      "description": "多模态视觉分析",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_home.energy.standby_power.detect",
+      "description": "smart_home.energy.standby_power.detect",
+      "usage_count": 803,
+      "task_success_rate": 0.8891,
+      "mean_execution_time_ms": 8536.0,
+      "tool_call_failure_rate": 0.12,
+      "hallucination_rate": 0.038814999999999995
+    },
+    {
+      "name": "smart_home.energy.abnormal_consumption.detect",
+      "description": "smart_home.energy.abnormal_consumption.detect",
+      "usage_count": 803,
+      "task_success_rate": 0.8891,
+      "mean_execution_time_ms": 8536.0,
+      "tool_call_failure_rate": 0.12,
+      "hallucination_rate": 0.038814999999999995
+    },
+    {
+      "name": "smart_home.energy.battery_status.monitor",
+      "description": "smart_home.energy.battery_status.monitor",
+      "usage_count": 803,
+      "task_success_rate": 0.8891,
+      "mean_execution_time_ms": 8536.0,
+      "tool_call_failure_rate": 0.12,
+      "hallucination_rate": 0.038814999999999995
+    },
+    {
+      "name": "smart_home.energy.consumption.monitor",
+      "description": "smart_home.energy.consumption.monitor",
+      "usage_count": 803,
+      "task_success_rate": 0.8891,
+      "mean_execution_time_ms": 8536.0,
+      "tool_call_failure_rate": 0.12,
+      "hallucination_rate": 0.038814999999999995
+    },
+    {
+      "name": "smart_home.energy.peak_usage.detect",
+      "description": "smart_home.energy.peak_usage.detect",
+      "usage_count": 803,
+      "task_success_rate": 0.8891,
+      "mean_execution_time_ms": 8536.0,
+      "tool_call_failure_rate": 0.12,
+      "hallucination_rate": 0.038814999999999995
     }
   ],
   "metadata": {
-    "role": "vision"
+    "agent_key": "A036",
+    "scenario": "智慧家居",
+    "source_agent_type_id": "agent-008",
+    "source_agent_type_name": "Smart Home Energy Management Agent"
   }
 }

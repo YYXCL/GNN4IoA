@@ -2,25 +2,64 @@
   "agent_id": 54,
   "capabilities": [
     {
-      "name": "多模态视觉分析",
-      "description": "多模态视觉分析",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_home.multimodal.qa.answer",
+      "description": "smart_home.multimodal.qa.answer",
+      "usage_count": 306,
+      "task_success_rate": 0.9,
+      "mean_execution_time_ms": 10373.0,
+      "tool_call_failure_rate": 0.0315,
+      "hallucination_rate": 0.03499999999999999
     },
     {
-      "name": "诊断链路拥塞",
-      "description": "诊断链路拥塞",
-      "usage_count": 1,
-      "task_success_rate": 0.8200000000000001,
-      "mean_execution_time_ms": 1918.8216882677207,
-      "tool_call_failure_rate": 0.19,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_home.multimodal.evidence_chain.generate",
+      "description": "smart_home.multimodal.evidence_chain.generate",
+      "usage_count": 306,
+      "task_success_rate": 0.9,
+      "mean_execution_time_ms": 10373.0,
+      "tool_call_failure_rate": 0.0315,
+      "hallucination_rate": 0.03499999999999999
+    },
+    {
+      "name": "smart_home.multimodal.event_timeline.generate",
+      "description": "smart_home.multimodal.event_timeline.generate",
+      "usage_count": 306,
+      "task_success_rate": 0.9,
+      "mean_execution_time_ms": 10373.0,
+      "tool_call_failure_rate": 0.0315,
+      "hallucination_rate": 0.03499999999999999
+    },
+    {
+      "name": "smart_home.multimodal.child_safety.assess",
+      "description": "smart_home.multimodal.child_safety.assess",
+      "usage_count": 306,
+      "task_success_rate": 0.9,
+      "mean_execution_time_ms": 10373.0,
+      "tool_call_failure_rate": 0.0315,
+      "hallucination_rate": 0.03499999999999999
+    },
+    {
+      "name": "smart_home.multimodal.pet_activity.assess",
+      "description": "smart_home.multimodal.pet_activity.assess",
+      "usage_count": 306,
+      "task_success_rate": 0.9,
+      "mean_execution_time_ms": 10373.0,
+      "tool_call_failure_rate": 0.0315,
+      "hallucination_rate": 0.03499999999999999
+    },
+    {
+      "name": "smart_home.multimodal.room_context.infer",
+      "description": "smart_home.multimodal.room_context.infer",
+      "usage_count": 306,
+      "task_success_rate": 0.9,
+      "mean_execution_time_ms": 10373.0,
+      "tool_call_failure_rate": 0.0315,
+      "hallucination_rate": 0.03499999999999999
     }
   ],
   "metadata": {
-    "role": "vision"
+    "agent_key": "A055",
+    "scenario": "智慧家居",
+    "source_agent_type_id": "agent-011",
+    "source_agent_type_name": "Smart Home Multimodal Context Agent"
   }
 }

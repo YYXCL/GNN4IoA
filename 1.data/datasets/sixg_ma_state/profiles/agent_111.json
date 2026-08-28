@@ -1,0 +1,65 @@
+{
+  "agent_id": 111,
+  "capabilities": [
+    {
+      "name": "smart_building.facility.space_utilization.analyze",
+      "description": "smart_building.facility.space_utilization.analyze",
+      "usage_count": 479,
+      "task_success_rate": 0.9533,
+      "mean_execution_time_ms": 9131.0,
+      "tool_call_failure_rate": 0.0827,
+      "hallucination_rate": 0.016344999999999988
+    },
+    {
+      "name": "smart_building.facility.cost_analysis.generate",
+      "description": "smart_building.facility.cost_analysis.generate",
+      "usage_count": 479,
+      "task_success_rate": 0.9533,
+      "mean_execution_time_ms": 9131.0,
+      "tool_call_failure_rate": 0.0827,
+      "hallucination_rate": 0.016344999999999988
+    },
+    {
+      "name": "smart_building.facility.multisource_efficiency.analyze",
+      "description": "smart_building.facility.multisource_efficiency.analyze",
+      "usage_count": 479,
+      "task_success_rate": 0.9533,
+      "mean_execution_time_ms": 9131.0,
+      "tool_call_failure_rate": 0.0827,
+      "hallucination_rate": 0.016344999999999988
+    },
+    {
+      "name": "smart_building.facility.green_building.assess",
+      "description": "smart_building.facility.green_building.assess",
+      "usage_count": 479,
+      "task_success_rate": 0.9533,
+      "mean_execution_time_ms": 9131.0,
+      "tool_call_failure_rate": 0.0827,
+      "hallucination_rate": 0.016344999999999988
+    },
+    {
+      "name": "smart_building.meeting_room.availability.assess",
+      "description": "smart_building.meeting_room.availability.assess",
+      "usage_count": 479,
+      "task_success_rate": 0.9533,
+      "mean_execution_time_ms": 9131.0,
+      "tool_call_failure_rate": 0.0827,
+      "hallucination_rate": 0.016344999999999988
+    },
+    {
+      "name": "smart_building.facility.elevator.dispatch",
+      "description": "smart_building.facility.elevator.dispatch",
+      "usage_count": 479,
+      "task_success_rate": 0.9533,
+      "mean_execution_time_ms": 9131.0,
+      "tool_call_failure_rate": 0.0827,
+      "hallucination_rate": 0.016344999999999988
+    }
+  ],
+  "metadata": {
+    "agent_key": "A112",
+    "scenario": "应急救援",
+    "source_agent_type_id": "agent-023",
+    "source_agent_type_name": "Smart Building Facility & Energy Agent"
+  }
+}

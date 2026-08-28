@@ -2,25 +2,73 @@
   "agent_id": 72,
   "capabilities": [
     {
-      "name": "复杂任务规划",
-      "description": "复杂任务规划",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_factory.maintenance.schedule.optimize",
+      "description": "smart_factory.maintenance.schedule.optimize",
+      "usage_count": 566,
+      "task_success_rate": 0.8308,
+      "mean_execution_time_ms": 8229.0,
+      "tool_call_failure_rate": 0.0129,
+      "hallucination_rate": 0.05922
     },
     {
-      "name": "修复代码缺陷",
-      "description": "修复代码缺陷",
-      "usage_count": 1,
-      "task_success_rate": 0.8200000000000001,
-      "mean_execution_time_ms": 1893.3065181764032,
-      "tool_call_failure_rate": 0.09000000000000001,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_factory.maintenance.preventive_task.recommend",
+      "description": "smart_factory.maintenance.preventive_task.recommend",
+      "usage_count": 566,
+      "task_success_rate": 0.8308,
+      "mean_execution_time_ms": 8229.0,
+      "tool_call_failure_rate": 0.0129,
+      "hallucination_rate": 0.05922
+    },
+    {
+      "name": "smart_factory.maintenance.downtime_risk.estimate",
+      "description": "smart_factory.maintenance.downtime_risk.estimate",
+      "usage_count": 566,
+      "task_success_rate": 0.8308,
+      "mean_execution_time_ms": 8229.0,
+      "tool_call_failure_rate": 0.0129,
+      "hallucination_rate": 0.05922
+    },
+    {
+      "name": "smart_factory.maintenance.report.generate",
+      "description": "smart_factory.maintenance.report.generate",
+      "usage_count": 566,
+      "task_success_rate": 0.8308,
+      "mean_execution_time_ms": 8229.0,
+      "tool_call_failure_rate": 0.0129,
+      "hallucination_rate": 0.05922
+    },
+    {
+      "name": "smart_factory.maintenance.spare_part.inventory.check",
+      "description": "smart_factory.maintenance.spare_part.inventory.check",
+      "usage_count": 566,
+      "task_success_rate": 0.8308,
+      "mean_execution_time_ms": 8229.0,
+      "tool_call_failure_rate": 0.0129,
+      "hallucination_rate": 0.05922
+    },
+    {
+      "name": "smart_factory.maintenance.repair_time.estimate",
+      "description": "smart_factory.maintenance.repair_time.estimate",
+      "usage_count": 566,
+      "task_success_rate": 0.8308,
+      "mean_execution_time_ms": 8229.0,
+      "tool_call_failure_rate": 0.0129,
+      "hallucination_rate": 0.05922
+    },
+    {
+      "name": "smart_factory.maintenance.risk_score.calculate",
+      "description": "smart_factory.maintenance.risk_score.calculate",
+      "usage_count": 566,
+      "task_success_rate": 0.8308,
+      "mean_execution_time_ms": 8229.0,
+      "tool_call_failure_rate": 0.0129,
+      "hallucination_rate": 0.05922
     }
   ],
   "metadata": {
-    "role": "planning"
+    "agent_key": "A073",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-015",
+    "source_agent_type_name": "Smart Factory Maintenance Agent"
   }
 }

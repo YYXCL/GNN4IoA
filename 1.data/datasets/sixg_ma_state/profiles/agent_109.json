@@ -1,0 +1,65 @@
+{
+  "agent_id": 109,
+  "capabilities": [
+    {
+      "name": "smart_building.security.fire_evacuation.monitor",
+      "description": "smart_building.security.fire_evacuation.monitor",
+      "usage_count": 350,
+      "task_success_rate": 0.909,
+      "mean_execution_time_ms": 7716.0,
+      "tool_call_failure_rate": 0.0147,
+      "hallucination_rate": 0.03184999999999999
+    },
+    {
+      "name": "smart_building.security.unauthorized_area.detect",
+      "description": "smart_building.security.unauthorized_area.detect",
+      "usage_count": 350,
+      "task_success_rate": 0.909,
+      "mean_execution_time_ms": 7716.0,
+      "tool_call_failure_rate": 0.0147,
+      "hallucination_rate": 0.03184999999999999
+    },
+    {
+      "name": "smart_building.security.alarm_event.classify",
+      "description": "smart_building.security.alarm_event.classify",
+      "usage_count": 350,
+      "task_success_rate": 0.909,
+      "mean_execution_time_ms": 7716.0,
+      "tool_call_failure_rate": 0.0147,
+      "hallucination_rate": 0.03184999999999999
+    },
+    {
+      "name": "smart_building.security.qa.answer",
+      "description": "smart_building.security.qa.answer",
+      "usage_count": 350,
+      "task_success_rate": 0.909,
+      "mean_execution_time_ms": 7716.0,
+      "tool_call_failure_rate": 0.0147,
+      "hallucination_rate": 0.03184999999999999
+    },
+    {
+      "name": "smart_building.security.daily_report.generate",
+      "description": "smart_building.security.daily_report.generate",
+      "usage_count": 350,
+      "task_success_rate": 0.909,
+      "mean_execution_time_ms": 7716.0,
+      "tool_call_failure_rate": 0.0147,
+      "hallucination_rate": 0.03184999999999999
+    },
+    {
+      "name": "smart_building.security.tailgating.detect",
+      "description": "smart_building.security.tailgating.detect",
+      "usage_count": 350,
+      "task_success_rate": 0.909,
+      "mean_execution_time_ms": 7716.0,
+      "tool_call_failure_rate": 0.0147,
+      "hallucination_rate": 0.03184999999999999
+    }
+  ],
+  "metadata": {
+    "agent_key": "A110",
+    "scenario": "应急救援",
+    "source_agent_type_id": "agent-022",
+    "source_agent_type_name": "Smart Building Security & Access Agent"
+  }
+}

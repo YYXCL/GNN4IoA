@@ -2,7 +2,9 @@
 
 from .config import ModelConfig
 from .capabilities import CapabilityRegistry, LLMCapabilityDecomposer
-from .model import TaskConditionedHeterogeneousTGN
+from .model import TaskConditionedHeterogeneousTGN as LegacyTaskConditionedTGN
+from .v2_model import TaskConditionedHGTGRU
+TaskConditionedHeterogeneousTGN = TaskConditionedHGTGRU
 from .types import EventType, GraphEvent, QueryGraph, RelationType, TaskRequirement, TrainingCase
 
 __all__ = [
@@ -14,6 +16,8 @@ __all__ = [
     "QueryGraph",
     "RelationType",
     "TaskConditionedHeterogeneousTGN",
+    "TaskConditionedHGTGRU",
+    "LegacyTaskConditionedTGN",
     "TaskRequirement",
     "TrainingCase",
 ]

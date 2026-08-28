@@ -2,16 +2,73 @@
   "agent_id": 82,
   "capabilities": [
     {
-      "name": "工具调用",
-      "description": "工具调用",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_factory.robotics.robot_speed.optimize",
+      "description": "smart_factory.robotics.robot_speed.optimize",
+      "usage_count": 294,
+      "task_success_rate": 0.9498,
+      "mean_execution_time_ms": 10389.0,
+      "tool_call_failure_rate": 0.0553,
+      "hallucination_rate": 0.017570000000000006
+    },
+    {
+      "name": "smart_factory.robotics.robot_workflow.optimize",
+      "description": "smart_factory.robotics.robot_workflow.optimize",
+      "usage_count": 294,
+      "task_success_rate": 0.9498,
+      "mean_execution_time_ms": 10389.0,
+      "tool_call_failure_rate": 0.0553,
+      "hallucination_rate": 0.017570000000000006
+    },
+    {
+      "name": "smart_factory.robotics.robot_tool_change.manage",
+      "description": "smart_factory.robotics.robot_tool_change.manage",
+      "usage_count": 294,
+      "task_success_rate": 0.9498,
+      "mean_execution_time_ms": 10389.0,
+      "tool_call_failure_rate": 0.0553,
+      "hallucination_rate": 0.017570000000000006
+    },
+    {
+      "name": "smart_factory.robotics.robot_maintenance.recommend",
+      "description": "smart_factory.robotics.robot_maintenance.recommend",
+      "usage_count": 294,
+      "task_success_rate": 0.9498,
+      "mean_execution_time_ms": 10389.0,
+      "tool_call_failure_rate": 0.0553,
+      "hallucination_rate": 0.017570000000000006
+    },
+    {
+      "name": "smart_factory.robotics.robot.vision_guidance.process",
+      "description": "smart_factory.robotics.robot.vision_guidance.process",
+      "usage_count": 294,
+      "task_success_rate": 0.9498,
+      "mean_execution_time_ms": 10389.0,
+      "tool_call_failure_rate": 0.0553,
+      "hallucination_rate": 0.017570000000000006
+    },
+    {
+      "name": "smart_factory.robotics.multi_robot.coordinate",
+      "description": "smart_factory.robotics.multi_robot.coordinate",
+      "usage_count": 294,
+      "task_success_rate": 0.9498,
+      "mean_execution_time_ms": 10389.0,
+      "tool_call_failure_rate": 0.0553,
+      "hallucination_rate": 0.017570000000000006
+    },
+    {
+      "name": "smart_factory.robotics.robot.operation_log.summarize",
+      "description": "smart_factory.robotics.robot.operation_log.summarize",
+      "usage_count": 294,
+      "task_success_rate": 0.9498,
+      "mean_execution_time_ms": 10389.0,
+      "tool_call_failure_rate": 0.0553,
+      "hallucination_rate": 0.017570000000000006
     }
   ],
   "metadata": {
-    "role": "tool"
+    "agent_key": "A083",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-017",
+    "source_agent_type_name": "Smart Factory Robotics Coordination Agent"
   }
 }

@@ -2,25 +2,64 @@
   "agent_id": 86,
   "capabilities": [
     {
-      "name": "多模态视觉分析",
-      "description": "多模态视觉分析",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_factory.energy.machine_energy.analyze",
+      "description": "smart_factory.energy.machine_energy.analyze",
+      "usage_count": 1034,
+      "task_success_rate": 0.8383,
+      "mean_execution_time_ms": 10188.0,
+      "tool_call_failure_rate": 0.0249,
+      "hallucination_rate": 0.05659499999999998
     },
     {
-      "name": "检索领域文档证据",
-      "description": "检索领域文档证据",
-      "usage_count": 1,
-      "task_success_rate": 0.8200000000000001,
-      "mean_execution_time_ms": 1885.5189308543884,
-      "tool_call_failure_rate": 0.19,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_factory.energy.renewable_generation.analyze",
+      "description": "smart_factory.energy.renewable_generation.analyze",
+      "usage_count": 1034,
+      "task_success_rate": 0.8383,
+      "mean_execution_time_ms": 10188.0,
+      "tool_call_failure_rate": 0.0249,
+      "hallucination_rate": 0.05659499999999998
+    },
+    {
+      "name": "smart_factory.energy.line_energy.compare",
+      "description": "smart_factory.energy.line_energy.compare",
+      "usage_count": 1034,
+      "task_success_rate": 0.8383,
+      "mean_execution_time_ms": 10188.0,
+      "tool_call_failure_rate": 0.0249,
+      "hallucination_rate": 0.05659499999999998
+    },
+    {
+      "name": "smart_factory.energy.consumption.monitor",
+      "description": "smart_factory.energy.consumption.monitor",
+      "usage_count": 1034,
+      "task_success_rate": 0.8383,
+      "mean_execution_time_ms": 10188.0,
+      "tool_call_failure_rate": 0.0249,
+      "hallucination_rate": 0.05659499999999998
+    },
+    {
+      "name": "smart_factory.energy.standby_power.detect",
+      "description": "smart_factory.energy.standby_power.detect",
+      "usage_count": 1034,
+      "task_success_rate": 0.8383,
+      "mean_execution_time_ms": 10188.0,
+      "tool_call_failure_rate": 0.0249,
+      "hallucination_rate": 0.05659499999999998
+    },
+    {
+      "name": "smart_factory.energy.energy_saving.recommend",
+      "description": "smart_factory.energy.energy_saving.recommend",
+      "usage_count": 1034,
+      "task_success_rate": 0.8383,
+      "mean_execution_time_ms": 10188.0,
+      "tool_call_failure_rate": 0.0249,
+      "hallucination_rate": 0.05659499999999998
     }
   ],
   "metadata": {
-    "role": "vision"
+    "agent_key": "A087",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-018",
+    "source_agent_type_name": "Smart Factory Energy Management Agent"
   }
 }

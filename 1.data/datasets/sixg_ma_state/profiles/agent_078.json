@@ -2,25 +2,55 @@
   "agent_id": 78,
   "capabilities": [
     {
-      "name": "知识检索",
-      "description": "知识检索",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_factory.safety.forklift_collision_risk.assess",
+      "description": "smart_factory.safety.forklift_collision_risk.assess",
+      "usage_count": 108,
+      "task_success_rate": 0.8242,
+      "mean_execution_time_ms": 5865.0,
+      "tool_call_failure_rate": 0.0562,
+      "hallucination_rate": 0.06152999999999998
     },
     {
-      "name": "检索领域文档证据",
-      "description": "检索领域文档证据",
-      "usage_count": 1,
-      "task_success_rate": 0.7200000000000001,
-      "mean_execution_time_ms": 1915.8777632140575,
-      "tool_call_failure_rate": 0.09000000000000001,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_factory.safety.high_temperature_risk.assess",
+      "description": "smart_factory.safety.high_temperature_risk.assess",
+      "usage_count": 108,
+      "task_success_rate": 0.8242,
+      "mean_execution_time_ms": 5865.0,
+      "tool_call_failure_rate": 0.0562,
+      "hallucination_rate": 0.06152999999999998
+    },
+    {
+      "name": "smart_factory.safety.emergency_response.recommend",
+      "description": "smart_factory.safety.emergency_response.recommend",
+      "usage_count": 108,
+      "task_success_rate": 0.8242,
+      "mean_execution_time_ms": 5865.0,
+      "tool_call_failure_rate": 0.0562,
+      "hallucination_rate": 0.06152999999999998
+    },
+    {
+      "name": "smart_factory.safety.fire_risk.detect",
+      "description": "smart_factory.safety.fire_risk.detect",
+      "usage_count": 108,
+      "task_success_rate": 0.8242,
+      "mean_execution_time_ms": 5865.0,
+      "tool_call_failure_rate": 0.0562,
+      "hallucination_rate": 0.06152999999999998
+    },
+    {
+      "name": "smart_factory.safety.worker_fall.detect",
+      "description": "smart_factory.safety.worker_fall.detect",
+      "usage_count": 108,
+      "task_success_rate": 0.8242,
+      "mean_execution_time_ms": 5865.0,
+      "tool_call_failure_rate": 0.0562,
+      "hallucination_rate": 0.06152999999999998
     }
   ],
   "metadata": {
-    "role": "retrieval"
+    "agent_key": "A079",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-016",
+    "source_agent_type_name": "Smart Factory Safety Monitoring Agent"
   }
 }

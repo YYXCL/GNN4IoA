@@ -2,16 +2,64 @@
   "agent_id": 4,
   "capabilities": [
     {
-      "name": "多模态视觉分析",
-      "description": "多模态视觉分析",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_home.video.smoke_fire.detect",
+      "description": "smart_home.video.smoke_fire.detect",
+      "usage_count": 298,
+      "task_success_rate": 0.9181,
+      "mean_execution_time_ms": 8825.0,
+      "tool_call_failure_rate": 0.0224,
+      "hallucination_rate": 0.02866499999999999
+    },
+    {
+      "name": "smart_factory.video.danger_zone.intrusion.detect",
+      "description": "smart_factory.video.danger_zone.intrusion.detect",
+      "usage_count": 298,
+      "task_success_rate": 0.9181,
+      "mean_execution_time_ms": 8825.0,
+      "tool_call_failure_rate": 0.0224,
+      "hallucination_rate": 0.02866499999999999
+    },
+    {
+      "name": "smart_home.video.fall.detect",
+      "description": "smart_home.video.fall.detect",
+      "usage_count": 298,
+      "task_success_rate": 0.9181,
+      "mean_execution_time_ms": 8825.0,
+      "tool_call_failure_rate": 0.0224,
+      "hallucination_rate": 0.02866499999999999
+    },
+    {
+      "name": "smart_home.video.intrusion.detect",
+      "description": "smart_home.video.intrusion.detect",
+      "usage_count": 298,
+      "task_success_rate": 0.9181,
+      "mean_execution_time_ms": 8825.0,
+      "tool_call_failure_rate": 0.0224,
+      "hallucination_rate": 0.02866499999999999
+    },
+    {
+      "name": "smart_factory.video.smoke_fire.detect",
+      "description": "smart_factory.video.smoke_fire.detect",
+      "usage_count": 298,
+      "task_success_rate": 0.9181,
+      "mean_execution_time_ms": 8825.0,
+      "tool_call_failure_rate": 0.0224,
+      "hallucination_rate": 0.02866499999999999
+    },
+    {
+      "name": "smart_home.video.abnormal_behavior.detect",
+      "description": "smart_home.video.abnormal_behavior.detect",
+      "usage_count": 298,
+      "task_success_rate": 0.9181,
+      "mean_execution_time_ms": 8825.0,
+      "tool_call_failure_rate": 0.0224,
+      "hallucination_rate": 0.02866499999999999
     }
   ],
   "metadata": {
-    "role": "vision"
+    "agent_key": "A005",
+    "scenario": "应急救援",
+    "source_agent_type_id": "agent-001",
+    "source_agent_type_name": "Video Understanding Agent"
   }
 }

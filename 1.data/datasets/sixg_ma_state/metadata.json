@@ -1,35 +1,66 @@
 {
-  "dataset": "6G-Agent-Compute-Heterogeneous-State",
-  "version": "2.0",
-  "num_agents": 100,
+  "dataset": "6G-Agent-Compute-Foundation-Sliding-Window",
+  "version": "5.0-dag-query",
+  "dataset_origin": "1.data numbered foundation tables",
+  "num_agents": 120,
   "num_compute_nodes": 12,
   "compute_node_distribution": {
     "cloud": 4,
     "edge": 8
   },
-  "samples": 48,
-  "update_interval_ms": 100,
-  "scenario_duration_minutes": 30,
-  "virtual_probe_ticks": 18000,
+  "samples": 72,
   "splits": {
-    "train": 36,
-    "val": 6,
-    "test": 6
+    "train": 54,
+    "val": 9,
+    "test": 9
   },
+  "split_source_timestamp_ranges": {
+    "train": {
+      "source_timestamp_start": 1662858720,
+      "source_timestamp_end": 1662920223
+    },
+    "val": {
+      "source_timestamp_start": 1662920508,
+      "source_timestamp_end": 1662930483
+    },
+    "test": {
+      "source_timestamp_start": 1662930768,
+      "source_timestamp_end": 1662940800
+    }
+  },
+  "window_size_timestamps": 16,
+  "candidate_count": 12,
+  "events_per_window": 24,
+  "window_overlap": false,
+  "source_timestamp_origin": 1662858720,
+  "source_timestamp_min": 1662858720,
+  "source_timestamp_max": 1662940800,
+  "confidence_tau_seconds": 600.0,
   "task_distribution": {
-    "knowledge_answer": 14,
-    "network_diagnosis": 8,
-    "fire_frame": 8,
-    "code_fix": 7,
-    "task_planning": 11
+    "智慧家居": 29,
+    "智慧工厂": 33,
+    "应急救援": 10
   },
   "profile_format": "profiles/agent_NNN.json",
+  "derived_field_notes": {
+    "gpu_total_tflops": "按云侧/边侧节点类型使用 4000/400 TFLOPS 仿真假设",
+    "gpu_memory_bandwidth": "按节点类型设定总带宽，并以 server_load_rate_proxy 推算已用带宽",
+    "queue_and_batch": "由 queue_rt_ms、active_gpu_container_count 和节点类型推导",
+    "hallucination_rate": "基础可靠性表没有该字段，按 (1-task_success_rate)*0.35 截断到 0.5%-10%"
+  },
   "design_constraints": {
+    "chronological_split": true,
+    "non_overlapping_windows": true,
+    "required_skill_present_in_candidates": true,
+    "label_agent_has_required_skill": true,
     "queue_batch_in_graph": true,
     "queue_batch_used_for_decision": false,
     "link_path_type_encoded": false,
-    "capability_slots": 8,
-    "capability_growth": "append on unmatched task capability; evict least-used slot at capacity"
+    "explicit_task_node": false,
+    "task_representation": "dependency-aware DAG query; system graph nodes are agent/compute only",
+    "required_skill_hard_mask": true,
+    "task_and_agent_text_in_jsonl": true,
+    "capability_slots": 8
   },
   "schema": {
     "node_types": [
@@ -162,6 +193,13 @@
         1.0,
         1.0
       ]
-    }
+    },
+    "v2_normalization": "train-split-only typewise z-score; statistics stored in checkpoint",
+    "relation_types": [
+      "compute_access",
+      "communication",
+      "task_dependency"
+    ],
+    "task_representation": "DAG query sequence conditioned outside the agent-compute system graph"
   }
 }

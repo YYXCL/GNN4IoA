@@ -2,16 +2,55 @@
   "agent_id": 60,
   "capabilities": [
     {
-      "name": "6G 网络控制",
-      "description": "6G 网络控制",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_factory.quality.nonconformance.detect",
+      "description": "smart_factory.quality.nonconformance.detect",
+      "usage_count": 163,
+      "task_success_rate": 0.8882,
+      "mean_execution_time_ms": 7441.0,
+      "tool_call_failure_rate": 0.0314,
+      "hallucination_rate": 0.03913
+    },
+    {
+      "name": "smart_factory.quality.defect.classify",
+      "description": "smart_factory.quality.defect.classify",
+      "usage_count": 163,
+      "task_success_rate": 0.8882,
+      "mean_execution_time_ms": 7441.0,
+      "tool_call_failure_rate": 0.0314,
+      "hallucination_rate": 0.03913
+    },
+    {
+      "name": "smart_factory.quality.defect_root_cause.analyze",
+      "description": "smart_factory.quality.defect_root_cause.analyze",
+      "usage_count": 163,
+      "task_success_rate": 0.8882,
+      "mean_execution_time_ms": 7441.0,
+      "tool_call_failure_rate": 0.0314,
+      "hallucination_rate": 0.03913
+    },
+    {
+      "name": "smart_factory.quality.pass_rate.calculate",
+      "description": "smart_factory.quality.pass_rate.calculate",
+      "usage_count": 163,
+      "task_success_rate": 0.8882,
+      "mean_execution_time_ms": 7441.0,
+      "tool_call_failure_rate": 0.0314,
+      "hallucination_rate": 0.03913
+    },
+    {
+      "name": "smart_factory.quality.inspection_report.generate",
+      "description": "smart_factory.quality.inspection_report.generate",
+      "usage_count": 163,
+      "task_success_rate": 0.8882,
+      "mean_execution_time_ms": 7441.0,
+      "tool_call_failure_rate": 0.0314,
+      "hallucination_rate": 0.03913
     }
   ],
   "metadata": {
-    "role": "network"
+    "agent_key": "A061",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-013",
+    "source_agent_type_name": "Smart Factory Quality Control Agent"
   }
 }

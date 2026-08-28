@@ -2,25 +2,64 @@
   "agent_id": 16,
   "capabilities": [
     {
-      "name": "代码生成与执行",
-      "description": "代码生成与执行",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_home.iot.device_energy.analyze",
+      "description": "smart_home.iot.device_energy.analyze",
+      "usage_count": 1046,
+      "task_success_rate": 0.9273,
+      "mean_execution_time_ms": 8553.0,
+      "tool_call_failure_rate": 0.0086,
+      "hallucination_rate": 0.025444999999999995
     },
     {
-      "name": "检索领域文档证据",
-      "description": "检索领域文档证据",
-      "usage_count": 1,
-      "task_success_rate": 0.8200000000000001,
-      "mean_execution_time_ms": 1857.6602150701563,
-      "tool_call_failure_rate": 0.09000000000000001,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_home.iot.door_lock.control",
+      "description": "smart_home.iot.door_lock.control",
+      "usage_count": 1046,
+      "task_success_rate": 0.9273,
+      "mean_execution_time_ms": 8553.0,
+      "tool_call_failure_rate": 0.0086,
+      "hallucination_rate": 0.025444999999999995
+    },
+    {
+      "name": "smart_home.iot.appliance.control",
+      "description": "smart_home.iot.appliance.control",
+      "usage_count": 1046,
+      "task_success_rate": 0.9273,
+      "mean_execution_time_ms": 8553.0,
+      "tool_call_failure_rate": 0.0086,
+      "hallucination_rate": 0.025444999999999995
+    },
+    {
+      "name": "smart_home.iot.air_purifier.control",
+      "description": "smart_home.iot.air_purifier.control",
+      "usage_count": 1046,
+      "task_success_rate": 0.9273,
+      "mean_execution_time_ms": 8553.0,
+      "tool_call_failure_rate": 0.0086,
+      "hallucination_rate": 0.025444999999999995
+    },
+    {
+      "name": "smart_home.iot.device_fault.detect",
+      "description": "smart_home.iot.device_fault.detect",
+      "usage_count": 1046,
+      "task_success_rate": 0.9273,
+      "mean_execution_time_ms": 8553.0,
+      "tool_call_failure_rate": 0.0086,
+      "hallucination_rate": 0.025444999999999995
+    },
+    {
+      "name": "smart_home.iot.device_group.control",
+      "description": "smart_home.iot.device_group.control",
+      "usage_count": 1046,
+      "task_success_rate": 0.9273,
+      "mean_execution_time_ms": 8553.0,
+      "tool_call_failure_rate": 0.0086,
+      "hallucination_rate": 0.025444999999999995
     }
   ],
   "metadata": {
-    "role": "coding"
+    "agent_key": "A017",
+    "scenario": "智慧家居",
+    "source_agent_type_id": "agent-004",
+    "source_agent_type_name": "IoT Device Management Agent"
   }
 }

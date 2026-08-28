@@ -2,25 +2,64 @@
   "agent_id": 94,
   "capabilities": [
     {
-      "name": "代码生成与执行",
-      "description": "代码生成与执行",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_factory.logistics.logistics_report.generate",
+      "description": "smart_factory.logistics.logistics_report.generate",
+      "usage_count": 509,
+      "task_success_rate": 0.9368,
+      "mean_execution_time_ms": 9464.0,
+      "tool_call_failure_rate": 0.029,
+      "hallucination_rate": 0.02212000000000001
     },
     {
-      "name": "判断单个视频帧是否有火灾",
-      "description": "判断单个视频帧是否有火灾",
-      "usage_count": 1,
-      "task_success_rate": 0.8200000000000001,
-      "mean_execution_time_ms": 1911.7438167570408,
-      "tool_call_failure_rate": 0.09000000000000001,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_factory.logistics.pick_pack_plan.generate",
+      "description": "smart_factory.logistics.pick_pack_plan.generate",
+      "usage_count": 509,
+      "task_success_rate": 0.9368,
+      "mean_execution_time_ms": 9464.0,
+      "tool_call_failure_rate": 0.029,
+      "hallucination_rate": 0.02212000000000001
+    },
+    {
+      "name": "smart_factory.logistics.qa.answer",
+      "description": "smart_factory.logistics.qa.answer",
+      "usage_count": 509,
+      "task_success_rate": 0.9368,
+      "mean_execution_time_ms": 9464.0,
+      "tool_call_failure_rate": 0.029,
+      "hallucination_rate": 0.02212000000000001
+    },
+    {
+      "name": "smart_factory.logistics.agv_route.plan",
+      "description": "smart_factory.logistics.agv_route.plan",
+      "usage_count": 509,
+      "task_success_rate": 0.9368,
+      "mean_execution_time_ms": 9464.0,
+      "tool_call_failure_rate": 0.029,
+      "hallucination_rate": 0.02212000000000001
+    },
+    {
+      "name": "smart_factory.logistics.supply_delay.predict",
+      "description": "smart_factory.logistics.supply_delay.predict",
+      "usage_count": 509,
+      "task_success_rate": 0.9368,
+      "mean_execution_time_ms": 9464.0,
+      "tool_call_failure_rate": 0.029,
+      "hallucination_rate": 0.02212000000000001
+    },
+    {
+      "name": "smart_factory.logistics.pallet_status.track",
+      "description": "smart_factory.logistics.pallet_status.track",
+      "usage_count": 509,
+      "task_success_rate": 0.9368,
+      "mean_execution_time_ms": 9464.0,
+      "tool_call_failure_rate": 0.029,
+      "hallucination_rate": 0.02212000000000001
     }
   ],
   "metadata": {
-    "role": "coding"
+    "agent_key": "A095",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-019",
+    "source_agent_type_name": "Smart Factory Logistics Agent"
   }
 }

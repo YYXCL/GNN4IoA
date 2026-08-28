@@ -2,25 +2,64 @@
   "agent_id": 76,
   "capabilities": [
     {
-      "name": "多模态视觉分析",
-      "description": "多模态视觉分析",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_factory.safety.forklift_collision_risk.assess",
+      "description": "smart_factory.safety.forklift_collision_risk.assess",
+      "usage_count": 883,
+      "task_success_rate": 0.9388,
+      "mean_execution_time_ms": 9271.0,
+      "tool_call_failure_rate": 0.0231,
+      "hallucination_rate": 0.02142000000000001
     },
     {
-      "name": "判断单个视频帧是否有火灾",
-      "description": "判断单个视频帧是否有火灾",
-      "usage_count": 1,
-      "task_success_rate": 0.8200000000000001,
-      "mean_execution_time_ms": 1911.4574423459908,
-      "tool_call_failure_rate": 0.09000000000000001,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_factory.safety.noise_exposure.assess",
+      "description": "smart_factory.safety.noise_exposure.assess",
+      "usage_count": 883,
+      "task_success_rate": 0.9388,
+      "mean_execution_time_ms": 9271.0,
+      "tool_call_failure_rate": 0.0231,
+      "hallucination_rate": 0.02142000000000001
+    },
+    {
+      "name": "smart_factory.safety.high_temperature_risk.assess",
+      "description": "smart_factory.safety.high_temperature_risk.assess",
+      "usage_count": 883,
+      "task_success_rate": 0.9388,
+      "mean_execution_time_ms": 9271.0,
+      "tool_call_failure_rate": 0.0231,
+      "hallucination_rate": 0.02142000000000001
+    },
+    {
+      "name": "smart_factory.safety.gas_leak.detect",
+      "description": "smart_factory.safety.gas_leak.detect",
+      "usage_count": 883,
+      "task_success_rate": 0.9388,
+      "mean_execution_time_ms": 9271.0,
+      "tool_call_failure_rate": 0.0231,
+      "hallucination_rate": 0.02142000000000001
+    },
+    {
+      "name": "smart_factory.safety.worker_fall.detect",
+      "description": "smart_factory.safety.worker_fall.detect",
+      "usage_count": 883,
+      "task_success_rate": 0.9388,
+      "mean_execution_time_ms": 9271.0,
+      "tool_call_failure_rate": 0.0231,
+      "hallucination_rate": 0.02142000000000001
+    },
+    {
+      "name": "smart_factory.safety.unsafe_behavior.detect",
+      "description": "smart_factory.safety.unsafe_behavior.detect",
+      "usage_count": 883,
+      "task_success_rate": 0.9388,
+      "mean_execution_time_ms": 9271.0,
+      "tool_call_failure_rate": 0.0231,
+      "hallucination_rate": 0.02142000000000001
     }
   ],
   "metadata": {
-    "role": "vision"
+    "agent_key": "A077",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-016",
+    "source_agent_type_name": "Smart Factory Safety Monitoring Agent"
   }
 }

@@ -2,16 +2,55 @@
   "agent_id": 23,
   "capabilities": [
     {
-      "name": "6G 网络控制",
-      "description": "6G 网络控制",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_factory.sensor.data_quality.assess",
+      "description": "smart_factory.sensor.data_quality.assess",
+      "usage_count": 453,
+      "task_success_rate": 0.8628,
+      "mean_execution_time_ms": 7267.0,
+      "tool_call_failure_rate": 0.0314,
+      "hallucination_rate": 0.04801999999999999
+    },
+    {
+      "name": "smart_factory.sensor.multi_source.fuse",
+      "description": "smart_factory.sensor.multi_source.fuse",
+      "usage_count": 453,
+      "task_success_rate": 0.8628,
+      "mean_execution_time_ms": 7267.0,
+      "tool_call_failure_rate": 0.0314,
+      "hallucination_rate": 0.04801999999999999
+    },
+    {
+      "name": "smart_factory.sensor.failure_warning.generate",
+      "description": "smart_factory.sensor.failure_warning.generate",
+      "usage_count": 453,
+      "task_success_rate": 0.8628,
+      "mean_execution_time_ms": 7267.0,
+      "tool_call_failure_rate": 0.0314,
+      "hallucination_rate": 0.04801999999999999
+    },
+    {
+      "name": "smart_factory.sensor.humidity.monitor",
+      "description": "smart_factory.sensor.humidity.monitor",
+      "usage_count": 453,
+      "task_success_rate": 0.8628,
+      "mean_execution_time_ms": 7267.0,
+      "tool_call_failure_rate": 0.0314,
+      "hallucination_rate": 0.04801999999999999
+    },
+    {
+      "name": "smart_factory.sensor.gas_concentration.monitor",
+      "description": "smart_factory.sensor.gas_concentration.monitor",
+      "usage_count": 453,
+      "task_success_rate": 0.8628,
+      "mean_execution_time_ms": 7267.0,
+      "tool_call_failure_rate": 0.0314,
+      "hallucination_rate": 0.04801999999999999
     }
   ],
   "metadata": {
-    "role": "network"
+    "agent_key": "A024",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-005",
+    "source_agent_type_name": "Sensor Monitoring Agent"
   }
 }

@@ -18,8 +18,13 @@ venv/
 .DS_Store
 Thumbs.db
 
-# The following are reproducible experiment outputs. They are kept in this
-# project as ready-to-run examples; uncomment them for a source-only repository.
-# data/datasets/
-# outputs/checkpoints/
-# outputs/artifacts/
+# Local scratch space and generated experiment artifacts
+tmp/
+outputs/
+*.pt
+*.log
+.coverage
+htmlcov/
+
+# The prepared JSONL dataset is intentionally versioned for reproducibility.
+# Large regenerated raw datasets should be reviewed before being added.

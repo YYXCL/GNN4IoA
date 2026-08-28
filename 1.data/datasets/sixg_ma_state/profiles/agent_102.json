@@ -1,0 +1,74 @@
+{
+  "agent_id": 102,
+  "capabilities": [
+    {
+      "name": "smart_factory.report.energy_report.generate",
+      "description": "smart_factory.report.energy_report.generate",
+      "usage_count": 836,
+      "task_success_rate": 0.8396,
+      "mean_execution_time_ms": 11006.0,
+      "tool_call_failure_rate": 0.0211,
+      "hallucination_rate": 0.05613999999999999
+    },
+    {
+      "name": "smart_factory.report.shift_report.generate",
+      "description": "smart_factory.report.shift_report.generate",
+      "usage_count": 836,
+      "task_success_rate": 0.8396,
+      "mean_execution_time_ms": 11006.0,
+      "tool_call_failure_rate": 0.0211,
+      "hallucination_rate": 0.05613999999999999
+    },
+    {
+      "name": "smart_factory.report.defect_analysis.generate",
+      "description": "smart_factory.report.defect_analysis.generate",
+      "usage_count": 836,
+      "task_success_rate": 0.8396,
+      "mean_execution_time_ms": 11006.0,
+      "tool_call_failure_rate": 0.0211,
+      "hallucination_rate": 0.05613999999999999
+    },
+    {
+      "name": "smart_factory.report.downtime_analysis.generate",
+      "description": "smart_factory.report.downtime_analysis.generate",
+      "usage_count": 836,
+      "task_success_rate": 0.8396,
+      "mean_execution_time_ms": 11006.0,
+      "tool_call_failure_rate": 0.0211,
+      "hallucination_rate": 0.05613999999999999
+    },
+    {
+      "name": "smart_factory.report.oee_report.generate",
+      "description": "smart_factory.report.oee_report.generate",
+      "usage_count": 836,
+      "task_success_rate": 0.8396,
+      "mean_execution_time_ms": 11006.0,
+      "tool_call_failure_rate": 0.0211,
+      "hallucination_rate": 0.05613999999999999
+    },
+    {
+      "name": "smart_factory.report.sensor_anomaly_report.generate",
+      "description": "smart_factory.report.sensor_anomaly_report.generate",
+      "usage_count": 836,
+      "task_success_rate": 0.8396,
+      "mean_execution_time_ms": 11006.0,
+      "tool_call_failure_rate": 0.0211,
+      "hallucination_rate": 0.05613999999999999
+    },
+    {
+      "name": "smart_factory.report.multimodal_evidence.generate",
+      "description": "smart_factory.report.multimodal_evidence.generate",
+      "usage_count": 836,
+      "task_success_rate": 0.8396,
+      "mean_execution_time_ms": 11006.0,
+      "tool_call_failure_rate": 0.0211,
+      "hallucination_rate": 0.05613999999999999
+    }
+  ],
+  "metadata": {
+    "agent_key": "A103",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-021",
+    "source_agent_type_name": "Smart Factory Report Generation Agent"
+  }
+}

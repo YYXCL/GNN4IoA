@@ -2,34 +2,73 @@
   "agent_id": 37,
   "capabilities": [
     {
-      "name": "复杂任务规划",
-      "description": "复杂任务规划",
-      "usage_count": 2,
-      "task_success_rate": 0.8200000000000001,
-      "mean_execution_time_ms": 1876.9741028731812,
-      "tool_call_failure_rate": 0.09000000000000001,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_home.energy.schedule.optimize",
+      "description": "smart_home.energy.schedule.optimize",
+      "usage_count": 316,
+      "task_success_rate": 0.9231,
+      "mean_execution_time_ms": 11138.0,
+      "tool_call_failure_rate": 0.0174,
+      "hallucination_rate": 0.026914999999999988
     },
     {
-      "name": "检索领域文档证据",
-      "description": "检索领域文档证据",
-      "usage_count": 2,
-      "task_success_rate": 0.8380000000000001,
-      "mean_execution_time_ms": 1815.4333295261176,
-      "tool_call_failure_rate": 0.08100000000000002,
-      "hallucination_rate": 0.08100000000000002
+      "name": "smart_home.energy.ev_charging.optimize",
+      "description": "smart_home.energy.ev_charging.optimize",
+      "usage_count": 316,
+      "task_success_rate": 0.9231,
+      "mean_execution_time_ms": 11138.0,
+      "tool_call_failure_rate": 0.0174,
+      "hallucination_rate": 0.026914999999999988
     },
     {
-      "name": "拆分复杂任务",
-      "description": "拆分复杂任务",
-      "usage_count": 1,
-      "task_success_rate": 0.8200000000000001,
-      "mean_execution_time_ms": 1868.9642894535054,
-      "tool_call_failure_rate": 0.19,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_home.energy.automation_rule.recommend",
+      "description": "smart_home.energy.automation_rule.recommend",
+      "usage_count": 316,
+      "task_success_rate": 0.9231,
+      "mean_execution_time_ms": 11138.0,
+      "tool_call_failure_rate": 0.0174,
+      "hallucination_rate": 0.026914999999999988
+    },
+    {
+      "name": "smart_home.energy.multi_device.optimize",
+      "description": "smart_home.energy.multi_device.optimize",
+      "usage_count": 316,
+      "task_success_rate": 0.9231,
+      "mean_execution_time_ms": 11138.0,
+      "tool_call_failure_rate": 0.0174,
+      "hallucination_rate": 0.026914999999999988
+    },
+    {
+      "name": "smart_home.energy.standby_power.detect",
+      "description": "smart_home.energy.standby_power.detect",
+      "usage_count": 316,
+      "task_success_rate": 0.9231,
+      "mean_execution_time_ms": 11138.0,
+      "tool_call_failure_rate": 0.0174,
+      "hallucination_rate": 0.026914999999999988
+    },
+    {
+      "name": "smart_home.energy.tariff_aware.schedule",
+      "description": "smart_home.energy.tariff_aware.schedule",
+      "usage_count": 316,
+      "task_success_rate": 0.9231,
+      "mean_execution_time_ms": 11138.0,
+      "tool_call_failure_rate": 0.0174,
+      "hallucination_rate": 0.026914999999999988
+    },
+    {
+      "name": "smart_home.energy.device_energy.rank",
+      "description": "smart_home.energy.device_energy.rank",
+      "usage_count": 316,
+      "task_success_rate": 0.9231,
+      "mean_execution_time_ms": 11138.0,
+      "tool_call_failure_rate": 0.0174,
+      "hallucination_rate": 0.026914999999999988
     }
   ],
   "metadata": {
-    "role": "planning"
+    "agent_key": "A038",
+    "scenario": "智慧家居",
+    "source_agent_type_id": "agent-008",
+    "source_agent_type_name": "Smart Home Energy Management Agent"
   }
 }

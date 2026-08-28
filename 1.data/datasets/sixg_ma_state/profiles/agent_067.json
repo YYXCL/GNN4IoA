@@ -2,16 +2,73 @@
   "agent_id": 67,
   "capabilities": [
     {
-      "name": "代码生成与执行",
-      "description": "代码生成与执行",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_factory.production.schedule.optimize",
+      "description": "smart_factory.production.schedule.optimize",
+      "usage_count": 465,
+      "task_success_rate": 0.8306,
+      "mean_execution_time_ms": 10400.0,
+      "tool_call_failure_rate": 0.0976,
+      "hallucination_rate": 0.059289999999999995
+    },
+    {
+      "name": "smart_factory.production.changeover.optimize",
+      "description": "smart_factory.production.changeover.optimize",
+      "usage_count": 465,
+      "task_success_rate": 0.8306,
+      "mean_execution_time_ms": 10400.0,
+      "tool_call_failure_rate": 0.0976,
+      "hallucination_rate": 0.059289999999999995
+    },
+    {
+      "name": "smart_factory.production.shift_performance.compare",
+      "description": "smart_factory.production.shift_performance.compare",
+      "usage_count": 465,
+      "task_success_rate": 0.8306,
+      "mean_execution_time_ms": 10400.0,
+      "tool_call_failure_rate": 0.0976,
+      "hallucination_rate": 0.059289999999999995
+    },
+    {
+      "name": "smart_factory.production.process_parameter.recommend",
+      "description": "smart_factory.production.process_parameter.recommend",
+      "usage_count": 465,
+      "task_success_rate": 0.8306,
+      "mean_execution_time_ms": 10400.0,
+      "tool_call_failure_rate": 0.0976,
+      "hallucination_rate": 0.059289999999999995
+    },
+    {
+      "name": "smart_factory.production.output.forecast",
+      "description": "smart_factory.production.output.forecast",
+      "usage_count": 465,
+      "task_success_rate": 0.8306,
+      "mean_execution_time_ms": 10400.0,
+      "tool_call_failure_rate": 0.0976,
+      "hallucination_rate": 0.059289999999999995
+    },
+    {
+      "name": "smart_factory.production.material_shortage.detect",
+      "description": "smart_factory.production.material_shortage.detect",
+      "usage_count": 465,
+      "task_success_rate": 0.8306,
+      "mean_execution_time_ms": 10400.0,
+      "tool_call_failure_rate": 0.0976,
+      "hallucination_rate": 0.059289999999999995
+    },
+    {
+      "name": "smart_factory.production.work_order.dispatch",
+      "description": "smart_factory.production.work_order.dispatch",
+      "usage_count": 465,
+      "task_success_rate": 0.8306,
+      "mean_execution_time_ms": 10400.0,
+      "tool_call_failure_rate": 0.0976,
+      "hallucination_rate": 0.059289999999999995
     }
   ],
   "metadata": {
-    "role": "coding"
+    "agent_key": "A068",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-014",
+    "source_agent_type_name": "Smart Factory Production Management Agent"
   }
 }

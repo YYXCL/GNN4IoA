@@ -2,16 +2,55 @@
   "agent_id": 5,
   "capabilities": [
     {
-      "name": "多模态视觉分析",
-      "description": "多模态视觉分析",
-      "usage_count": 2,
-      "task_success_rate": 0.8200000000000001,
-      "mean_execution_time_ms": 3058.3485219963477,
-      "tool_call_failure_rate": 0.09000000000000001,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_home.image.room_scene.recognize",
+      "description": "smart_home.image.room_scene.recognize",
+      "usage_count": 753,
+      "task_success_rate": 0.9507,
+      "mean_execution_time_ms": 8604.0,
+      "tool_call_failure_rate": 0.064,
+      "hallucination_rate": 0.017255000000000003
+    },
+    {
+      "name": "smart_home.image.object.recognize",
+      "description": "smart_home.image.object.recognize",
+      "usage_count": 753,
+      "task_success_rate": 0.9507,
+      "mean_execution_time_ms": 8604.0,
+      "tool_call_failure_rate": 0.064,
+      "hallucination_rate": 0.017255000000000003
+    },
+    {
+      "name": "smart_home.image.food_item.recognize",
+      "description": "smart_home.image.food_item.recognize",
+      "usage_count": 753,
+      "task_success_rate": 0.9507,
+      "mean_execution_time_ms": 8604.0,
+      "tool_call_failure_rate": 0.064,
+      "hallucination_rate": 0.017255000000000003
+    },
+    {
+      "name": "smart_home.image.medicine_label.recognize",
+      "description": "smart_home.image.medicine_label.recognize",
+      "usage_count": 753,
+      "task_success_rate": 0.9507,
+      "mean_execution_time_ms": 8604.0,
+      "tool_call_failure_rate": 0.064,
+      "hallucination_rate": 0.017255000000000003
+    },
+    {
+      "name": "smart_home.image.water_leak_evidence.detect",
+      "description": "smart_home.image.water_leak_evidence.detect",
+      "usage_count": 753,
+      "task_success_rate": 0.9507,
+      "mean_execution_time_ms": 8604.0,
+      "tool_call_failure_rate": 0.064,
+      "hallucination_rate": 0.017255000000000003
     }
   ],
   "metadata": {
-    "role": "vision"
+    "agent_key": "A006",
+    "scenario": "智慧家居",
+    "source_agent_type_id": "agent-002",
+    "source_agent_type_name": "Image Understanding Agent"
   }
 }

@@ -53,6 +53,15 @@ class GraphEvent:
 class TaskRequirement:
     values: Tensor
     capability_embedding: Tensor
+    description: str = ""
+    required_capability: str = ""
+    # DAG 是条件化 query 序列，不属于系统图节点。
+    dag_descriptions: tuple[str, ...] = ()
+    dag_required_capabilities: tuple[str, ...] = ()
+    dag_qos: Optional[Tensor] = None
+    dag_edge_index: Optional[Tensor] = None
+    dag_current_index: int = 0
+    complex_task_id: str = ""
 
 
 @dataclass
@@ -64,6 +73,10 @@ class QueryGraph:
     edge_timestamp: Tensor
     edge_confidence: Tensor
     query_time: float
+    # 与 candidate_ids 等长。V2 用于任务文本和智能体能力文本的语义匹配。
+    candidate_texts: tuple[str, ...] = ()
+    # 必需 Skill 是可执行性硬约束，不依赖文本相似度猜测。
+    candidate_skill_mask: Optional[Tensor] = None
 
 
 @dataclass

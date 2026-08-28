@@ -1,73 +1,73 @@
-﻿任务id,任务具体提示词,实验要求,准确率要求
-T0001,在智慧家居场景中，从家庭摄像头视频中检测人员出现、位置和活动状态，用于家庭安防、照护和房间占用分析。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.video.person.detect；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0002,在智慧家居场景中，检测家庭或门口区域中被遗留的物品，用于包裹、危险物或异常物品识别。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.video.object_left_behind.detect；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 5 秒。,0.94
-T0003,在智慧工厂场景中，生成工厂视频中的 event timeline相关报告、摘要、时间线或结构化输出。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.video.event_timeline.generate；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0004,在智慧家居场景中，识别图像中的房间类型和家庭场景，例如客厅、卧室、厨房、卫生间或门口区域。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.image.room_scene.recognize；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0005,在智慧家居场景中，分析图像时间、来源、设备信息和拍摄条件等元数据，用于证据整理和溯源。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.image.metadata.analyze；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0006,在智慧工厂场景中，回答用户关于Image Understanding Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.image.qa.answer；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0007,在智慧家居场景中，检测疑似跌倒、撞击或重物落地声音，用于辅助判断跌倒事件。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.audio.fall_sound.detect；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 5 秒。,0.94
-T0008,在智慧工厂场景中，检测工厂音频中的 abnormal sound相关事件或异常，并返回事件类型、位置、时间和置信度。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.audio.abnormal_sound.detect；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0009,在智慧工厂场景中，基于异常噪声、轴承噪声、电机噪声、气漏声、碰撞声等音频检测结果，给出基础声学故障风险等级、依据和建议后续检查项。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.audio.fault_risk.assess；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0010,在智慧家居场景中，查询家庭智能设备的在线状态、运行状态、电量、连接状态和基础设备信息。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.iot.device.status.query；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0011,在智慧工厂场景中，采集工厂 IoT 设备中的 telemetry数据，并整理为后续监测、分析或诊断所需的结构化输入。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.iot.telemetry.collect；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0012,在智慧家居场景中，查询智能门锁的锁定状态、在线状态、电量、异常告警、最后操作时间和安全联动状态。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.iot.door_lock.status.query；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 5 秒。,0.94
-T0013,在智慧家居场景中，监测家庭各房间温度变化，识别过热、过冷或异常温度状态。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.sensor.temperature.monitor；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0014,在智慧家居场景中，回答用户关于家庭传感器状态、数值变化、异常和趋势的问题。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.sensor.qa.answer；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0015,在智慧工厂场景中，回答用户关于Sensor Monitoring Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.sensor.qa.answer；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0016,在智慧家居场景中，综合家庭安防数据检测疑似入侵事件，并输出风险等级和证据摘要。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.security.intrusion.detect；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 5 秒。,0.94
-T0017,在智慧家居场景中，识别由家人、宠物、天气、设备误触发等导致的安防误报。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.security.false_alarm.filter；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 5 秒。,0.94
-T0018,在智慧家居场景中，回答用户关于家庭安防状态、事件记录、风险原因和处理建议的问题。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.security.qa.answer；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0019,在智慧家居场景中，监测老人日常活动频率、活动区域和活动规律，用于居家照护评估。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.healthcare.elderly_activity.monitor；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0020,在智慧家居场景中，在跌倒、呼救或健康异常时准备紧急联系信息和事件摘要。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.healthcare.emergency_call.prepare；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 5 秒。,0.94
-T0021,在智慧家居场景中，回答用户关于居家照护、活动状态、睡眠质量、风险评分和健康提醒的问题。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.healthcare.qa.answer；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0022,在智慧家居场景中，监测家庭整体能耗和分时用电变化，用于掌握家庭能源使用状态。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.energy.consumption.monitor；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0023,在智慧家居场景中，分析家庭光伏发电量、发电趋势和自用比例。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.energy.solar_generation.analyze；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0024,在智慧家居场景中，回答用户关于家庭能耗、用电费用、节能建议和设备耗电的问题。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.energy.qa.answer；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0025,在智慧家居场景中，根据房间状态、用户偏好和环境条件生成温度调节建议或控制策略。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.environment.temperature.adjust；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.9
-T0026,在智慧家居场景中，评估儿童房的温湿度、空气质量、光照和噪声状态，并生成优化建议。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.environment.child_room.assess；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0027,在智慧家居场景中，回答用户关于家庭环境、舒适度、空气质量、噪声和调节建议的问题。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.environment.qa.answer；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0028,在智慧家居场景中，创建家庭自动化场景，例如回家、离家、睡眠、观影和节能模式。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.automation.scene.create；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0029,在智慧家居场景中，基于家庭生活规律推荐新的自动化规则或优化已有规则。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.automation.routine.recommend；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0030,在智慧家居场景中，回答用户关于家庭自动化规则、场景模式、触发条件和执行记录的问题。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.automation.qa.answer；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0031,在智慧家居场景中，融合视频、音频、人体传感器和活动状态信息，验证是否发生真实跌倒事件。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.multimodal.fall_event.verify；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 5 秒。,0.94
-T0032,在智慧家居场景中，融合语音指令和视觉上下文，识别用户指向的设备或场景化控制目标。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.multimodal.voice_video_command.fuse；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.9
-T0033,在智慧家居场景中，基于多源睡眠环境评估结果生成温度、湿度、噪声、光照、通风和空气质量方面的优化建议。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.multimodal.sleep_environment.optimize；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0034,在智慧家居场景中，生成家庭整体状态报告，涵盖安全、环境、设备、能耗和照护状态。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.report.home_status.generate；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0035,在智慧家居场景中，生成家庭节能报告，包括节能潜力、优化策略和预期节省成本。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_home.report.energy_saving.generate；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0036,在应急救援场景中，将上游 agent 的结构化识别、检测、评估和融合结果整理为标准 JSON、摘要或简短报告，适用于跨任务后处理。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=global.report.json.generate；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0037,在智慧工厂场景中，对质量控制中的 defect进行分类，输出类别标签、置信度和依据说明。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.quality.defect.classify；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.9
-T0038,在智慧工厂场景中，分析质量控制中的 process capability相关数据，提取关键指标、趋势和异常信息。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.quality.process_capability.analyze；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.9
-T0039,在智慧工厂场景中，回答用户关于Smart Factory Quality Control Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.quality.qa.answer；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.9
-T0040,在智慧工厂场景中，优化生产管理中的 schedule方案、调度或资源配置，并输出推荐结果。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.production.schedule.optimize；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0041,在智慧工厂场景中，计算生产管理中的 kpi相关指标，并输出数值、趋势和解释。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.production.kpi.calculate；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0042,在智慧工厂场景中，回答用户关于Smart Factory Production Management Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.production.qa.answer；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0043,在智慧工厂场景中，处理设备维护中的相关任务，并输出结构化结果。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.maintenance.predict_failure；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0044,在智慧工厂场景中，生成设备维护中的 inspection plan相关报告、摘要、时间线或结构化输出。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.maintenance.inspection_plan.generate；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0045,在智慧工厂场景中，结合维护历史、设备健康、传感器趋势、声学异常和工单信息判断是否需要预防性维护，并给出优先级和依据。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.maintenance.preventive_decision.assess；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0046,在智慧工厂场景中，检测安全监管中的 PPE相关事件或异常，并返回事件类型、位置、时间和置信度。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.safety.ppe.detect；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 5 秒。,0.94
-T0047,在智慧工厂场景中，生成安全监管中的 violation report相关报告、摘要、时间线或结构化输出。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.safety.violation_report.generate；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 5 秒。,0.94
-T0048,在智慧工厂场景中，回答用户关于Smart Factory Safety Monitoring Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.safety.qa.answer；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 5 秒。,0.94
-T0049,在智慧工厂场景中，监测工业机器人中的 robot status状态，识别异常变化并输出结构化监测结果。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.robotics.robot.status.monitor；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0050,在智慧工厂场景中，优化工业机器人中的 robot speed方案、调度或资源配置，并输出推荐结果。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.robotics.robot_speed.optimize；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0051,在智慧工厂场景中，回答用户关于Smart Factory Robotics Coordination Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.robotics.qa.answer；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0052,在智慧工厂场景中，监测工厂能源中的 consumption状态，识别异常变化并输出结构化监测结果。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.energy.consumption.monitor；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0053,在智慧工厂场景中，检测工厂能源中的 compressed air loss相关事件或异常，并返回事件类型、位置、时间和置信度。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.energy.compressed_air_loss.detect；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0054,在智慧工厂场景中，回答用户关于Smart Factory Energy Management Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.energy.qa.answer；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0055,在智慧工厂场景中，查询厂内物流中的 material inventory相关信息，并返回当前状态、历史记录或匹配结果。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.logistics.material_inventory.query；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0056,在智慧工厂场景中，计算厂内物流中的 buffer stock相关指标，并输出数值、趋势和解释。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.logistics.buffer_stock.calculate；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0057,在智慧工厂场景中，回答用户关于Smart Factory Logistics Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.logistics.qa.answer；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0058,在智慧工厂场景中，融合多模态诊断中的 defect evidence多源证据，形成统一判断、风险评分或事件结论。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.multimodal.defect_evidence.fuse；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0059,在智慧工厂场景中，融合多模态诊断中的 robot quality feedback多源证据，形成统一判断、风险评分或事件结论。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.multimodal.robot_quality_feedback.fuse；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0060,在智慧工厂场景中，融合音频、传感器、IoT、视频和维护数据，对设备故障可能性进行风险评分、证据链生成和处置建议输出。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.multimodal.fault_risk.assess；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0061,在智慧工厂场景中，生成工厂报告中的 quality report相关报告、摘要、时间线或结构化输出。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.report.quality_report.generate；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0062,在智慧工厂场景中，生成工厂报告中的 defect analysis相关报告、摘要、时间线或结构化输出。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.report.defect_analysis.generate；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0063,在智慧工厂场景中，生成工厂报告中的 executive summary相关报告、摘要、时间线或结构化输出。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_factory.report.executive_summary.generate；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0064,在应急救援场景中，检测门禁区域的尾随闯入行为，识别未经授权跟随授权人员进入的事件并返回告警信息。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_building.security.tailgating.detect；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 5 秒。,0.94
-T0065,在应急救援场景中，融合门禁、视频、电梯、人流、告警和巡检结果，生成楼宇安防事件时间线、证据链和风险说明。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_building.security.event_timeline.generate；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 5 秒。,0.94
-T0066,在应急救援场景中，对楼宇视频、门禁、电梯、人流、消防联动和安防告警进行多源证据融合，判断异常通行、人员聚集和安全事件风险。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_building.security.multisource_risk.assess；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 5 秒。,0.94
-T0067,在应急救援场景中，基于楼宇各区域的人员密度、室内温湿度和室外气候数据，动态优化中央空调的运行参数和分区调节策略。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_building.facility.hvac.optimize；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0068,在应急救援场景中，监测楼宇室内CO₂、PM2.5、TVOC和温湿度等空气质量指标，识别超标区域并触发新风系统联动。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_building.facility.indoor_air_quality.monitor；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0069,在应急救援场景中，融合会议预约、会议设备状态、人员到场和室内环境数据，判断会议室是否可正常使用。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_building.meeting_room.availability.assess；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0070,在应急救援场景中，基于车牌识别和白名单规则，控制园区出入口闸机的开放与拒绝，记录每辆车的进出时间和权限依据。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_campus.vehicle.entry_exit.control；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.9
-T0071,在应急救援场景中，分析园区各路段的车流量变化规律，识别高峰期拥堵路段，为园区交通组织优化提供数据支撑。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_campus.vehicle.traffic_flow.analyze；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
-T0072,在应急救援场景中，回答用户关于园区车辆通行、停车状态、违规记录、充电桩和交通拥堵情况的问题，并基于相关数据提供解释。请给出结构化结果、关键证据和置信度。,候选智能体必须包含 skill=smart_campus.vehicle.qa.answer；结果需可解析为 JSON；关键字段完整率不低于 95%；端到端完成时间不超过 15 秒。,0.86
+﻿任务id,任务具体提示词,必需的Skill id,输出结果的要求,字段完整率要求,端到端完成时延要求(s),准确率要求
+T0001,在智慧家居场景中，从家庭摄像头视频中检测人员出现、位置和活动状态，用于家庭安防、照护和房间占用分析。请给出结构化结果、关键证据和置信度。,smart_home.video.person.detect,JSON,0.95,15,0.86
+T0002,在智慧家居场景中，检测家庭或门口区域中被遗留的物品，用于包裹、危险物或异常物品识别。请给出结构化结果、关键证据和置信度。,smart_home.video.object_left_behind.detect,JSON,0.95,5,0.94
+T0003,在智慧工厂场景中，生成工厂视频中的 event timeline相关报告、摘要、时间线或结构化输出。请给出结构化结果、关键证据和置信度。,smart_factory.video.event_timeline.generate,JSON,0.95,15,0.86
+T0004,在智慧家居场景中，识别图像中的房间类型和家庭场景，例如客厅、卧室、厨房、卫生间或门口区域。请给出结构化结果、关键证据和置信度。,smart_home.image.room_scene.recognize,JSON,0.95,15,0.86
+T0005,在智慧家居场景中，分析图像时间、来源、设备信息和拍摄条件等元数据，用于证据整理和溯源。请给出结构化结果、关键证据和置信度。,smart_home.image.metadata.analyze,JSON,0.95,15,0.86
+T0006,在智慧工厂场景中，回答用户关于Image Understanding Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。请给出结构化结果、关键证据和置信度。,smart_factory.image.qa.answer,JSON,0.95,15,0.86
+T0007,在智慧家居场景中，检测疑似跌倒、撞击或重物落地声音，用于辅助判断跌倒事件。请给出结构化结果、关键证据和置信度。,smart_home.audio.fall_sound.detect,JSON,0.95,5,0.94
+T0008,在智慧工厂场景中，检测工厂音频中的 abnormal sound相关事件或异常，并返回事件类型、位置、时间和置信度。请给出结构化结果、关键证据和置信度。,smart_factory.audio.abnormal_sound.detect,JSON,0.95,15,0.86
+T0009,在智慧工厂场景中，基于异常噪声、轴承噪声、电机噪声、气漏声、碰撞声等音频检测结果，给出基础声学故障风险等级、依据和建议后续检查项。请给出结构化结果、关键证据和置信度。,smart_factory.audio.fault_risk.assess,JSON,0.95,15,0.86
+T0010,在智慧家居场景中，查询家庭智能设备的在线状态、运行状态、电量、连接状态和基础设备信息。请给出结构化结果、关键证据和置信度。,smart_home.iot.device.status.query,JSON,0.95,15,0.86
+T0011,在智慧工厂场景中，采集工厂 IoT 设备中的 telemetry数据，并整理为后续监测、分析或诊断所需的结构化输入。请给出结构化结果、关键证据和置信度。,smart_factory.iot.telemetry.collect,JSON,0.95,15,0.86
+T0012,在智慧家居场景中，查询智能门锁的锁定状态、在线状态、电量、异常告警、最后操作时间和安全联动状态。请给出结构化结果、关键证据和置信度。,smart_home.iot.door_lock.status.query,JSON,0.95,5,0.94
+T0013,在智慧家居场景中，监测家庭各房间温度变化，识别过热、过冷或异常温度状态。请给出结构化结果、关键证据和置信度。,smart_home.sensor.temperature.monitor,JSON,0.95,15,0.86
+T0014,在智慧家居场景中，回答用户关于家庭传感器状态、数值变化、异常和趋势的问题。请给出结构化结果、关键证据和置信度。,smart_home.sensor.qa.answer,JSON,0.95,15,0.86
+T0015,在智慧工厂场景中，回答用户关于Sensor Monitoring Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。请给出结构化结果、关键证据和置信度。,smart_factory.sensor.qa.answer,JSON,0.95,15,0.86
+T0016,在智慧家居场景中，综合家庭安防数据检测疑似入侵事件，并输出风险等级和证据摘要。请给出结构化结果、关键证据和置信度。,smart_home.security.intrusion.detect,JSON,0.95,5,0.94
+T0017,在智慧家居场景中，识别由家人、宠物、天气、设备误触发等导致的安防误报。请给出结构化结果、关键证据和置信度。,smart_home.security.false_alarm.filter,JSON,0.95,5,0.94
+T0018,在智慧家居场景中，回答用户关于家庭安防状态、事件记录、风险原因和处理建议的问题。请给出结构化结果、关键证据和置信度。,smart_home.security.qa.answer,JSON,0.95,15,0.86
+T0019,在智慧家居场景中，监测老人日常活动频率、活动区域和活动规律，用于居家照护评估。请给出结构化结果、关键证据和置信度。,smart_home.healthcare.elderly_activity.monitor,JSON,0.95,15,0.86
+T0020,在智慧家居场景中，在跌倒、呼救或健康异常时准备紧急联系信息和事件摘要。请给出结构化结果、关键证据和置信度。,smart_home.healthcare.emergency_call.prepare,JSON,0.95,5,0.94
+T0021,在智慧家居场景中，回答用户关于居家照护、活动状态、睡眠质量、风险评分和健康提醒的问题。请给出结构化结果、关键证据和置信度。,smart_home.healthcare.qa.answer,JSON,0.95,15,0.86
+T0022,在智慧家居场景中，监测家庭整体能耗和分时用电变化，用于掌握家庭能源使用状态。请给出结构化结果、关键证据和置信度。,smart_home.energy.consumption.monitor,JSON,0.95,15,0.86
+T0023,在智慧家居场景中，分析家庭光伏发电量、发电趋势和自用比例。请给出结构化结果、关键证据和置信度。,smart_home.energy.solar_generation.analyze,JSON,0.95,15,0.86
+T0024,在智慧家居场景中，回答用户关于家庭能耗、用电费用、节能建议和设备耗电的问题。请给出结构化结果、关键证据和置信度。,smart_home.energy.qa.answer,JSON,0.95,15,0.86
+T0025,在智慧家居场景中，根据房间状态、用户偏好和环境条件生成温度调节建议或控制策略。请给出结构化结果、关键证据和置信度。,smart_home.environment.temperature.adjust,JSON,0.95,15,0.9
+T0026,在智慧家居场景中，评估儿童房的温湿度、空气质量、光照和噪声状态，并生成优化建议。请给出结构化结果、关键证据和置信度。,smart_home.environment.child_room.assess,JSON,0.95,15,0.86
+T0027,在智慧家居场景中，回答用户关于家庭环境、舒适度、空气质量、噪声和调节建议的问题。请给出结构化结果、关键证据和置信度。,smart_home.environment.qa.answer,JSON,0.95,15,0.86
+T0028,在智慧家居场景中，创建家庭自动化场景，例如回家、离家、睡眠、观影和节能模式。请给出结构化结果、关键证据和置信度。,smart_home.automation.scene.create,JSON,0.95,15,0.86
+T0029,在智慧家居场景中，基于家庭生活规律推荐新的自动化规则或优化已有规则。请给出结构化结果、关键证据和置信度。,smart_home.automation.routine.recommend,JSON,0.95,15,0.86
+T0030,在智慧家居场景中，回答用户关于家庭自动化规则、场景模式、触发条件和执行记录的问题。请给出结构化结果、关键证据和置信度。,smart_home.automation.qa.answer,JSON,0.95,15,0.86
+T0031,在智慧家居场景中，融合视频、音频、人体传感器和活动状态信息，验证是否发生真实跌倒事件。请给出结构化结果、关键证据和置信度。,smart_home.multimodal.fall_event.verify,JSON,0.95,5,0.94
+T0032,在智慧家居场景中，融合语音指令和视觉上下文，识别用户指向的设备或场景化控制目标。请给出结构化结果、关键证据和置信度。,smart_home.multimodal.voice_video_command.fuse,JSON,0.95,15,0.9
+T0033,在智慧家居场景中，基于多源睡眠环境评估结果生成温度、湿度、噪声、光照、通风和空气质量方面的优化建议。请给出结构化结果、关键证据和置信度。,smart_home.multimodal.sleep_environment.optimize,JSON,0.95,15,0.86
+T0034,在智慧家居场景中，生成家庭整体状态报告，涵盖安全、环境、设备、能耗和照护状态。请给出结构化结果、关键证据和置信度。,smart_home.report.home_status.generate,JSON,0.95,15,0.86
+T0035,在智慧家居场景中，生成家庭节能报告，包括节能潜力、优化策略和预期节省成本。请给出结构化结果、关键证据和置信度。,smart_home.report.energy_saving.generate,JSON,0.95,15,0.86
+T0036,在应急救援场景中，将上游 agent 的结构化识别、检测、评估和融合结果整理为标准 JSON、摘要或简短报告，适用于跨任务后处理。请给出结构化结果、关键证据和置信度。,global.report.json.generate,JSON,0.95,15,0.86
+T0037,在智慧工厂场景中，对质量控制中的 defect进行分类，输出类别标签、置信度和依据说明。请给出结构化结果、关键证据和置信度。,smart_factory.quality.defect.classify,JSON,0.95,15,0.9
+T0038,在智慧工厂场景中，分析质量控制中的 process capability相关数据，提取关键指标、趋势和异常信息。请给出结构化结果、关键证据和置信度。,smart_factory.quality.process_capability.analyze,JSON,0.95,15,0.9
+T0039,在智慧工厂场景中，回答用户关于Smart Factory Quality Control Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。请给出结构化结果、关键证据和置信度。,smart_factory.quality.qa.answer,JSON,0.95,15,0.9
+T0040,在智慧工厂场景中，优化生产管理中的 schedule方案、调度或资源配置，并输出推荐结果。请给出结构化结果、关键证据和置信度。,smart_factory.production.schedule.optimize,JSON,0.95,15,0.86
+T0041,在智慧工厂场景中，计算生产管理中的 kpi相关指标，并输出数值、趋势和解释。请给出结构化结果、关键证据和置信度。,smart_factory.production.kpi.calculate,JSON,0.95,15,0.86
+T0042,在智慧工厂场景中，回答用户关于Smart Factory Production Management Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。请给出结构化结果、关键证据和置信度。,smart_factory.production.qa.answer,JSON,0.95,15,0.86
+T0043,在智慧工厂场景中，处理设备维护中的相关任务，并输出结构化结果。请给出结构化结果、关键证据和置信度。,smart_factory.maintenance.predict_failure,JSON,0.95,15,0.86
+T0044,在智慧工厂场景中，生成设备维护中的 inspection plan相关报告、摘要、时间线或结构化输出。请给出结构化结果、关键证据和置信度。,smart_factory.maintenance.inspection_plan.generate,JSON,0.95,15,0.86
+T0045,在智慧工厂场景中，结合维护历史、设备健康、传感器趋势、声学异常和工单信息判断是否需要预防性维护，并给出优先级和依据。请给出结构化结果、关键证据和置信度。,smart_factory.maintenance.preventive_decision.assess,JSON,0.95,15,0.86
+T0046,在智慧工厂场景中，检测安全监管中的 PPE相关事件或异常，并返回事件类型、位置、时间和置信度。请给出结构化结果、关键证据和置信度。,smart_factory.safety.ppe.detect,JSON,0.95,5,0.94
+T0047,在智慧工厂场景中，生成安全监管中的 violation report相关报告、摘要、时间线或结构化输出。请给出结构化结果、关键证据和置信度。,smart_factory.safety.violation_report.generate,JSON,0.95,5,0.94
+T0048,在智慧工厂场景中，回答用户关于Smart Factory Safety Monitoring Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。请给出结构化结果、关键证据和置信度。,smart_factory.safety.qa.answer,JSON,0.95,5,0.94
+T0049,在智慧工厂场景中，监测工业机器人中的 robot status状态，识别异常变化并输出结构化监测结果。请给出结构化结果、关键证据和置信度。,smart_factory.robotics.robot.status.monitor,JSON,0.95,15,0.86
+T0050,在智慧工厂场景中，优化工业机器人中的 robot speed方案、调度或资源配置，并输出推荐结果。请给出结构化结果、关键证据和置信度。,smart_factory.robotics.robot_speed.optimize,JSON,0.95,15,0.86
+T0051,在智慧工厂场景中，回答用户关于Smart Factory Robotics Coordination Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。请给出结构化结果、关键证据和置信度。,smart_factory.robotics.qa.answer,JSON,0.95,15,0.86
+T0052,在智慧工厂场景中，监测工厂能源中的 consumption状态，识别异常变化并输出结构化监测结果。请给出结构化结果、关键证据和置信度。,smart_factory.energy.consumption.monitor,JSON,0.95,15,0.86
+T0053,在智慧工厂场景中，检测工厂能源中的 compressed air loss相关事件或异常，并返回事件类型、位置、时间和置信度。请给出结构化结果、关键证据和置信度。,smart_factory.energy.compressed_air_loss.detect,JSON,0.95,15,0.86
+T0054,在智慧工厂场景中，回答用户关于Smart Factory Energy Management Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。请给出结构化结果、关键证据和置信度。,smart_factory.energy.qa.answer,JSON,0.95,15,0.86
+T0055,在智慧工厂场景中，查询厂内物流中的 material inventory相关信息，并返回当前状态、历史记录或匹配结果。请给出结构化结果、关键证据和置信度。,smart_factory.logistics.material_inventory.query,JSON,0.95,15,0.86
+T0056,在智慧工厂场景中，计算厂内物流中的 buffer stock相关指标，并输出数值、趋势和解释。请给出结构化结果、关键证据和置信度。,smart_factory.logistics.buffer_stock.calculate,JSON,0.95,15,0.86
+T0057,在智慧工厂场景中，回答用户关于Smart Factory Logistics Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。请给出结构化结果、关键证据和置信度。,smart_factory.logistics.qa.answer,JSON,0.95,15,0.86
+T0058,在智慧工厂场景中，融合多模态诊断中的 defect evidence多源证据，形成统一判断、风险评分或事件结论。请给出结构化结果、关键证据和置信度。,smart_factory.multimodal.defect_evidence.fuse,JSON,0.95,15,0.86
+T0059,在智慧工厂场景中，融合多模态诊断中的 robot quality feedback多源证据，形成统一判断、风险评分或事件结论。请给出结构化结果、关键证据和置信度。,smart_factory.multimodal.robot_quality_feedback.fuse,JSON,0.95,15,0.86
+T0060,在智慧工厂场景中，融合音频、传感器、IoT、视频和维护数据，对设备故障可能性进行风险评分、证据链生成和处置建议输出。请给出结构化结果、关键证据和置信度。,smart_factory.multimodal.fault_risk.assess,JSON,0.95,15,0.86
+T0061,在智慧工厂场景中，生成工厂报告中的 quality report相关报告、摘要、时间线或结构化输出。请给出结构化结果、关键证据和置信度。,smart_factory.report.quality_report.generate,JSON,0.95,15,0.86
+T0062,在智慧工厂场景中，生成工厂报告中的 defect analysis相关报告、摘要、时间线或结构化输出。请给出结构化结果、关键证据和置信度。,smart_factory.report.defect_analysis.generate,JSON,0.95,15,0.86
+T0063,在智慧工厂场景中，生成工厂报告中的 executive summary相关报告、摘要、时间线或结构化输出。请给出结构化结果、关键证据和置信度。,smart_factory.report.executive_summary.generate,JSON,0.95,15,0.86
+T0064,在应急救援场景中，检测门禁区域的尾随闯入行为，识别未经授权跟随授权人员进入的事件并返回告警信息。请给出结构化结果、关键证据和置信度。,smart_building.security.tailgating.detect,JSON,0.95,5,0.94
+T0065,在应急救援场景中，融合门禁、视频、电梯、人流、告警和巡检结果，生成楼宇安防事件时间线、证据链和风险说明。请给出结构化结果、关键证据和置信度。,smart_building.security.event_timeline.generate,JSON,0.95,5,0.94
+T0066,在应急救援场景中，对楼宇视频、门禁、电梯、人流、消防联动和安防告警进行多源证据融合，判断异常通行、人员聚集和安全事件风险。请给出结构化结果、关键证据和置信度。,smart_building.security.multisource_risk.assess,JSON,0.95,5,0.94
+T0067,在应急救援场景中，基于楼宇各区域的人员密度、室内温湿度和室外气候数据，动态优化中央空调的运行参数和分区调节策略。请给出结构化结果、关键证据和置信度。,smart_building.facility.hvac.optimize,JSON,0.95,15,0.86
+T0068,在应急救援场景中，监测楼宇室内CO₂、PM2.5、TVOC和温湿度等空气质量指标，识别超标区域并触发新风系统联动。请给出结构化结果、关键证据和置信度。,smart_building.facility.indoor_air_quality.monitor,JSON,0.95,15,0.86
+T0069,在应急救援场景中，融合会议预约、会议设备状态、人员到场和室内环境数据，判断会议室是否可正常使用。请给出结构化结果、关键证据和置信度。,smart_building.meeting_room.availability.assess,JSON,0.95,15,0.86
+T0070,在应急救援场景中，基于车牌识别和白名单规则，控制园区出入口闸机的开放与拒绝，记录每辆车的进出时间和权限依据。请给出结构化结果、关键证据和置信度。,smart_campus.vehicle.entry_exit.control,JSON,0.95,15,0.9
+T0071,在应急救援场景中，分析园区各路段的车流量变化规律，识别高峰期拥堵路段，为园区交通组织优化提供数据支撑。请给出结构化结果、关键证据和置信度。,smart_campus.vehicle.traffic_flow.analyze,JSON,0.95,15,0.86
+T0072,在应急救援场景中，回答用户关于园区车辆通行、停车状态、违规记录、充电桩和交通拥堵情况的问题，并基于相关数据提供解释。请给出结构化结果、关键证据和置信度。,smart_campus.vehicle.qa.answer,JSON,0.95,15,0.86

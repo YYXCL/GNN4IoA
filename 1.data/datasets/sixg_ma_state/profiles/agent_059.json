@@ -2,25 +2,64 @@
   "agent_id": 59,
   "capabilities": [
     {
-      "name": "多模态视觉分析",
-      "description": "多模态视觉分析",
-      "usage_count": 2,
-      "task_success_rate": 0.8200000000000001,
-      "mean_execution_time_ms": 1914.9127515596858,
-      "tool_call_failure_rate": 0.09000000000000001,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_home.report.qa.answer",
+      "description": "smart_home.report.qa.answer",
+      "usage_count": 347,
+      "task_success_rate": 0.8991,
+      "mean_execution_time_ms": 10427.0,
+      "tool_call_failure_rate": 0.0415,
+      "hallucination_rate": 0.03531499999999999
     },
     {
-      "name": "判断单个视频帧是否有火灾",
-      "description": "判断单个视频帧是否有火灾",
-      "usage_count": 1,
-      "task_success_rate": 0.8200000000000001,
-      "mean_execution_time_ms": 1874.9303677672208,
-      "tool_call_failure_rate": 0.09000000000000001,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_home.report.security_log.generate",
+      "description": "smart_home.report.security_log.generate",
+      "usage_count": 347,
+      "task_success_rate": 0.8991,
+      "mean_execution_time_ms": 10427.0,
+      "tool_call_failure_rate": 0.0415,
+      "hallucination_rate": 0.03531499999999999
+    },
+    {
+      "name": "smart_home.report.automation_log.generate",
+      "description": "smart_home.report.automation_log.generate",
+      "usage_count": 347,
+      "task_success_rate": 0.8991,
+      "mean_execution_time_ms": 10427.0,
+      "tool_call_failure_rate": 0.0415,
+      "hallucination_rate": 0.03531499999999999
+    },
+    {
+      "name": "smart_home.report.multimodal_evidence.generate",
+      "description": "smart_home.report.multimodal_evidence.generate",
+      "usage_count": 347,
+      "task_success_rate": 0.8991,
+      "mean_execution_time_ms": 10427.0,
+      "tool_call_failure_rate": 0.0415,
+      "hallucination_rate": 0.03531499999999999
+    },
+    {
+      "name": "smart_home.report.healthcare_summary.generate",
+      "description": "smart_home.report.healthcare_summary.generate",
+      "usage_count": 347,
+      "task_success_rate": 0.8991,
+      "mean_execution_time_ms": 10427.0,
+      "tool_call_failure_rate": 0.0415,
+      "hallucination_rate": 0.03531499999999999
+    },
+    {
+      "name": "smart_home.report.energy_usage.generate",
+      "description": "smart_home.report.energy_usage.generate",
+      "usage_count": 347,
+      "task_success_rate": 0.8991,
+      "mean_execution_time_ms": 10427.0,
+      "tool_call_failure_rate": 0.0415,
+      "hallucination_rate": 0.03531499999999999
     }
   ],
   "metadata": {
-    "role": "vision"
+    "agent_key": "A060",
+    "scenario": "智慧家居",
+    "source_agent_type_id": "agent-012",
+    "source_agent_type_name": "Smart Home Report Generation Agent"
   }
 }

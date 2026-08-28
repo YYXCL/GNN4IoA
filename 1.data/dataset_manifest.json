@@ -1,5 +1,5 @@
 {
-  "dataset_version": "1.0.0",
+  "dataset_version": "1.1.0",
   "generation_seed": 20260814,
   "counts": {
     "agents": 120,
@@ -28,6 +28,17 @@
     "memory_capacity": "synthetic fixed capacities 512/768/1024 GB, used only to estimate used memory",
     "gpu_memory_capacity": "per-node maximum observed aggregate rounded up to a multiple of 64 GiB",
     "interpolation": "only missing memory utilization and GPU memory usage are interpolated within each node"
+  },
+  "training_jsonl": {
+    "output_dir": "datasets\\sixg_ma_state",
+    "samples": 72,
+    "splits": {
+      "train": 54,
+      "val": 9,
+      "test": 9
+    },
+    "window_size_timestamps": 16,
+    "window_overlap": false
   },
   "link_column_6_interpretation": "用户重复写了网络丢包；按模型现有 EDGE_METRICS 将第6列定义为网络抖动(ms)。",
   "files": {

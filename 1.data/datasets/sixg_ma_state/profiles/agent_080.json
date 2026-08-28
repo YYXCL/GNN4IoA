@@ -2,34 +2,55 @@
   "agent_id": 80,
   "capabilities": [
     {
-      "name": "代码生成与执行",
-      "description": "代码生成与执行",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_factory.robotics.robot.status.monitor",
+      "description": "smart_factory.robotics.robot.status.monitor",
+      "usage_count": 272,
+      "task_success_rate": 0.8667,
+      "mean_execution_time_ms": 7679.0,
+      "tool_call_failure_rate": 0.0412,
+      "hallucination_rate": 0.04665499999999999
     },
     {
-      "name": "检索领域文档证据",
-      "description": "检索领域文档证据",
-      "usage_count": 1,
-      "task_success_rate": 0.8200000000000001,
-      "mean_execution_time_ms": 1859.763744295524,
-      "tool_call_failure_rate": 0.09000000000000001,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_factory.robotics.human_robot_interaction.monitor",
+      "description": "smart_factory.robotics.human_robot_interaction.monitor",
+      "usage_count": 272,
+      "task_success_rate": 0.8667,
+      "mean_execution_time_ms": 7679.0,
+      "tool_call_failure_rate": 0.0412,
+      "hallucination_rate": 0.04665499999999999
     },
     {
-      "name": "判断单个视频帧是否有火灾",
-      "description": "判断单个视频帧是否有火灾",
-      "usage_count": 1,
-      "task_success_rate": 0.8200000000000001,
-      "mean_execution_time_ms": 1897.2693662029913,
-      "tool_call_failure_rate": 0.09000000000000001,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_factory.robotics.robot_fault.detect",
+      "description": "smart_factory.robotics.robot_fault.detect",
+      "usage_count": 272,
+      "task_success_rate": 0.8667,
+      "mean_execution_time_ms": 7679.0,
+      "tool_call_failure_rate": 0.0412,
+      "hallucination_rate": 0.04665499999999999
+    },
+    {
+      "name": "smart_factory.robotics.robot.task.assign",
+      "description": "smart_factory.robotics.robot.task.assign",
+      "usage_count": 272,
+      "task_success_rate": 0.8667,
+      "mean_execution_time_ms": 7679.0,
+      "tool_call_failure_rate": 0.0412,
+      "hallucination_rate": 0.04665499999999999
+    },
+    {
+      "name": "smart_factory.robotics.robot.vision_guidance.process",
+      "description": "smart_factory.robotics.robot.vision_guidance.process",
+      "usage_count": 272,
+      "task_success_rate": 0.8667,
+      "mean_execution_time_ms": 7679.0,
+      "tool_call_failure_rate": 0.0412,
+      "hallucination_rate": 0.04665499999999999
     }
   ],
   "metadata": {
-    "role": "coding"
+    "agent_key": "A081",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-017",
+    "source_agent_type_name": "Smart Factory Robotics Coordination Agent"
   }
 }

@@ -2,25 +2,73 @@
   "agent_id": 2,
   "capabilities": [
     {
-      "name": "代码生成与执行",
-      "description": "代码生成与执行",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_factory.video.abnormal_operation.detect",
+      "description": "smart_factory.video.abnormal_operation.detect",
+      "usage_count": 497,
+      "task_success_rate": 0.9389,
+      "mean_execution_time_ms": 7631.0,
+      "tool_call_failure_rate": 0.0133,
+      "hallucination_rate": 0.021385000000000015
     },
     {
-      "name": "诊断链路拥塞",
-      "description": "诊断链路拥塞",
-      "usage_count": 1,
-      "task_success_rate": 0.8200000000000001,
-      "mean_execution_time_ms": 1906.9923015043294,
-      "tool_call_failure_rate": 0.19,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_factory.video.crowd_density.monitor",
+      "description": "smart_factory.video.crowd_density.monitor",
+      "usage_count": 497,
+      "task_success_rate": 0.9389,
+      "mean_execution_time_ms": 7631.0,
+      "tool_call_failure_rate": 0.0133,
+      "hallucination_rate": 0.021385000000000015
+    },
+    {
+      "name": "smart_factory.video.equipment_panel.read",
+      "description": "smart_factory.video.equipment_panel.read",
+      "usage_count": 497,
+      "task_success_rate": 0.9389,
+      "mean_execution_time_ms": 7631.0,
+      "tool_call_failure_rate": 0.0133,
+      "hallucination_rate": 0.021385000000000015
+    },
+    {
+      "name": "smart_factory.video.event_timeline.generate",
+      "description": "smart_factory.video.event_timeline.generate",
+      "usage_count": 497,
+      "task_success_rate": 0.9389,
+      "mean_execution_time_ms": 7631.0,
+      "tool_call_failure_rate": 0.0133,
+      "hallucination_rate": 0.021385000000000015
+    },
+    {
+      "name": "smart_factory.video.danger_zone.intrusion.detect",
+      "description": "smart_factory.video.danger_zone.intrusion.detect",
+      "usage_count": 497,
+      "task_success_rate": 0.9389,
+      "mean_execution_time_ms": 7631.0,
+      "tool_call_failure_rate": 0.0133,
+      "hallucination_rate": 0.021385000000000015
+    },
+    {
+      "name": "smart_factory.video.machine_operation.monitor",
+      "description": "smart_factory.video.machine_operation.monitor",
+      "usage_count": 497,
+      "task_success_rate": 0.9389,
+      "mean_execution_time_ms": 7631.0,
+      "tool_call_failure_rate": 0.0133,
+      "hallucination_rate": 0.021385000000000015
+    },
+    {
+      "name": "smart_factory.video.forklift_activity.monitor",
+      "description": "smart_factory.video.forklift_activity.monitor",
+      "usage_count": 497,
+      "task_success_rate": 0.9389,
+      "mean_execution_time_ms": 7631.0,
+      "tool_call_failure_rate": 0.0133,
+      "hallucination_rate": 0.021385000000000015
     }
   ],
   "metadata": {
-    "role": "coding"
+    "agent_key": "A003",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-001",
+    "source_agent_type_name": "Video Understanding Agent"
   }
 }

@@ -2,16 +2,55 @@
   "agent_id": 8,
   "capabilities": [
     {
-      "name": "知识检索",
-      "description": "知识检索",
-      "usage_count": 2,
-      "task_success_rate": 0.8200000000000001,
-      "mean_execution_time_ms": 1908.698662460225,
-      "tool_call_failure_rate": 0.19,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_factory.image.ocr_code.read",
+      "description": "smart_factory.image.ocr_code.read",
+      "usage_count": 368,
+      "task_success_rate": 0.9168,
+      "mean_execution_time_ms": 9761.0,
+      "tool_call_failure_rate": 0.0356,
+      "hallucination_rate": 0.029120000000000017
+    },
+    {
+      "name": "smart_factory.image.component_presence.check",
+      "description": "smart_factory.image.component_presence.check",
+      "usage_count": 368,
+      "task_success_rate": 0.9168,
+      "mean_execution_time_ms": 9761.0,
+      "tool_call_failure_rate": 0.0356,
+      "hallucination_rate": 0.029120000000000017
+    },
+    {
+      "name": "smart_factory.image.batch_quality.summarize",
+      "description": "smart_factory.image.batch_quality.summarize",
+      "usage_count": 368,
+      "task_success_rate": 0.9168,
+      "mean_execution_time_ms": 9761.0,
+      "tool_call_failure_rate": 0.0356,
+      "hallucination_rate": 0.029120000000000017
+    },
+    {
+      "name": "smart_factory.image.barcode_qr.read",
+      "description": "smart_factory.image.barcode_qr.read",
+      "usage_count": 368,
+      "task_success_rate": 0.9168,
+      "mean_execution_time_ms": 9761.0,
+      "tool_call_failure_rate": 0.0356,
+      "hallucination_rate": 0.029120000000000017
+    },
+    {
+      "name": "smart_factory.image.label.verify",
+      "description": "smart_factory.image.label.verify",
+      "usage_count": 368,
+      "task_success_rate": 0.9168,
+      "mean_execution_time_ms": 9761.0,
+      "tool_call_failure_rate": 0.0356,
+      "hallucination_rate": 0.029120000000000017
     }
   ],
   "metadata": {
-    "role": "retrieval"
+    "agent_key": "A009",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-002",
+    "source_agent_type_name": "Image Understanding Agent"
   }
 }

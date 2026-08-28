@@ -1,0 +1,65 @@
+{
+  "agent_id": 104,
+  "capabilities": [
+    {
+      "name": "smart_factory.report.executive_summary.generate",
+      "description": "smart_factory.report.executive_summary.generate",
+      "usage_count": 231,
+      "task_success_rate": 0.9031,
+      "mean_execution_time_ms": 4709.0,
+      "tool_call_failure_rate": 0.1137,
+      "hallucination_rate": 0.033914999999999994
+    },
+    {
+      "name": "smart_factory.report.shift_report.generate",
+      "description": "smart_factory.report.shift_report.generate",
+      "usage_count": 231,
+      "task_success_rate": 0.9031,
+      "mean_execution_time_ms": 4709.0,
+      "tool_call_failure_rate": 0.1137,
+      "hallucination_rate": 0.033914999999999994
+    },
+    {
+      "name": "smart_factory.report.production_report.generate",
+      "description": "smart_factory.report.production_report.generate",
+      "usage_count": 231,
+      "task_success_rate": 0.9031,
+      "mean_execution_time_ms": 4709.0,
+      "tool_call_failure_rate": 0.1137,
+      "hallucination_rate": 0.033914999999999994
+    },
+    {
+      "name": "smart_factory.report.daily_digest.generate",
+      "description": "smart_factory.report.daily_digest.generate",
+      "usage_count": 231,
+      "task_success_rate": 0.9031,
+      "mean_execution_time_ms": 4709.0,
+      "tool_call_failure_rate": 0.1137,
+      "hallucination_rate": 0.033914999999999994
+    },
+    {
+      "name": "smart_factory.report.oee_report.generate",
+      "description": "smart_factory.report.oee_report.generate",
+      "usage_count": 231,
+      "task_success_rate": 0.9031,
+      "mean_execution_time_ms": 4709.0,
+      "tool_call_failure_rate": 0.1137,
+      "hallucination_rate": 0.033914999999999994
+    },
+    {
+      "name": "smart_factory.report.sensor_anomaly_report.generate",
+      "description": "smart_factory.report.sensor_anomaly_report.generate",
+      "usage_count": 231,
+      "task_success_rate": 0.9031,
+      "mean_execution_time_ms": 4709.0,
+      "tool_call_failure_rate": 0.1137,
+      "hallucination_rate": 0.033914999999999994
+    }
+  ],
+  "metadata": {
+    "agent_key": "A105",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-021",
+    "source_agent_type_name": "Smart Factory Report Generation Agent"
+  }
+}

@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
+import subprocess
 import sys
 from pathlib import Path
 
@@ -33,23 +35,46 @@ def run_case(model: TaskConditionedHeterogeneousTGN, case: TrainingCase, train: 
 def evaluate(model: TaskConditionedHeterogeneousTGN, cases: list[TrainingCase]) -> dict[str, float]:
     model.eval()
     correct = 0
+    top3_correct = 0
+    reciprocal_rank = 0.0
+    ndcg5 = 0.0
+    regret = 0.0
     total_candidates = 0
     absolute_errors = torch.zeros(5)
     with torch.no_grad():
         for case in cases:
             output = run_case(model, case, False)
             correct += int(output["candidate_logits"].argmax() == case.label)
+            ranking = torch.argsort(output["candidate_logits"], descending=True).cpu()
+            label = int(case.label)
+            top3_correct += int(label in ranking[:3].tolist())
+            rank = ranking.tolist().index(label) + 1
+            reciprocal_rank += 1.0 / rank
+            k = min(5, ranking.numel())
+            relevance = case.teacher_scores.float()
+            gains = torch.pow(2.0, relevance[ranking[:k]]) - 1.0
+            discount = torch.log2(torch.arange(k, dtype=torch.float32) + 2.0)
+            ideal = torch.sort(relevance, descending=True).values[:k]
+            ideal_dcg = ((torch.pow(2.0, ideal) - 1.0) / discount).sum().clamp_min(1e-8)
+            ndcg5 += float((gains / discount).sum() / ideal_dcg)
+            chosen = int(ranking[0])
+            regret += float(relevance.max() - relevance[chosen])
             predicted = output["state_predictions"].cpu()
             target = case.candidate_targets
             absolute_errors += (predicted-target).abs().sum(0)
             total_candidates += target.shape[0]
     return {
         "top1_accuracy": correct / max(1, len(cases)),
+        "top3_hit_rate": top3_correct / max(1, len(cases)),
+        "mrr": reciprocal_rank / max(1, len(cases)),
+        "ndcg_at_5": ndcg5 / max(1, len(cases)),
+        "selection_regret": regret / max(1, len(cases)),
         "task_success_rate_mae": float(absolute_errors[0])/max(1,total_candidates),
         "execution_time_mae": float(absolute_errors[1])/max(1,total_candidates),
         "tool_failure_rate_mae": float(absolute_errors[2])/max(1,total_candidates),
         "hallucination_rate_mae": float(absolute_errors[3])/max(1,total_candidates),
         "executability_mae": float(absolute_errors[4])/max(1,total_candidates),
+        "mean_state_mae": float(absolute_errors.sum())/max(1,total_candidates*5),
     }
 
 
@@ -92,6 +117,15 @@ def dashboard_payload(config: ModelConfig, case: TrainingCase, output: dict[str,
         "task_type": case.metadata["task_type"],
         "required_capability": case.metadata["required_capability"],
         "task_requirements": dict(zip(TASK_QOS_METRICS, case.task.values.tolist())),
+        "task_query": {
+            "complex_task_id": case.task.complex_task_id,
+            "subtask_count": len(case.task.dag_descriptions) or 1,
+            "dag_edge_index": (
+                case.task.dag_edge_index.tolist() if case.task.dag_edge_index is not None else [[], []]
+            ),
+            "current_subtask_index": case.task.dag_current_index,
+            "representation": "conditioned query (not a system graph node)",
+        },
         "nodes": nodes, "edges": edges,
         "metrics": metrics, "history": history,
         "model_constraints": {"queue_batch_used_for_decision": config.use_queue_batch_in_decision, "link_path_type_encoded": False},
@@ -119,26 +153,42 @@ def main() -> None:
         default=PROJECT_ROOT / "outputs" / "artifacts",
     )
     parser.add_argument("--generate-if-missing", action=argparse.BooleanOptionalAction, default=True)
-    parser.add_argument("--max-train-cases", type=int, default=12, help="0 表示使用全部训练样本")
+    parser.add_argument("--max-train-cases", type=int, default=0, help="0 表示使用全部训练样本")
     args = parser.parse_args()
     torch.manual_seed(args.seed)
     if not (args.dataset / "train.jsonl").exists():
         if not args.generate_if_missing:
             raise FileNotFoundError(args.dataset / "train.jsonl")
-        generate_dataset(args.dataset, num_agents=100, samples=48, seed=args.seed)
+        foundation_tasks = PROJECT_ROOT / "1.data" / "5.任务数据" / "tasks.json"
+        if foundation_tasks.exists():
+            subprocess.run([
+                sys.executable,
+                str(PROJECT_ROOT / "1.data" / "数据集处理与生成" / "build_training_jsonl_from_foundation.py"),
+                "--data-root", str(PROJECT_ROOT / "1.data"),
+                "--output", str(args.dataset),
+                "--seed", str(args.seed),
+            ], check=True)
+        else:
+            generate_dataset(args.dataset, num_agents=100, samples=48, seed=args.seed)
     metadata = json.loads((args.dataset / "metadata.json").read_text(encoding="utf-8"))
-    config = ModelConfig(num_agents=int(metadata["num_agents"]), num_compute_nodes=int(metadata["num_compute_nodes"]), dropout=0.05)
+    config = ModelConfig(
+        num_agents=int(metadata["num_agents"]),
+        num_compute_nodes=int(metadata["num_compute_nodes"]),
+        confidence_tau_seconds=float(metadata.get("confidence_tau_seconds", 2.0)),
+        dropout=0.05,
+    )
     train_cases = list(iter_cases(args.dataset / "train.jsonl"))
     val_cases = list(iter_cases(args.dataset / "val.jsonl"))
     test_cases = list(iter_cases(args.dataset / "test.jsonl"))
     if args.max_train_cases > 0:
         train_cases = train_cases[:args.max_train_cases]
     model = TaskConditionedHeterogeneousTGN(config)
+    model.fit_normalizers(train_cases)
     optimizer = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=1e-4)
     class_loss = nn.CrossEntropyLoss()
     state_loss = nn.BCELoss()
     history: list[dict] = []
-    best_accuracy = -1.0
+    best_selection_score = -1.0
     args.output.parent.mkdir(parents=True, exist_ok=True)
     for epoch in range(1, args.epochs + 1):
         model.train(); loss_sum = 0.0
@@ -146,7 +196,12 @@ def main() -> None:
             output = run_case(model, case, True)
             loss = class_loss(output["candidate_logits"].unsqueeze(0), case.label.reshape(1))
             loss = loss + 0.40 * state_loss(output["state_predictions"], case.candidate_targets)
-            loss = loss + 0.10 * nn.functional.mse_loss(output["candidate_scores"], case.teacher_scores)
+            teacher_distribution = torch.softmax(case.teacher_scores / 0.15, dim=0)
+            loss = loss + 0.10 * nn.functional.kl_div(
+                torch.log_softmax(output["candidate_logits"], dim=0),
+                teacher_distribution,
+                reduction="batchmean",
+            )
             optimizer.zero_grad(); loss.backward()
             nn.utils.clip_grad_norm_(model.parameters(), 1.0); optimizer.step()
             loss_sum += float(loss.detach())
@@ -154,8 +209,9 @@ def main() -> None:
         row = {"epoch": epoch, "train_loss": loss_sum / len(train_cases), **validation}
         history.append(row)
         print(json.dumps(row, ensure_ascii=False))
-        if validation["top1_accuracy"] >= best_accuracy:
-            best_accuracy = validation["top1_accuracy"]
+        selection_score = validation["top1_accuracy"] + 0.25 * validation["ndcg_at_5"]
+        if selection_score > best_selection_score:
+            best_selection_score = selection_score
             torch.save({"config": config.__dict__, "model": model.state_dict()}, args.output)
     checkpoint = torch.load(args.output, map_location="cpu", weights_only=True)
     model.load_state_dict(checkpoint["model"])
@@ -166,6 +222,9 @@ def main() -> None:
     args.artifacts.mkdir(parents=True, exist_ok=True)
     (args.artifacts / "training_history.json").write_text(json.dumps(history, ensure_ascii=False, indent=2), encoding="utf-8")
     (args.artifacts / "dataset_summary.json").write_text(json.dumps(metadata, ensure_ascii=False, indent=2), encoding="utf-8")
+    (args.artifacts / "normalization_stats.json").write_text(
+        json.dumps(model.normalizer.summary(), ensure_ascii=False, indent=2), encoding="utf-8"
+    )
     payload = dashboard_payload(config, test_cases[0], sample_output, test_metrics, history)
     (args.artifacts / "latest_inference.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     print("test=" + json.dumps(test_metrics, ensure_ascii=False))

@@ -2,25 +2,73 @@
   "agent_id": 7,
   "capabilities": [
     {
-      "name": "多模态视觉分析",
-      "description": "多模态视觉分析",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_factory.image.ocr_code.read",
+      "description": "smart_factory.image.ocr_code.read",
+      "usage_count": 513,
+      "task_success_rate": 0.8571,
+      "mean_execution_time_ms": 10801.0,
+      "tool_call_failure_rate": 0.0783,
+      "hallucination_rate": 0.050015000000000004
     },
     {
-      "name": "检索领域文档证据",
-      "description": "检索领域文档证据",
-      "usage_count": 3,
-      "task_success_rate": 0.6832000000000001,
-      "mean_execution_time_ms": 2855.2203745231554,
-      "tool_call_failure_rate": 0.17290000000000003,
-      "hallucination_rate": 0.1539
+      "name": "smart_factory.image.component_presence.check",
+      "description": "smart_factory.image.component_presence.check",
+      "usage_count": 513,
+      "task_success_rate": 0.8571,
+      "mean_execution_time_ms": 10801.0,
+      "tool_call_failure_rate": 0.0783,
+      "hallucination_rate": 0.050015000000000004
+    },
+    {
+      "name": "smart_factory.image.batch_quality.summarize",
+      "description": "smart_factory.image.batch_quality.summarize",
+      "usage_count": 513,
+      "task_success_rate": 0.8571,
+      "mean_execution_time_ms": 10801.0,
+      "tool_call_failure_rate": 0.0783,
+      "hallucination_rate": 0.050015000000000004
+    },
+    {
+      "name": "smart_factory.image.printing_quality.inspect",
+      "description": "smart_factory.image.printing_quality.inspect",
+      "usage_count": 513,
+      "task_success_rate": 0.8571,
+      "mean_execution_time_ms": 10801.0,
+      "tool_call_failure_rate": 0.0783,
+      "hallucination_rate": 0.050015000000000004
+    },
+    {
+      "name": "smart_factory.image.instrument_panel.read",
+      "description": "smart_factory.image.instrument_panel.read",
+      "usage_count": 513,
+      "task_success_rate": 0.8571,
+      "mean_execution_time_ms": 10801.0,
+      "tool_call_failure_rate": 0.0783,
+      "hallucination_rate": 0.050015000000000004
+    },
+    {
+      "name": "smart_factory.image.qa.answer",
+      "description": "smart_factory.image.qa.answer",
+      "usage_count": 513,
+      "task_success_rate": 0.8571,
+      "mean_execution_time_ms": 10801.0,
+      "tool_call_failure_rate": 0.0783,
+      "hallucination_rate": 0.050015000000000004
+    },
+    {
+      "name": "smart_factory.image.defect.detect",
+      "description": "smart_factory.image.defect.detect",
+      "usage_count": 513,
+      "task_success_rate": 0.8571,
+      "mean_execution_time_ms": 10801.0,
+      "tool_call_failure_rate": 0.0783,
+      "hallucination_rate": 0.050015000000000004
     }
   ],
   "metadata": {
-    "role": "vision"
+    "agent_key": "A008",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-002",
+    "source_agent_type_name": "Image Understanding Agent"
   }
 }

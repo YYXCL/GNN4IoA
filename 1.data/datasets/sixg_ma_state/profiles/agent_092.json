@@ -2,16 +2,73 @@
   "agent_id": 92,
   "capabilities": [
     {
-      "name": "复杂任务规划",
-      "description": "复杂任务规划",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_factory.logistics.shipping_schedule.optimize",
+      "description": "smart_factory.logistics.shipping_schedule.optimize",
+      "usage_count": 219,
+      "task_success_rate": 0.9664,
+      "mean_execution_time_ms": 8816.0,
+      "tool_call_failure_rate": 0.0128,
+      "hallucination_rate": 0.011759999999999986
+    },
+    {
+      "name": "smart_factory.logistics.line_feeding.optimize",
+      "description": "smart_factory.logistics.line_feeding.optimize",
+      "usage_count": 219,
+      "task_success_rate": 0.9664,
+      "mean_execution_time_ms": 8816.0,
+      "tool_call_failure_rate": 0.0128,
+      "hallucination_rate": 0.011759999999999986
+    },
+    {
+      "name": "smart_factory.logistics.warehouse_location.search",
+      "description": "smart_factory.logistics.warehouse_location.search",
+      "usage_count": 219,
+      "task_success_rate": 0.9664,
+      "mean_execution_time_ms": 8816.0,
+      "tool_call_failure_rate": 0.0128,
+      "hallucination_rate": 0.011759999999999986
+    },
+    {
+      "name": "smart_factory.logistics.agv_task.assign",
+      "description": "smart_factory.logistics.agv_task.assign",
+      "usage_count": 219,
+      "task_success_rate": 0.9664,
+      "mean_execution_time_ms": 8816.0,
+      "tool_call_failure_rate": 0.0128,
+      "hallucination_rate": 0.011759999999999986
+    },
+    {
+      "name": "smart_factory.logistics.agv_route.plan",
+      "description": "smart_factory.logistics.agv_route.plan",
+      "usage_count": 219,
+      "task_success_rate": 0.9664,
+      "mean_execution_time_ms": 8816.0,
+      "tool_call_failure_rate": 0.0128,
+      "hallucination_rate": 0.011759999999999986
+    },
+    {
+      "name": "smart_factory.logistics.inbound_material.track",
+      "description": "smart_factory.logistics.inbound_material.track",
+      "usage_count": 219,
+      "task_success_rate": 0.9664,
+      "mean_execution_time_ms": 8816.0,
+      "tool_call_failure_rate": 0.0128,
+      "hallucination_rate": 0.011759999999999986
+    },
+    {
+      "name": "smart_factory.logistics.outbound_product.track",
+      "description": "smart_factory.logistics.outbound_product.track",
+      "usage_count": 219,
+      "task_success_rate": 0.9664,
+      "mean_execution_time_ms": 8816.0,
+      "tool_call_failure_rate": 0.0128,
+      "hallucination_rate": 0.011759999999999986
     }
   ],
   "metadata": {
-    "role": "planning"
+    "agent_key": "A093",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-019",
+    "source_agent_type_name": "Smart Factory Logistics Agent"
   }
 }

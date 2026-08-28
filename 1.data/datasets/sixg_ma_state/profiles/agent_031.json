@@ -2,16 +2,64 @@
   "agent_id": 31,
   "capabilities": [
     {
-      "name": "6G 网络控制",
-      "description": "6G 网络控制",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_home.healthcare.sleep_quality.analyze",
+      "description": "smart_home.healthcare.sleep_quality.analyze",
+      "usage_count": 909,
+      "task_success_rate": 0.9199,
+      "mean_execution_time_ms": 9994.0,
+      "tool_call_failure_rate": 0.0155,
+      "hallucination_rate": 0.02803499999999998
+    },
+    {
+      "name": "smart_home.healthcare.fall_risk.assess",
+      "description": "smart_home.healthcare.fall_risk.assess",
+      "usage_count": 909,
+      "task_success_rate": 0.9199,
+      "mean_execution_time_ms": 9994.0,
+      "tool_call_failure_rate": 0.0155,
+      "hallucination_rate": 0.02803499999999998
+    },
+    {
+      "name": "smart_home.healthcare.care_need.assess",
+      "description": "smart_home.healthcare.care_need.assess",
+      "usage_count": 909,
+      "task_success_rate": 0.9199,
+      "mean_execution_time_ms": 9994.0,
+      "tool_call_failure_rate": 0.0155,
+      "hallucination_rate": 0.02803499999999998
+    },
+    {
+      "name": "smart_home.healthcare.daily_activity.analyze",
+      "description": "smart_home.healthcare.daily_activity.analyze",
+      "usage_count": 909,
+      "task_success_rate": 0.9199,
+      "mean_execution_time_ms": 9994.0,
+      "tool_call_failure_rate": 0.0155,
+      "hallucination_rate": 0.02803499999999998
+    },
+    {
+      "name": "smart_home.healthcare.baby_cry.analyze",
+      "description": "smart_home.healthcare.baby_cry.analyze",
+      "usage_count": 909,
+      "task_success_rate": 0.9199,
+      "mean_execution_time_ms": 9994.0,
+      "tool_call_failure_rate": 0.0155,
+      "hallucination_rate": 0.02803499999999998
+    },
+    {
+      "name": "smart_home.healthcare.elderly_activity.monitor",
+      "description": "smart_home.healthcare.elderly_activity.monitor",
+      "usage_count": 909,
+      "task_success_rate": 0.9199,
+      "mean_execution_time_ms": 9994.0,
+      "tool_call_failure_rate": 0.0155,
+      "hallucination_rate": 0.02803499999999998
     }
   ],
   "metadata": {
-    "role": "network"
+    "agent_key": "A032",
+    "scenario": "智慧家居",
+    "source_agent_type_id": "agent-007",
+    "source_agent_type_name": "Smart Home Healthcare Agent"
   }
 }

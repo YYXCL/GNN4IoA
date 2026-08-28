@@ -2,16 +2,64 @@
   "agent_id": 99,
   "capabilities": [
     {
-      "name": "6G 网络控制",
-      "description": "6G 网络控制",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_factory.multimodal.decision_recommendation.generate",
+      "description": "smart_factory.multimodal.decision_recommendation.generate",
+      "usage_count": 355,
+      "task_success_rate": 0.9506,
+      "mean_execution_time_ms": 9171.0,
+      "tool_call_failure_rate": 0.0686,
+      "hallucination_rate": 0.01729
+    },
+    {
+      "name": "smart_factory.multimodal.event_timeline.generate",
+      "description": "smart_factory.multimodal.event_timeline.generate",
+      "usage_count": 355,
+      "task_success_rate": 0.9506,
+      "mean_execution_time_ms": 9171.0,
+      "tool_call_failure_rate": 0.0686,
+      "hallucination_rate": 0.01729
+    },
+    {
+      "name": "smart_factory.multimodal.qa.answer",
+      "description": "smart_factory.multimodal.qa.answer",
+      "usage_count": 355,
+      "task_success_rate": 0.9506,
+      "mean_execution_time_ms": 9171.0,
+      "tool_call_failure_rate": 0.0686,
+      "hallucination_rate": 0.01729
+    },
+    {
+      "name": "smart_factory.multimodal.safety_event.verify",
+      "description": "smart_factory.multimodal.safety_event.verify",
+      "usage_count": 355,
+      "task_success_rate": 0.9506,
+      "mean_execution_time_ms": 9171.0,
+      "tool_call_failure_rate": 0.0686,
+      "hallucination_rate": 0.01729
+    },
+    {
+      "name": "smart_factory.multimodal.video_sensor_event.fuse",
+      "description": "smart_factory.multimodal.video_sensor_event.fuse",
+      "usage_count": 355,
+      "task_success_rate": 0.9506,
+      "mean_execution_time_ms": 9171.0,
+      "tool_call_failure_rate": 0.0686,
+      "hallucination_rate": 0.01729
+    },
+    {
+      "name": "smart_factory.multimodal.image_process_parameter.align",
+      "description": "smart_factory.multimodal.image_process_parameter.align",
+      "usage_count": 355,
+      "task_success_rate": 0.9506,
+      "mean_execution_time_ms": 9171.0,
+      "tool_call_failure_rate": 0.0686,
+      "hallucination_rate": 0.01729
     }
   ],
   "metadata": {
-    "role": "network"
+    "agent_key": "A100",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-020",
+    "source_agent_type_name": "Smart Factory Multimodal Diagnosis Agent"
   }
 }

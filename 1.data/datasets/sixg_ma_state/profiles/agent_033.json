@@ -2,34 +2,55 @@
   "agent_id": 33,
   "capabilities": [
     {
-      "name": "多模态视觉分析",
-      "description": "多模态视觉分析",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_home.healthcare.fall_risk.assess",
+      "description": "smart_home.healthcare.fall_risk.assess",
+      "usage_count": 1139,
+      "task_success_rate": 0.9391,
+      "mean_execution_time_ms": 9426.0,
+      "tool_call_failure_rate": 0.0418,
+      "hallucination_rate": 0.021314999999999983
     },
     {
-      "name": "诊断链路拥塞",
-      "description": "诊断链路拥塞",
-      "usage_count": 1,
-      "task_success_rate": 0.8200000000000001,
-      "mean_execution_time_ms": 2072.515381394531,
-      "tool_call_failure_rate": 0.09000000000000001,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_home.healthcare.elderly_risk.score",
+      "description": "smart_home.healthcare.elderly_risk.score",
+      "usage_count": 1139,
+      "task_success_rate": 0.9391,
+      "mean_execution_time_ms": 9426.0,
+      "tool_call_failure_rate": 0.0418,
+      "hallucination_rate": 0.021314999999999983
     },
     {
-      "name": "检索领域文档证据",
-      "description": "检索领域文档证据",
-      "usage_count": 1,
-      "task_success_rate": 0.7200000000000001,
-      "mean_execution_time_ms": 2079.4957189104107,
-      "tool_call_failure_rate": 0.09000000000000001,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_home.healthcare.fall_event.verify",
+      "description": "smart_home.healthcare.fall_event.verify",
+      "usage_count": 1139,
+      "task_success_rate": 0.9391,
+      "mean_execution_time_ms": 9426.0,
+      "tool_call_failure_rate": 0.0418,
+      "hallucination_rate": 0.021314999999999983
+    },
+    {
+      "name": "smart_home.healthcare.emergency_call.prepare",
+      "description": "smart_home.healthcare.emergency_call.prepare",
+      "usage_count": 1139,
+      "task_success_rate": 0.9391,
+      "mean_execution_time_ms": 9426.0,
+      "tool_call_failure_rate": 0.0418,
+      "hallucination_rate": 0.021314999999999983
+    },
+    {
+      "name": "smart_home.healthcare.daily_care_report.generate",
+      "description": "smart_home.healthcare.daily_care_report.generate",
+      "usage_count": 1139,
+      "task_success_rate": 0.9391,
+      "mean_execution_time_ms": 9426.0,
+      "tool_call_failure_rate": 0.0418,
+      "hallucination_rate": 0.021314999999999983
     }
   ],
   "metadata": {
-    "role": "vision"
+    "agent_key": "A034",
+    "scenario": "智慧家居",
+    "source_agent_type_id": "agent-007",
+    "source_agent_type_name": "Smart Home Healthcare Agent"
   }
 }

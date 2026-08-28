@@ -2,25 +2,73 @@
   "agent_id": 27,
   "capabilities": [
     {
-      "name": "工具调用",
-      "description": "工具调用",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_home.security.intrusion.detect",
+      "description": "smart_home.security.intrusion.detect",
+      "usage_count": 778,
+      "task_success_rate": 0.9082,
+      "mean_execution_time_ms": 6631.0,
+      "tool_call_failure_rate": 0.0239,
+      "hallucination_rate": 0.03213
     },
     {
-      "name": "拆分复杂任务",
-      "description": "拆分复杂任务",
-      "usage_count": 1,
-      "task_success_rate": 0.7200000000000001,
-      "mean_execution_time_ms": 2176.542511395853,
-      "tool_call_failure_rate": 0.19,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_home.security.window_status.check",
+      "description": "smart_home.security.window_status.check",
+      "usage_count": 778,
+      "task_success_rate": 0.9082,
+      "mean_execution_time_ms": 6631.0,
+      "tool_call_failure_rate": 0.0239,
+      "hallucination_rate": 0.03213
+    },
+    {
+      "name": "smart_home.security.perimeter.monitor",
+      "description": "smart_home.security.perimeter.monitor",
+      "usage_count": 778,
+      "task_success_rate": 0.9082,
+      "mean_execution_time_ms": 6631.0,
+      "tool_call_failure_rate": 0.0239,
+      "hallucination_rate": 0.03213
+    },
+    {
+      "name": "smart_home.security.stranger.detect",
+      "description": "smart_home.security.stranger.detect",
+      "usage_count": 778,
+      "task_success_rate": 0.9082,
+      "mean_execution_time_ms": 6631.0,
+      "tool_call_failure_rate": 0.0239,
+      "hallucination_rate": 0.03213
+    },
+    {
+      "name": "smart_home.security.package_theft.detect",
+      "description": "smart_home.security.package_theft.detect",
+      "usage_count": 778,
+      "task_success_rate": 0.9082,
+      "mean_execution_time_ms": 6631.0,
+      "tool_call_failure_rate": 0.0239,
+      "hallucination_rate": 0.03213
+    },
+    {
+      "name": "smart_home.security.emergency_contact.notify",
+      "description": "smart_home.security.emergency_contact.notify",
+      "usage_count": 778,
+      "task_success_rate": 0.9082,
+      "mean_execution_time_ms": 6631.0,
+      "tool_call_failure_rate": 0.0239,
+      "hallucination_rate": 0.03213
+    },
+    {
+      "name": "smart_home.security.door_lock_status.check",
+      "description": "smart_home.security.door_lock_status.check",
+      "usage_count": 778,
+      "task_success_rate": 0.9082,
+      "mean_execution_time_ms": 6631.0,
+      "tool_call_failure_rate": 0.0239,
+      "hallucination_rate": 0.03213
     }
   ],
   "metadata": {
-    "role": "tool"
+    "agent_key": "A028",
+    "scenario": "智慧家居",
+    "source_agent_type_id": "agent-006",
+    "source_agent_type_name": "Smart Home Security Agent"
   }
 }

@@ -2,25 +2,55 @@
   "agent_id": 10,
   "capabilities": [
     {
-      "name": "多模态视觉分析",
-      "description": "多模态视觉分析",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_home.audio.glass_break.detect",
+      "description": "smart_home.audio.glass_break.detect",
+      "usage_count": 714,
+      "task_success_rate": 0.8637,
+      "mean_execution_time_ms": 8370.0,
+      "tool_call_failure_rate": 0.0221,
+      "hallucination_rate": 0.04770499999999999
     },
     {
-      "name": "检索领域文档证据",
-      "description": "检索领域文档证据",
-      "usage_count": 1,
-      "task_success_rate": 0.8200000000000001,
-      "mean_execution_time_ms": 2438.887053275871,
-      "tool_call_failure_rate": 0.09000000000000001,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_home.audio.pet_sound.detect",
+      "description": "smart_home.audio.pet_sound.detect",
+      "usage_count": 714,
+      "task_success_rate": 0.8637,
+      "mean_execution_time_ms": 8370.0,
+      "tool_call_failure_rate": 0.0221,
+      "hallucination_rate": 0.04770499999999999
+    },
+    {
+      "name": "smart_home.audio.alarm_sound.detect",
+      "description": "smart_home.audio.alarm_sound.detect",
+      "usage_count": 714,
+      "task_success_rate": 0.8637,
+      "mean_execution_time_ms": 8370.0,
+      "tool_call_failure_rate": 0.0221,
+      "hallucination_rate": 0.04770499999999999
+    },
+    {
+      "name": "smart_home.audio.tv_sound.detect",
+      "description": "smart_home.audio.tv_sound.detect",
+      "usage_count": 714,
+      "task_success_rate": 0.8637,
+      "mean_execution_time_ms": 8370.0,
+      "tool_call_failure_rate": 0.0221,
+      "hallucination_rate": 0.04770499999999999
+    },
+    {
+      "name": "smart_home.audio.fall_sound.detect",
+      "description": "smart_home.audio.fall_sound.detect",
+      "usage_count": 714,
+      "task_success_rate": 0.8637,
+      "mean_execution_time_ms": 8370.0,
+      "tool_call_failure_rate": 0.0221,
+      "hallucination_rate": 0.04770499999999999
     }
   ],
   "metadata": {
-    "role": "vision"
+    "agent_key": "A011",
+    "scenario": "智慧家居",
+    "source_agent_type_id": "agent-003",
+    "source_agent_type_name": "Audio Understanding Agent"
   }
 }

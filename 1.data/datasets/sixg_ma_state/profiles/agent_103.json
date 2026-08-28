@@ -1,0 +1,56 @@
+{
+  "agent_id": 103,
+  "capabilities": [
+    {
+      "name": "smart_factory.report.safety_report.generate",
+      "description": "smart_factory.report.safety_report.generate",
+      "usage_count": 305,
+      "task_success_rate": 0.8274,
+      "mean_execution_time_ms": 6598.0,
+      "tool_call_failure_rate": 0.0284,
+      "hallucination_rate": 0.060409999999999985
+    },
+    {
+      "name": "smart_factory.report.energy_report.generate",
+      "description": "smart_factory.report.energy_report.generate",
+      "usage_count": 305,
+      "task_success_rate": 0.8274,
+      "mean_execution_time_ms": 6598.0,
+      "tool_call_failure_rate": 0.0284,
+      "hallucination_rate": 0.060409999999999985
+    },
+    {
+      "name": "smart_factory.report.weekly_digest.generate",
+      "description": "smart_factory.report.weekly_digest.generate",
+      "usage_count": 305,
+      "task_success_rate": 0.8274,
+      "mean_execution_time_ms": 6598.0,
+      "tool_call_failure_rate": 0.0284,
+      "hallucination_rate": 0.060409999999999985
+    },
+    {
+      "name": "smart_factory.report.shift_report.generate",
+      "description": "smart_factory.report.shift_report.generate",
+      "usage_count": 305,
+      "task_success_rate": 0.8274,
+      "mean_execution_time_ms": 6598.0,
+      "tool_call_failure_rate": 0.0284,
+      "hallucination_rate": 0.060409999999999985
+    },
+    {
+      "name": "smart_factory.report.defect_analysis.generate",
+      "description": "smart_factory.report.defect_analysis.generate",
+      "usage_count": 305,
+      "task_success_rate": 0.8274,
+      "mean_execution_time_ms": 6598.0,
+      "tool_call_failure_rate": 0.0284,
+      "hallucination_rate": 0.060409999999999985
+    }
+  ],
+  "metadata": {
+    "agent_key": "A104",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-021",
+    "source_agent_type_name": "Smart Factory Report Generation Agent"
+  }
+}

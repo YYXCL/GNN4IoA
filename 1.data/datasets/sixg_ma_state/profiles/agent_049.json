@@ -2,16 +2,64 @@
   "agent_id": 49,
   "capabilities": [
     {
-      "name": "6G 网络控制",
-      "description": "6G 网络控制",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_home.automation.execution_log.summarize",
+      "description": "smart_home.automation.execution_log.summarize",
+      "usage_count": 916,
+      "task_success_rate": 0.8829,
+      "mean_execution_time_ms": 9139.0,
+      "tool_call_failure_rate": 0.0355,
+      "hallucination_rate": 0.040984999999999994
+    },
+    {
+      "name": "smart_home.automation.qa.answer",
+      "description": "smart_home.automation.qa.answer",
+      "usage_count": 916,
+      "task_success_rate": 0.8829,
+      "mean_execution_time_ms": 9139.0,
+      "tool_call_failure_rate": 0.0355,
+      "hallucination_rate": 0.040984999999999994
+    },
+    {
+      "name": "smart_home.automation.scene.create",
+      "description": "smart_home.automation.scene.create",
+      "usage_count": 916,
+      "task_success_rate": 0.8829,
+      "mean_execution_time_ms": 9139.0,
+      "tool_call_failure_rate": 0.0355,
+      "hallucination_rate": 0.040984999999999994
+    },
+    {
+      "name": "smart_home.automation.scene.activate",
+      "description": "smart_home.automation.scene.activate",
+      "usage_count": 916,
+      "task_success_rate": 0.8829,
+      "mean_execution_time_ms": 9139.0,
+      "tool_call_failure_rate": 0.0355,
+      "hallucination_rate": 0.040984999999999994
+    },
+    {
+      "name": "smart_home.automation.rule.create",
+      "description": "smart_home.automation.rule.create",
+      "usage_count": 916,
+      "task_success_rate": 0.8829,
+      "mean_execution_time_ms": 9139.0,
+      "tool_call_failure_rate": 0.0355,
+      "hallucination_rate": 0.040984999999999994
+    },
+    {
+      "name": "smart_home.automation.rule.validate",
+      "description": "smart_home.automation.rule.validate",
+      "usage_count": 916,
+      "task_success_rate": 0.8829,
+      "mean_execution_time_ms": 9139.0,
+      "tool_call_failure_rate": 0.0355,
+      "hallucination_rate": 0.040984999999999994
     }
   ],
   "metadata": {
-    "role": "network"
+    "agent_key": "A050",
+    "scenario": "智慧家居",
+    "source_agent_type_id": "agent-010",
+    "source_agent_type_name": "Smart Home Automation Agent"
   }
 }

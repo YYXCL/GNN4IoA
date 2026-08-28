@@ -2,16 +2,55 @@
   "agent_id": 98,
   "capabilities": [
     {
-      "name": "6G 网络控制",
-      "description": "6G 网络控制",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_factory.multimodal.fault_risk.assess",
+      "description": "smart_factory.multimodal.fault_risk.assess",
+      "usage_count": 1226,
+      "task_success_rate": 0.8404,
+      "mean_execution_time_ms": 5765.0,
+      "tool_call_failure_rate": 0.0779,
+      "hallucination_rate": 0.055859999999999986
+    },
+    {
+      "name": "smart_factory.multimodal.video_sensor_event.fuse",
+      "description": "smart_factory.multimodal.video_sensor_event.fuse",
+      "usage_count": 1226,
+      "task_success_rate": 0.8404,
+      "mean_execution_time_ms": 5765.0,
+      "tool_call_failure_rate": 0.0779,
+      "hallucination_rate": 0.055859999999999986
+    },
+    {
+      "name": "smart_factory.multimodal.audio_sensor_fault.fuse",
+      "description": "smart_factory.multimodal.audio_sensor_fault.fuse",
+      "usage_count": 1226,
+      "task_success_rate": 0.8404,
+      "mean_execution_time_ms": 5765.0,
+      "tool_call_failure_rate": 0.0779,
+      "hallucination_rate": 0.055859999999999986
+    },
+    {
+      "name": "smart_factory.multimodal.robot_quality_feedback.fuse",
+      "description": "smart_factory.multimodal.robot_quality_feedback.fuse",
+      "usage_count": 1226,
+      "task_success_rate": 0.8404,
+      "mean_execution_time_ms": 5765.0,
+      "tool_call_failure_rate": 0.0779,
+      "hallucination_rate": 0.055859999999999986
+    },
+    {
+      "name": "smart_factory.multimodal.risk_score.aggregate",
+      "description": "smart_factory.multimodal.risk_score.aggregate",
+      "usage_count": 1226,
+      "task_success_rate": 0.8404,
+      "mean_execution_time_ms": 5765.0,
+      "tool_call_failure_rate": 0.0779,
+      "hallucination_rate": 0.055859999999999986
     }
   ],
   "metadata": {
-    "role": "network"
+    "agent_key": "A099",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-020",
+    "source_agent_type_name": "Smart Factory Multimodal Diagnosis Agent"
   }
 }

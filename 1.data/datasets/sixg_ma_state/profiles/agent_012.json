@@ -2,25 +2,73 @@
   "agent_id": 12,
   "capabilities": [
     {
-      "name": "复杂任务规划",
-      "description": "复杂任务规划",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_factory.audio.collision_sound.detect",
+      "description": "smart_factory.audio.collision_sound.detect",
+      "usage_count": 584,
+      "task_success_rate": 0.8272,
+      "mean_execution_time_ms": 10896.0,
+      "tool_call_failure_rate": 0.0314,
+      "hallucination_rate": 0.06047999999999998
     },
     {
-      "name": "检索领域文档证据",
-      "description": "检索领域文档证据",
-      "usage_count": 1,
-      "task_success_rate": 0.8200000000000001,
-      "mean_execution_time_ms": 1925.287688778674,
-      "tool_call_failure_rate": 0.09000000000000001,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_factory.audio.worker_voice_command.recognize",
+      "description": "smart_factory.audio.worker_voice_command.recognize",
+      "usage_count": 584,
+      "task_success_rate": 0.8272,
+      "mean_execution_time_ms": 10896.0,
+      "tool_call_failure_rate": 0.0314,
+      "hallucination_rate": 0.06047999999999998
+    },
+    {
+      "name": "smart_factory.audio.production_event.detect",
+      "description": "smart_factory.audio.production_event.detect",
+      "usage_count": 584,
+      "task_success_rate": 0.8272,
+      "mean_execution_time_ms": 10896.0,
+      "tool_call_failure_rate": 0.0314,
+      "hallucination_rate": 0.06047999999999998
+    },
+    {
+      "name": "smart_factory.audio.qa.answer",
+      "description": "smart_factory.audio.qa.answer",
+      "usage_count": 584,
+      "task_success_rate": 0.8272,
+      "mean_execution_time_ms": 10896.0,
+      "tool_call_failure_rate": 0.0314,
+      "hallucination_rate": 0.06047999999999998
+    },
+    {
+      "name": "smart_factory.audio.abnormal_sound.detect",
+      "description": "smart_factory.audio.abnormal_sound.detect",
+      "usage_count": 584,
+      "task_success_rate": 0.8272,
+      "mean_execution_time_ms": 10896.0,
+      "tool_call_failure_rate": 0.0314,
+      "hallucination_rate": 0.06047999999999998
+    },
+    {
+      "name": "smart_factory.audio.air_leak_sound.detect",
+      "description": "smart_factory.audio.air_leak_sound.detect",
+      "usage_count": 584,
+      "task_success_rate": 0.8272,
+      "mean_execution_time_ms": 10896.0,
+      "tool_call_failure_rate": 0.0314,
+      "hallucination_rate": 0.06047999999999998
+    },
+    {
+      "name": "smart_factory.audio.alarm_sound.detect",
+      "description": "smart_factory.audio.alarm_sound.detect",
+      "usage_count": 584,
+      "task_success_rate": 0.8272,
+      "mean_execution_time_ms": 10896.0,
+      "tool_call_failure_rate": 0.0314,
+      "hallucination_rate": 0.06047999999999998
     }
   ],
   "metadata": {
-    "role": "planning"
+    "agent_key": "A013",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-003",
+    "source_agent_type_name": "Audio Understanding Agent"
   }
 }

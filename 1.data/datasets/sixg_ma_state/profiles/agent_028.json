@@ -2,16 +2,55 @@
   "agent_id": 28,
   "capabilities": [
     {
-      "name": "6G 网络控制",
-      "description": "6G 网络控制",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_home.security.alarm.trigger",
+      "description": "smart_home.security.alarm.trigger",
+      "usage_count": 993,
+      "task_success_rate": 0.9423,
+      "mean_execution_time_ms": 6593.0,
+      "tool_call_failure_rate": 0.0144,
+      "hallucination_rate": 0.02019499999999999
+    },
+    {
+      "name": "smart_home.security.child_safety.monitor",
+      "description": "smart_home.security.child_safety.monitor",
+      "usage_count": 993,
+      "task_success_rate": 0.9423,
+      "mean_execution_time_ms": 6593.0,
+      "tool_call_failure_rate": 0.0144,
+      "hallucination_rate": 0.02019499999999999
+    },
+    {
+      "name": "smart_home.security.intrusion.detect",
+      "description": "smart_home.security.intrusion.detect",
+      "usage_count": 993,
+      "task_success_rate": 0.9423,
+      "mean_execution_time_ms": 6593.0,
+      "tool_call_failure_rate": 0.0144,
+      "hallucination_rate": 0.02019499999999999
+    },
+    {
+      "name": "smart_home.security.risk_score.calculate",
+      "description": "smart_home.security.risk_score.calculate",
+      "usage_count": 993,
+      "task_success_rate": 0.9423,
+      "mean_execution_time_ms": 6593.0,
+      "tool_call_failure_rate": 0.0144,
+      "hallucination_rate": 0.02019499999999999
+    },
+    {
+      "name": "smart_home.security.pet_safety.monitor",
+      "description": "smart_home.security.pet_safety.monitor",
+      "usage_count": 993,
+      "task_success_rate": 0.9423,
+      "mean_execution_time_ms": 6593.0,
+      "tool_call_failure_rate": 0.0144,
+      "hallucination_rate": 0.02019499999999999
     }
   ],
   "metadata": {
-    "role": "network"
+    "agent_key": "A029",
+    "scenario": "智慧家居",
+    "source_agent_type_id": "agent-006",
+    "source_agent_type_name": "Smart Home Security Agent"
   }
 }

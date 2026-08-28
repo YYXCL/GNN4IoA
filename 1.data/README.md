@@ -10,12 +10,12 @@
 | `2.链路数据/` | 智能体—智能体及智能体—算力节点通信链路 |
 | `3.智能体能力数据(包括智能体环境和知识库、API权限)/` | 120 个派生智能体的能力、API、知识库、上下文和传感器状态 |
 | `4.智能体可靠性/` | 调用次数、成功率、平均耗时和工具调用失败率 |
-| `5.任务数据/` | 72 个提示词、实验约束和准确率要求 |
+| `5.任务数据/` | 72 个提示词，以及分列保存的 Skill、输出、完整率、时延和准确率要求 |
 | `6.事件数据/` | 事件类型、关系类型编码表及示例事件流 |
 | `实验室的智能体能力列表/` | 两部分原始智能体能力卡；本轮生成只读取 part1 |
-| `数据集处理与生成/` | 基础表生成、Alibaba 处理及 JSONL 合成脚本 |
-| `ma_tgn_data/` | `TrainingCase` 序列化和 MA-TGN 状态仿真器 |
-| `datasets/sixg_ma_state/` | 当前训练器直接读取的 train/val/test JSONL |
+| `数据集处理与生成/` | 基础表生成、Alibaba 处理及训练窗口转换脚本 |
+| `ma_tgn_data/` | `TrainingCase` 序列化、基础表窗口转换和 MA-TGN 状态仿真器 |
+| `datasets/sixg_ma_state/` | 由编号基础表生成、供训练器直接读取的 train/val/test JSONL |
 | `raw/` | Alibaba GenAI cluster trace 原始文件和旧容器级合并结果 |
 
 ## 一键重建
@@ -26,10 +26,16 @@
 python "1.data/数据集处理与生成/generate_simulation_datasets.py"
 ```
 
-该命令使用固定种子生成所有编号关联表，写入 `dataset_manifest.json`，并执行编号、外键和知识库占比检查。改变虚拟算力节点数量时使用：
+该命令使用固定种子生成所有编号关联表，写入 `dataset_manifest.json`，执行编号、外键和知识库占比检查，并自动将新基础表转换为训练器所需的滑动窗口 JSONL。默认取 16 个源时间戳组成一个窗口，生成 72 个互不重叠的窗口，并按时间顺序划分为 54/9/9 个训练、验证和测试样本。改变虚拟算力节点数量时使用：
 
 ```powershell
 python "1.data/数据集处理与生成/generate_simulation_datasets.py" --compute-nodes 16 --seed 20260814
+```
+
+如果只修改了基础表，可不重新处理原始数据，直接重建训练窗口：
+
+```powershell
+python "1.data/数据集处理与生成/build_training_jsonl_from_foundation.py"
 ```
 
 ## 关键字段解释
@@ -39,6 +45,8 @@ python "1.data/数据集处理与生成/generate_simulation_datasets.py" --compu
 - 链路第 6 列为 `网络抖动(ms)`，对应模型 `EDGE_METRICS` 的第四项。
 - 算力节点是从容器 IP 稳定哈希得到的虚拟服务器。CPU 负载不可由当前源数据恢复，故只提供明确命名的 `server_load_rate_proxy`。
 - `agent_capabilities.json` 和 `tasks.json` 保留 CSV 中没有展开的场景、源类型和完整 skill 溯源字段。
+- 任务表不再使用合并的 `实验要求` 或重复的 `required_skill_id`。统一使用 `必需的Skill id`、`输出结果的要求`、`字段完整率要求` 和 `端到端完成时延要求(s)` 四列。
+- 训练窗口保证候选集合中存在满足必需 Skill 的智能体，监督标签对应的智能体也必须具有该 Skill。
 
 ## 事件编码
 

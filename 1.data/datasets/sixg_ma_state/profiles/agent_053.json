@@ -2,16 +2,55 @@
   "agent_id": 53,
   "capabilities": [
     {
-      "name": "知识检索",
-      "description": "知识检索",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_home.multimodal.fire_risk.fuse",
+      "description": "smart_home.multimodal.fire_risk.fuse",
+      "usage_count": 1295,
+      "task_success_rate": 0.9121,
+      "mean_execution_time_ms": 7754.0,
+      "tool_call_failure_rate": 0.0524,
+      "hallucination_rate": 0.03076499999999999
+    },
+    {
+      "name": "smart_home.multimodal.fall_event.verify",
+      "description": "smart_home.multimodal.fall_event.verify",
+      "usage_count": 1295,
+      "task_success_rate": 0.9121,
+      "mean_execution_time_ms": 7754.0,
+      "tool_call_failure_rate": 0.0524,
+      "hallucination_rate": 0.03076499999999999
+    },
+    {
+      "name": "smart_home.multimodal.intrusion_event.verify",
+      "description": "smart_home.multimodal.intrusion_event.verify",
+      "usage_count": 1295,
+      "task_success_rate": 0.9121,
+      "mean_execution_time_ms": 7754.0,
+      "tool_call_failure_rate": 0.0524,
+      "hallucination_rate": 0.03076499999999999
+    },
+    {
+      "name": "smart_home.multimodal.child_safety.assess",
+      "description": "smart_home.multimodal.child_safety.assess",
+      "usage_count": 1295,
+      "task_success_rate": 0.9121,
+      "mean_execution_time_ms": 7754.0,
+      "tool_call_failure_rate": 0.0524,
+      "hallucination_rate": 0.03076499999999999
+    },
+    {
+      "name": "smart_home.multimodal.audio_video_event.fuse",
+      "description": "smart_home.multimodal.audio_video_event.fuse",
+      "usage_count": 1295,
+      "task_success_rate": 0.9121,
+      "mean_execution_time_ms": 7754.0,
+      "tool_call_failure_rate": 0.0524,
+      "hallucination_rate": 0.03076499999999999
     }
   ],
   "metadata": {
-    "role": "retrieval"
+    "agent_key": "A054",
+    "scenario": "智慧家居",
+    "source_agent_type_id": "agent-011",
+    "source_agent_type_name": "Smart Home Multimodal Context Agent"
   }
 }

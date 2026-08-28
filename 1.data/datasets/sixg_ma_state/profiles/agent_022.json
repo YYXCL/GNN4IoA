@@ -2,25 +2,73 @@
   "agent_id": 22,
   "capabilities": [
     {
-      "name": "多模态视觉分析",
-      "description": "多模态视觉分析",
-      "usage_count": 2,
-      "task_success_rate": 0.8200000000000001,
-      "mean_execution_time_ms": 1892.5419551163905,
-      "tool_call_failure_rate": 0.09000000000000001,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_factory.sensor.current.monitor",
+      "description": "smart_factory.sensor.current.monitor",
+      "usage_count": 277,
+      "task_success_rate": 0.8916,
+      "mean_execution_time_ms": 9527.0,
+      "tool_call_failure_rate": 0.0082,
+      "hallucination_rate": 0.037940000000000015
     },
     {
-      "name": "判断单个视频帧是否有火灾",
-      "description": "判断单个视频帧是否有火灾",
-      "usage_count": 1,
-      "task_success_rate": 0.8200000000000001,
-      "mean_execution_time_ms": 1923.0905851960085,
-      "tool_call_failure_rate": 0.09000000000000001,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_factory.sensor.data_quality.assess",
+      "description": "smart_factory.sensor.data_quality.assess",
+      "usage_count": 277,
+      "task_success_rate": 0.8916,
+      "mean_execution_time_ms": 9527.0,
+      "tool_call_failure_rate": 0.0082,
+      "hallucination_rate": 0.037940000000000015
+    },
+    {
+      "name": "smart_factory.sensor.gas_concentration.monitor",
+      "description": "smart_factory.sensor.gas_concentration.monitor",
+      "usage_count": 277,
+      "task_success_rate": 0.8916,
+      "mean_execution_time_ms": 9527.0,
+      "tool_call_failure_rate": 0.0082,
+      "hallucination_rate": 0.037940000000000015
+    },
+    {
+      "name": "smart_factory.sensor.displacement.monitor",
+      "description": "smart_factory.sensor.displacement.monitor",
+      "usage_count": 277,
+      "task_success_rate": 0.8916,
+      "mean_execution_time_ms": 9527.0,
+      "tool_call_failure_rate": 0.0082,
+      "hallucination_rate": 0.037940000000000015
+    },
+    {
+      "name": "smart_factory.sensor.qa.answer",
+      "description": "smart_factory.sensor.qa.answer",
+      "usage_count": 277,
+      "task_success_rate": 0.8916,
+      "mean_execution_time_ms": 9527.0,
+      "tool_call_failure_rate": 0.0082,
+      "hallucination_rate": 0.037940000000000015
+    },
+    {
+      "name": "smart_factory.sensor.vibration.monitor",
+      "description": "smart_factory.sensor.vibration.monitor",
+      "usage_count": 277,
+      "task_success_rate": 0.8916,
+      "mean_execution_time_ms": 9527.0,
+      "tool_call_failure_rate": 0.0082,
+      "hallucination_rate": 0.037940000000000015
+    },
+    {
+      "name": "smart_factory.sensor.temperature.monitor",
+      "description": "smart_factory.sensor.temperature.monitor",
+      "usage_count": 277,
+      "task_success_rate": 0.8916,
+      "mean_execution_time_ms": 9527.0,
+      "tool_call_failure_rate": 0.0082,
+      "hallucination_rate": 0.037940000000000015
     }
   ],
   "metadata": {
-    "role": "vision"
+    "agent_key": "A023",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-005",
+    "source_agent_type_name": "Sensor Monitoring Agent"
   }
 }

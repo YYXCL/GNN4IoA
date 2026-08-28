@@ -2,16 +2,73 @@
   "agent_id": 77,
   "capabilities": [
     {
-      "name": "6G 网络控制",
-      "description": "6G 网络控制",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_factory.safety.emergency_response.recommend",
+      "description": "smart_factory.safety.emergency_response.recommend",
+      "usage_count": 535,
+      "task_success_rate": 0.9602,
+      "mean_execution_time_ms": 7330.0,
+      "tool_call_failure_rate": 0.007,
+      "hallucination_rate": 0.01392999999999998
+    },
+    {
+      "name": "smart_factory.safety.confined_space.monitor",
+      "description": "smart_factory.safety.confined_space.monitor",
+      "usage_count": 535,
+      "task_success_rate": 0.9602,
+      "mean_execution_time_ms": 7330.0,
+      "tool_call_failure_rate": 0.007,
+      "hallucination_rate": 0.01392999999999998
+    },
+    {
+      "name": "smart_factory.safety.high_temperature_risk.assess",
+      "description": "smart_factory.safety.high_temperature_risk.assess",
+      "usage_count": 535,
+      "task_success_rate": 0.9602,
+      "mean_execution_time_ms": 7330.0,
+      "tool_call_failure_rate": 0.007,
+      "hallucination_rate": 0.01392999999999998
+    },
+    {
+      "name": "smart_factory.safety.noise_exposure.assess",
+      "description": "smart_factory.safety.noise_exposure.assess",
+      "usage_count": 535,
+      "task_success_rate": 0.9602,
+      "mean_execution_time_ms": 7330.0,
+      "tool_call_failure_rate": 0.007,
+      "hallucination_rate": 0.01392999999999998
+    },
+    {
+      "name": "smart_factory.safety.safety_training_record.check",
+      "description": "smart_factory.safety.safety_training_record.check",
+      "usage_count": 535,
+      "task_success_rate": 0.9602,
+      "mean_execution_time_ms": 7330.0,
+      "tool_call_failure_rate": 0.007,
+      "hallucination_rate": 0.01392999999999998
+    },
+    {
+      "name": "smart_factory.safety.danger_zone.detect",
+      "description": "smart_factory.safety.danger_zone.detect",
+      "usage_count": 535,
+      "task_success_rate": 0.9602,
+      "mean_execution_time_ms": 7330.0,
+      "tool_call_failure_rate": 0.007,
+      "hallucination_rate": 0.01392999999999998
+    },
+    {
+      "name": "smart_factory.safety.fire_risk.detect",
+      "description": "smart_factory.safety.fire_risk.detect",
+      "usage_count": 535,
+      "task_success_rate": 0.9602,
+      "mean_execution_time_ms": 7330.0,
+      "tool_call_failure_rate": 0.007,
+      "hallucination_rate": 0.01392999999999998
     }
   ],
   "metadata": {
-    "role": "network"
+    "agent_key": "A078",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-016",
+    "source_agent_type_name": "Smart Factory Safety Monitoring Agent"
   }
 }

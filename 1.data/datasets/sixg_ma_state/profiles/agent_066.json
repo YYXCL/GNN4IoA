@@ -2,16 +2,64 @@
   "agent_id": 66,
   "capabilities": [
     {
-      "name": "知识检索",
-      "description": "知识检索",
-      "usage_count": 2,
-      "task_success_rate": 0.7200000000000001,
-      "mean_execution_time_ms": 2312.776780494156,
-      "tool_call_failure_rate": 0.19,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_factory.production.cycle_time.analyze",
+      "description": "smart_factory.production.cycle_time.analyze",
+      "usage_count": 661,
+      "task_success_rate": 0.9128,
+      "mean_execution_time_ms": 7787.0,
+      "tool_call_failure_rate": 0.0288,
+      "hallucination_rate": 0.030520000000000016
+    },
+    {
+      "name": "smart_factory.production.line_balance.analyze",
+      "description": "smart_factory.production.line_balance.analyze",
+      "usage_count": 661,
+      "task_success_rate": 0.9128,
+      "mean_execution_time_ms": 7787.0,
+      "tool_call_failure_rate": 0.0288,
+      "hallucination_rate": 0.030520000000000016
+    },
+    {
+      "name": "smart_factory.production.capacity.assess",
+      "description": "smart_factory.production.capacity.assess",
+      "usage_count": 661,
+      "task_success_rate": 0.9128,
+      "mean_execution_time_ms": 7787.0,
+      "tool_call_failure_rate": 0.0288,
+      "hallucination_rate": 0.030520000000000016
+    },
+    {
+      "name": "smart_factory.production.shift_performance.compare",
+      "description": "smart_factory.production.shift_performance.compare",
+      "usage_count": 661,
+      "task_success_rate": 0.9128,
+      "mean_execution_time_ms": 7787.0,
+      "tool_call_failure_rate": 0.0288,
+      "hallucination_rate": 0.030520000000000016
+    },
+    {
+      "name": "smart_factory.production.schedule.optimize",
+      "description": "smart_factory.production.schedule.optimize",
+      "usage_count": 661,
+      "task_success_rate": 0.9128,
+      "mean_execution_time_ms": 7787.0,
+      "tool_call_failure_rate": 0.0288,
+      "hallucination_rate": 0.030520000000000016
+    },
+    {
+      "name": "smart_factory.production.output.forecast",
+      "description": "smart_factory.production.output.forecast",
+      "usage_count": 661,
+      "task_success_rate": 0.9128,
+      "mean_execution_time_ms": 7787.0,
+      "tool_call_failure_rate": 0.0288,
+      "hallucination_rate": 0.030520000000000016
     }
   ],
   "metadata": {
-    "role": "retrieval"
+    "agent_key": "A067",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-014",
+    "source_agent_type_name": "Smart Factory Production Management Agent"
   }
 }

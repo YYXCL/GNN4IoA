@@ -2,25 +2,64 @@
   "agent_id": 19,
   "capabilities": [
     {
-      "name": "多模态视觉分析",
-      "description": "多模态视觉分析",
-      "usage_count": 2,
-      "task_success_rate": 0.8200000000000001,
-      "mean_execution_time_ms": 1853.424864252126,
-      "tool_call_failure_rate": 0.09000000000000001,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_factory.iot.device_inventory.generate",
+      "description": "smart_factory.iot.device_inventory.generate",
+      "usage_count": 1052,
+      "task_success_rate": 0.8822,
+      "mean_execution_time_ms": 6711.0,
+      "tool_call_failure_rate": 0.0279,
+      "hallucination_rate": 0.04123
     },
     {
-      "name": "检索领域文档证据",
-      "description": "检索领域文档证据",
-      "usage_count": 1,
-      "task_success_rate": 0.7200000000000001,
-      "mean_execution_time_ms": 1855.0913767886843,
-      "tool_call_failure_rate": 0.09000000000000001,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_home.iot.door_lock.control",
+      "description": "smart_home.iot.door_lock.control",
+      "usage_count": 1052,
+      "task_success_rate": 0.8822,
+      "mean_execution_time_ms": 6711.0,
+      "tool_call_failure_rate": 0.0279,
+      "hallucination_rate": 0.04123
+    },
+    {
+      "name": "smart_home.iot.qa.answer",
+      "description": "smart_home.iot.qa.answer",
+      "usage_count": 1052,
+      "task_success_rate": 0.8822,
+      "mean_execution_time_ms": 6711.0,
+      "tool_call_failure_rate": 0.0279,
+      "hallucination_rate": 0.04123
+    },
+    {
+      "name": "smart_factory.iot.maintenance_alert.generate",
+      "description": "smart_factory.iot.maintenance_alert.generate",
+      "usage_count": 1052,
+      "task_success_rate": 0.8822,
+      "mean_execution_time_ms": 6711.0,
+      "tool_call_failure_rate": 0.0279,
+      "hallucination_rate": 0.04123
+    },
+    {
+      "name": "smart_home.iot.door_lock.status.query",
+      "description": "smart_home.iot.door_lock.status.query",
+      "usage_count": 1052,
+      "task_success_rate": 0.8822,
+      "mean_execution_time_ms": 6711.0,
+      "tool_call_failure_rate": 0.0279,
+      "hallucination_rate": 0.04123
+    },
+    {
+      "name": "smart_factory.iot.qa.answer",
+      "description": "smart_factory.iot.qa.answer",
+      "usage_count": 1052,
+      "task_success_rate": 0.8822,
+      "mean_execution_time_ms": 6711.0,
+      "tool_call_failure_rate": 0.0279,
+      "hallucination_rate": 0.04123
     }
   ],
   "metadata": {
-    "role": "vision"
+    "agent_key": "A020",
+    "scenario": "应急救援",
+    "source_agent_type_id": "agent-004",
+    "source_agent_type_name": "IoT Device Management Agent"
   }
 }

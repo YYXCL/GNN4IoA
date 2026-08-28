@@ -2,16 +2,55 @@
   "agent_id": 3,
   "capabilities": [
     {
-      "name": "工具调用",
-      "description": "工具调用",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_factory.video.danger_zone.intrusion.detect",
+      "description": "smart_factory.video.danger_zone.intrusion.detect",
+      "usage_count": 58,
+      "task_success_rate": 0.9151,
+      "mean_execution_time_ms": 5811.0,
+      "tool_call_failure_rate": 0.0068,
+      "hallucination_rate": 0.029714999999999988
+    },
+    {
+      "name": "smart_factory.video.smoke_fire.detect",
+      "description": "smart_factory.video.smoke_fire.detect",
+      "usage_count": 58,
+      "task_success_rate": 0.9151,
+      "mean_execution_time_ms": 5811.0,
+      "tool_call_failure_rate": 0.0068,
+      "hallucination_rate": 0.029714999999999988
+    },
+    {
+      "name": "smart_factory.video.spill_leak.detect",
+      "description": "smart_factory.video.spill_leak.detect",
+      "usage_count": 58,
+      "task_success_rate": 0.9151,
+      "mean_execution_time_ms": 5811.0,
+      "tool_call_failure_rate": 0.0068,
+      "hallucination_rate": 0.029714999999999988
+    },
+    {
+      "name": "smart_factory.video.safety_event.detect",
+      "description": "smart_factory.video.safety_event.detect",
+      "usage_count": 58,
+      "task_success_rate": 0.9151,
+      "mean_execution_time_ms": 5811.0,
+      "tool_call_failure_rate": 0.0068,
+      "hallucination_rate": 0.029714999999999988
+    },
+    {
+      "name": "smart_factory.video.worker_behavior.analyze",
+      "description": "smart_factory.video.worker_behavior.analyze",
+      "usage_count": 58,
+      "task_success_rate": 0.9151,
+      "mean_execution_time_ms": 5811.0,
+      "tool_call_failure_rate": 0.0068,
+      "hallucination_rate": 0.029714999999999988
     }
   ],
   "metadata": {
-    "role": "tool"
+    "agent_key": "A004",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-001",
+    "source_agent_type_name": "Video Understanding Agent"
   }
 }

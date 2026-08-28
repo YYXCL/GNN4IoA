@@ -2,25 +2,64 @@
   "agent_id": 29,
   "capabilities": [
     {
-      "name": "多模态视觉分析",
-      "description": "多模态视觉分析",
-      "usage_count": 2,
-      "task_success_rate": 0.8200000000000001,
-      "mean_execution_time_ms": 1863.6937644801922,
-      "tool_call_failure_rate": 0.19,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_home.security.event_report.generate",
+      "description": "smart_home.security.event_report.generate",
+      "usage_count": 653,
+      "task_success_rate": 0.9312,
+      "mean_execution_time_ms": 8621.0,
+      "tool_call_failure_rate": 0.1015,
+      "hallucination_rate": 0.02407999999999999
     },
     {
-      "name": "诊断链路拥塞",
-      "description": "诊断链路拥塞",
-      "usage_count": 1,
-      "task_success_rate": 0.8200000000000001,
-      "mean_execution_time_ms": 1916.250020958947,
-      "tool_call_failure_rate": 0.09000000000000001,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_home.security.qa.answer",
+      "description": "smart_home.security.qa.answer",
+      "usage_count": 653,
+      "task_success_rate": 0.9312,
+      "mean_execution_time_ms": 8621.0,
+      "tool_call_failure_rate": 0.1015,
+      "hallucination_rate": 0.02407999999999999
+    },
+    {
+      "name": "smart_home.security.intrusion.detect",
+      "description": "smart_home.security.intrusion.detect",
+      "usage_count": 653,
+      "task_success_rate": 0.9312,
+      "mean_execution_time_ms": 8621.0,
+      "tool_call_failure_rate": 0.1015,
+      "hallucination_rate": 0.02407999999999999
+    },
+    {
+      "name": "smart_home.security.access_log.analyze",
+      "description": "smart_home.security.access_log.analyze",
+      "usage_count": 653,
+      "task_success_rate": 0.9312,
+      "mean_execution_time_ms": 8621.0,
+      "tool_call_failure_rate": 0.1015,
+      "hallucination_rate": 0.02407999999999999
+    },
+    {
+      "name": "smart_home.security.emergency_contact.notify",
+      "description": "smart_home.security.emergency_contact.notify",
+      "usage_count": 653,
+      "task_success_rate": 0.9312,
+      "mean_execution_time_ms": 8621.0,
+      "tool_call_failure_rate": 0.1015,
+      "hallucination_rate": 0.02407999999999999
+    },
+    {
+      "name": "smart_home.security.visitor.identify",
+      "description": "smart_home.security.visitor.identify",
+      "usage_count": 653,
+      "task_success_rate": 0.9312,
+      "mean_execution_time_ms": 8621.0,
+      "tool_call_failure_rate": 0.1015,
+      "hallucination_rate": 0.02407999999999999
     }
   ],
   "metadata": {
-    "role": "vision"
+    "agent_key": "A030",
+    "scenario": "智慧家居",
+    "source_agent_type_id": "agent-006",
+    "source_agent_type_name": "Smart Home Security Agent"
   }
 }

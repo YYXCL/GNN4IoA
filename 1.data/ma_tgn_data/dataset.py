@@ -40,9 +40,23 @@ def case_to_dict(case: TrainingCase) -> dict:
             "candidate_ids": _list(graph.candidate_ids), "edge_index": _list(graph.edge_index),
             "edge_state": _list(graph.edge_state), "relation_type": _list(graph.relation_type),
             "edge_timestamp": _list(graph.edge_timestamp), "edge_confidence": _list(graph.edge_confidence),
-            "query_time": graph.query_time,
+            "query_time": graph.query_time, "candidate_texts": list(graph.candidate_texts),
+            "candidate_skill_mask": (
+                _list(graph.candidate_skill_mask) if graph.candidate_skill_mask is not None else []
+            ),
         },
-        "task": {"qos": _list(case.task.values), "capability_embedding": _list(case.task.capability_embedding)},
+        "task": {
+            "qos": _list(case.task.values),
+            "capability_embedding": _list(case.task.capability_embedding),
+            "description": case.task.description,
+            "required_capability": case.task.required_capability,
+            "dag_descriptions": list(case.task.dag_descriptions),
+            "dag_required_capabilities": list(case.task.dag_required_capabilities),
+            "dag_qos": _list(case.task.dag_qos) if case.task.dag_qos is not None else [],
+            "dag_edge_index": _list(case.task.dag_edge_index) if case.task.dag_edge_index is not None else [[], []],
+            "dag_current_index": case.task.dag_current_index,
+            "complex_task_id": case.task.complex_task_id,
+        },
         "label": int(case.label), "candidate_targets": _list(case.candidate_targets),
         "teacher_scores": _list(case.teacher_scores), "metadata": case.metadata,
     }
@@ -68,11 +82,27 @@ def case_from_dict(data: dict) -> TrainingCase:
         relation_type=torch.tensor(raw["relation_type"], dtype=torch.long),
         edge_timestamp=torch.tensor(raw["edge_timestamp"], dtype=torch.float32),
         edge_confidence=torch.tensor(raw["edge_confidence"], dtype=torch.float32), query_time=float(raw["query_time"]),
+        candidate_texts=tuple(raw.get("candidate_texts", data.get("metadata", {}).get("candidate_roles", []))),
+        candidate_skill_mask=(
+            torch.tensor(raw["candidate_skill_mask"], dtype=torch.bool)
+            if raw.get("candidate_skill_mask") else None
+        ),
     )
     task = data["task"]
     return TrainingCase(
         events, graph,
-        TaskRequirement(torch.tensor(task["qos"], dtype=torch.float32), torch.tensor(task["capability_embedding"], dtype=torch.float32)),
+        TaskRequirement(
+            torch.tensor(task["qos"], dtype=torch.float32),
+            torch.tensor(task["capability_embedding"], dtype=torch.float32),
+            str(task.get("description", data.get("metadata", {}).get("task_prompt", ""))),
+            str(task.get("required_capability", data.get("metadata", {}).get("required_capability", ""))),
+            tuple(task.get("dag_descriptions", ())),
+            tuple(task.get("dag_required_capabilities", ())),
+            torch.tensor(task["dag_qos"], dtype=torch.float32) if task.get("dag_qos") else None,
+            torch.tensor(task["dag_edge_index"], dtype=torch.long) if task.get("dag_edge_index") else None,
+            int(task.get("dag_current_index", 0)),
+            str(task.get("complex_task_id", "")),
+        ),
         torch.tensor(data["label"], dtype=torch.long), torch.tensor(data["candidate_targets"], dtype=torch.float32),
         torch.tensor(data["teacher_scores"], dtype=torch.float32), data["metadata"],
     )

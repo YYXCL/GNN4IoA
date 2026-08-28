@@ -2,16 +2,64 @@
   "agent_id": 56,
   "capabilities": [
     {
-      "name": "工具调用",
-      "description": "工具调用",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_home.report.environment_status.generate",
+      "description": "smart_home.report.environment_status.generate",
+      "usage_count": 832,
+      "task_success_rate": 0.9424,
+      "mean_execution_time_ms": 10210.0,
+      "tool_call_failure_rate": 0.0552,
+      "hallucination_rate": 0.020159999999999994
+    },
+    {
+      "name": "smart_home.report.sleep_optimization.generate",
+      "description": "smart_home.report.sleep_optimization.generate",
+      "usage_count": 832,
+      "task_success_rate": 0.9424,
+      "mean_execution_time_ms": 10210.0,
+      "tool_call_failure_rate": 0.0552,
+      "hallucination_rate": 0.020159999999999994
+    },
+    {
+      "name": "smart_home.report.home_status.generate",
+      "description": "smart_home.report.home_status.generate",
+      "usage_count": 832,
+      "task_success_rate": 0.9424,
+      "mean_execution_time_ms": 10210.0,
+      "tool_call_failure_rate": 0.0552,
+      "hallucination_rate": 0.020159999999999994
+    },
+    {
+      "name": "smart_home.report.weekly_digest.generate",
+      "description": "smart_home.report.weekly_digest.generate",
+      "usage_count": 832,
+      "task_success_rate": 0.9424,
+      "mean_execution_time_ms": 10210.0,
+      "tool_call_failure_rate": 0.0552,
+      "hallucination_rate": 0.020159999999999994
+    },
+    {
+      "name": "smart_home.report.energy_usage.generate",
+      "description": "smart_home.report.energy_usage.generate",
+      "usage_count": 832,
+      "task_success_rate": 0.9424,
+      "mean_execution_time_ms": 10210.0,
+      "tool_call_failure_rate": 0.0552,
+      "hallucination_rate": 0.020159999999999994
+    },
+    {
+      "name": "smart_home.report.elderly_care.generate",
+      "description": "smart_home.report.elderly_care.generate",
+      "usage_count": 832,
+      "task_success_rate": 0.9424,
+      "mean_execution_time_ms": 10210.0,
+      "tool_call_failure_rate": 0.0552,
+      "hallucination_rate": 0.020159999999999994
     }
   ],
   "metadata": {
-    "role": "tool"
+    "agent_key": "A057",
+    "scenario": "智慧家居",
+    "source_agent_type_id": "agent-012",
+    "source_agent_type_name": "Smart Home Report Generation Agent"
   }
 }

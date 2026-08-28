@@ -17,12 +17,12 @@ class ModelConfig:
     # 任务还携带细粒度能力语义向量。
     task_feature_dim: int = len(TASK_QOS_METRICS) + 8
     event_types: tuple[str, ...] = (
-        "context_change", "environment_change", "compute_change", "link_change",
-        "task_result", "capability_added",
+        "context_update", "environment_update", "compute_update", "link_update",
+        "task_result", "capability_update",
     )
-    relation_types: tuple[str, ...] = (
-        "compute_access", "communication", "historical_collaboration",
-    )
+    # 系统图只包含真实可调度实体；任务/DAG 始终作为 query，不进入节点集合。
+    relation_types: tuple[str, ...] = ("compute_access", "communication", "task_dependency")
+    node_types: tuple[str, ...] = ("agent", "compute")
     modality_dim: int = 16
     state_dim: int = 64
     memory_dim: int = 64
@@ -30,6 +30,12 @@ class ModelConfig:
     event_dim: int = 64
     task_dim: int = 32
     attention_heads: int = 4
+    hgt_layers: int = 2
+    text_hash_dim: int = 256
+    text_dim: int = 64
+    dag_layers: int = 2
+    semantic_prior_weight: float = 2.0
+    qos_utility_weight: float = 1.25
     dropout: float = 0.1
     slow_update_rate: float = 0.1
     confidence_tau_seconds: float = 2.0
@@ -47,3 +53,5 @@ class ModelConfig:
             raise ValueError("每个能力必须保留成功率、执行时间、工具失败率、幻觉率四项可靠性")
         if self.task_feature_dim != self.task_qos_dim + self.capability_embedding_dim:
             raise ValueError("task_feature_dim 必须包含 QoS 和能力语义向量")
+        if self.state_dim % self.attention_heads:
+            raise ValueError("state_dim 必须能被 attention_heads 整除")

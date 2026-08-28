@@ -2,25 +2,55 @@
   "agent_id": 55,
   "capabilities": [
     {
-      "name": "6G 网络控制",
-      "description": "6G 网络控制",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "global.report.json.generate",
+      "description": "global.report.json.generate",
+      "usage_count": 720,
+      "task_success_rate": 0.8786,
+      "mean_execution_time_ms": 7464.0,
+      "tool_call_failure_rate": 0.0144,
+      "hallucination_rate": 0.04248999999999998
     },
     {
-      "name": "检索领域文档证据",
-      "description": "检索领域文档证据",
-      "usage_count": 1,
-      "task_success_rate": 0.8200000000000001,
-      "mean_execution_time_ms": 3635.50776613969,
-      "tool_call_failure_rate": 0.09000000000000001,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_home.report.home_status.generate",
+      "description": "smart_home.report.home_status.generate",
+      "usage_count": 720,
+      "task_success_rate": 0.8786,
+      "mean_execution_time_ms": 7464.0,
+      "tool_call_failure_rate": 0.0144,
+      "hallucination_rate": 0.04248999999999998
+    },
+    {
+      "name": "smart_home.report.security_event.generate",
+      "description": "smart_home.report.security_event.generate",
+      "usage_count": 720,
+      "task_success_rate": 0.8786,
+      "mean_execution_time_ms": 7464.0,
+      "tool_call_failure_rate": 0.0144,
+      "hallucination_rate": 0.04248999999999998
+    },
+    {
+      "name": "smart_home.report.elderly_care.generate",
+      "description": "smart_home.report.elderly_care.generate",
+      "usage_count": 720,
+      "task_success_rate": 0.8786,
+      "mean_execution_time_ms": 7464.0,
+      "tool_call_failure_rate": 0.0144,
+      "hallucination_rate": 0.04248999999999998
+    },
+    {
+      "name": "smart_home.report.daily_digest.generate",
+      "description": "smart_home.report.daily_digest.generate",
+      "usage_count": 720,
+      "task_success_rate": 0.8786,
+      "mean_execution_time_ms": 7464.0,
+      "tool_call_failure_rate": 0.0144,
+      "hallucination_rate": 0.04248999999999998
     }
   ],
   "metadata": {
-    "role": "network"
+    "agent_key": "A056",
+    "scenario": "智慧家居",
+    "source_agent_type_id": "agent-012",
+    "source_agent_type_name": "Smart Home Report Generation Agent"
   }
 }

@@ -1,0 +1,56 @@
+{
+  "agent_id": 110,
+  "capabilities": [
+    {
+      "name": "smart_building.facility.meeting_room_occupancy.detect",
+      "description": "smart_building.facility.meeting_room_occupancy.detect",
+      "usage_count": 548,
+      "task_success_rate": 0.8384,
+      "mean_execution_time_ms": 7639.0,
+      "tool_call_failure_rate": 0.01,
+      "hallucination_rate": 0.056559999999999985
+    },
+    {
+      "name": "smart_building.facility.water_consumption.monitor",
+      "description": "smart_building.facility.water_consumption.monitor",
+      "usage_count": 548,
+      "task_success_rate": 0.8384,
+      "mean_execution_time_ms": 7639.0,
+      "tool_call_failure_rate": 0.01,
+      "hallucination_rate": 0.056559999999999985
+    },
+    {
+      "name": "smart_building.facility.indoor_air_quality.monitor",
+      "description": "smart_building.facility.indoor_air_quality.monitor",
+      "usage_count": 548,
+      "task_success_rate": 0.8384,
+      "mean_execution_time_ms": 7639.0,
+      "tool_call_failure_rate": 0.01,
+      "hallucination_rate": 0.056559999999999985
+    },
+    {
+      "name": "smart_building.facility.energy_consumption.monitor",
+      "description": "smart_building.facility.energy_consumption.monitor",
+      "usage_count": 548,
+      "task_success_rate": 0.8384,
+      "mean_execution_time_ms": 7639.0,
+      "tool_call_failure_rate": 0.01,
+      "hallucination_rate": 0.056559999999999985
+    },
+    {
+      "name": "smart_building.facility.noise.monitor",
+      "description": "smart_building.facility.noise.monitor",
+      "usage_count": 548,
+      "task_success_rate": 0.8384,
+      "mean_execution_time_ms": 7639.0,
+      "tool_call_failure_rate": 0.01,
+      "hallucination_rate": 0.056559999999999985
+    }
+  ],
+  "metadata": {
+    "agent_key": "A111",
+    "scenario": "应急救援",
+    "source_agent_type_id": "agent-023",
+    "source_agent_type_name": "Smart Building Facility & Energy Agent"
+  }
+}

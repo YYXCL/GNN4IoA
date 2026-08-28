@@ -2,16 +2,55 @@
   "agent_id": 90,
   "capabilities": [
     {
-      "name": "复杂任务规划",
-      "description": "复杂任务规划",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_factory.logistics.pallet_status.track",
+      "description": "smart_factory.logistics.pallet_status.track",
+      "usage_count": 855,
+      "task_success_rate": 0.9423,
+      "mean_execution_time_ms": 6078.0,
+      "tool_call_failure_rate": 0.0083,
+      "hallucination_rate": 0.02019499999999999
+    },
+    {
+      "name": "smart_factory.logistics.warehouse_congestion.detect",
+      "description": "smart_factory.logistics.warehouse_congestion.detect",
+      "usage_count": 855,
+      "task_success_rate": 0.9423,
+      "mean_execution_time_ms": 6078.0,
+      "tool_call_failure_rate": 0.0083,
+      "hallucination_rate": 0.02019499999999999
+    },
+    {
+      "name": "smart_factory.logistics.material_shortage.detect",
+      "description": "smart_factory.logistics.material_shortage.detect",
+      "usage_count": 855,
+      "task_success_rate": 0.9423,
+      "mean_execution_time_ms": 6078.0,
+      "tool_call_failure_rate": 0.0083,
+      "hallucination_rate": 0.02019499999999999
+    },
+    {
+      "name": "smart_factory.logistics.outbound_product.track",
+      "description": "smart_factory.logistics.outbound_product.track",
+      "usage_count": 855,
+      "task_success_rate": 0.9423,
+      "mean_execution_time_ms": 6078.0,
+      "tool_call_failure_rate": 0.0083,
+      "hallucination_rate": 0.02019499999999999
+    },
+    {
+      "name": "smart_factory.logistics.inbound_material.track",
+      "description": "smart_factory.logistics.inbound_material.track",
+      "usage_count": 855,
+      "task_success_rate": 0.9423,
+      "mean_execution_time_ms": 6078.0,
+      "tool_call_failure_rate": 0.0083,
+      "hallucination_rate": 0.02019499999999999
     }
   ],
   "metadata": {
-    "role": "planning"
+    "agent_key": "A091",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-019",
+    "source_agent_type_name": "Smart Factory Logistics Agent"
   }
 }

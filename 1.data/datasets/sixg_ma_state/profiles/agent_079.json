@@ -2,16 +2,64 @@
   "agent_id": 79,
   "capabilities": [
     {
-      "name": "6G 网络控制",
-      "description": "6G 网络控制",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_factory.safety.violation_report.generate",
+      "description": "smart_factory.safety.violation_report.generate",
+      "usage_count": 318,
+      "task_success_rate": 0.8765,
+      "mean_execution_time_ms": 9489.0,
+      "tool_call_failure_rate": 0.0046,
+      "hallucination_rate": 0.04322500000000001
+    },
+    {
+      "name": "smart_factory.safety.qa.answer",
+      "description": "smart_factory.safety.qa.answer",
+      "usage_count": 318,
+      "task_success_rate": 0.8765,
+      "mean_execution_time_ms": 9489.0,
+      "tool_call_failure_rate": 0.0046,
+      "hallucination_rate": 0.04322500000000001
+    },
+    {
+      "name": "smart_factory.safety.worker_fall.detect",
+      "description": "smart_factory.safety.worker_fall.detect",
+      "usage_count": 318,
+      "task_success_rate": 0.8765,
+      "mean_execution_time_ms": 9489.0,
+      "tool_call_failure_rate": 0.0046,
+      "hallucination_rate": 0.04322500000000001
+    },
+    {
+      "name": "smart_factory.safety.unsafe_behavior.detect",
+      "description": "smart_factory.safety.unsafe_behavior.detect",
+      "usage_count": 318,
+      "task_success_rate": 0.8765,
+      "mean_execution_time_ms": 9489.0,
+      "tool_call_failure_rate": 0.0046,
+      "hallucination_rate": 0.04322500000000001
+    },
+    {
+      "name": "smart_factory.safety.equipment_guard.check",
+      "description": "smart_factory.safety.equipment_guard.check",
+      "usage_count": 318,
+      "task_success_rate": 0.8765,
+      "mean_execution_time_ms": 9489.0,
+      "tool_call_failure_rate": 0.0046,
+      "hallucination_rate": 0.04322500000000001
+    },
+    {
+      "name": "smart_factory.safety.emergency_exit.check",
+      "description": "smart_factory.safety.emergency_exit.check",
+      "usage_count": 318,
+      "task_success_rate": 0.8765,
+      "mean_execution_time_ms": 9489.0,
+      "tool_call_failure_rate": 0.0046,
+      "hallucination_rate": 0.04322500000000001
     }
   ],
   "metadata": {
-    "role": "network"
+    "agent_key": "A080",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-016",
+    "source_agent_type_name": "Smart Factory Safety Monitoring Agent"
   }
 }

@@ -2,25 +2,55 @@
   "agent_id": 88,
   "capabilities": [
     {
-      "name": "6G 网络控制",
-      "description": "6G 网络控制",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_factory.energy.carbon_emission.estimate",
+      "description": "smart_factory.energy.carbon_emission.estimate",
+      "usage_count": 535,
+      "task_success_rate": 0.8969,
+      "mean_execution_time_ms": 9083.0,
+      "tool_call_failure_rate": 0.0154,
+      "hallucination_rate": 0.036084999999999985
     },
     {
-      "name": "检索领域文档证据",
-      "description": "检索领域文档证据",
-      "usage_count": 1,
-      "task_success_rate": 0.8200000000000001,
-      "mean_execution_time_ms": 1900.3031312287148,
-      "tool_call_failure_rate": 0.09000000000000001,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_factory.energy.consumption.monitor",
+      "description": "smart_factory.energy.consumption.monitor",
+      "usage_count": 535,
+      "task_success_rate": 0.8969,
+      "mean_execution_time_ms": 9083.0,
+      "tool_call_failure_rate": 0.0154,
+      "hallucination_rate": 0.036084999999999985
+    },
+    {
+      "name": "smart_factory.energy.peak_load.detect",
+      "description": "smart_factory.energy.peak_load.detect",
+      "usage_count": 535,
+      "task_success_rate": 0.8969,
+      "mean_execution_time_ms": 9083.0,
+      "tool_call_failure_rate": 0.0154,
+      "hallucination_rate": 0.036084999999999985
+    },
+    {
+      "name": "smart_factory.energy.energy_efficiency.score",
+      "description": "smart_factory.energy.energy_efficiency.score",
+      "usage_count": 535,
+      "task_success_rate": 0.8969,
+      "mean_execution_time_ms": 9083.0,
+      "tool_call_failure_rate": 0.0154,
+      "hallucination_rate": 0.036084999999999985
+    },
+    {
+      "name": "smart_factory.energy.hvac_energy.optimize",
+      "description": "smart_factory.energy.hvac_energy.optimize",
+      "usage_count": 535,
+      "task_success_rate": 0.8969,
+      "mean_execution_time_ms": 9083.0,
+      "tool_call_failure_rate": 0.0154,
+      "hallucination_rate": 0.036084999999999985
     }
   ],
   "metadata": {
-    "role": "network"
+    "agent_key": "A089",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-018",
+    "source_agent_type_name": "Smart Factory Energy Management Agent"
   }
 }

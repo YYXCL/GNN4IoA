@@ -12,9 +12,16 @@ import hashlib
 import json
 import math
 import random
+import sys
 from pathlib import Path
 
 import pandas as pd
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(PROJECT_ROOT / "2.模型"))
+sys.path.insert(0, str(PROJECT_ROOT / "1.data"))
+
+from ma_tgn_data.foundation import generate_foundation_dataset  # noqa: E402
 
 
 SEED = 20260814
@@ -389,18 +396,17 @@ def build_tasks(source_path: Path, agents: list[dict]) -> tuple[pd.DataFrame, li
                 # 源数据中的智慧楼宇/园区任务映射到三场景实验中的应急救援侧。
                 scenario = "应急救援"
             prompt = f"在{scenario}场景中，{skill['description']}请给出结构化结果、关键证据和置信度。"
-            requirement = (
-                f"候选智能体必须包含 skill={skill['id']}；结果需可解析为 JSON；"
-                f"关键字段完整率不低于 95%；端到端完成时间不超过 {5 if critical else 15} 秒。"
-            )
             row = {
                 "任务id": f"T{task_id:04d}",
                 "任务具体提示词": prompt,
-                "实验要求": requirement,
+                "必需的Skill id": skill["id"],
+                "输出结果的要求": "JSON",
+                "字段完整率要求": 0.95,
+                "端到端完成时延要求(s)": 5 if critical else 15,
                 "准确率要求": accuracy,
             }
             rows.append(row)
-            structured.append({**row, "场景": scenario, "required_skill_id": skill["id"], "source_agent_type_id": source["id"]})
+            structured.append({**row, "场景": scenario, "source_agent_type_id": source["id"]})
     return pd.DataFrame(rows), structured
 
 
@@ -442,6 +448,10 @@ def main() -> None:
     parser.add_argument("--data-root", type=Path, default=data_root)
     parser.add_argument("--compute-nodes", type=int, default=DEFAULT_COMPUTE_NODES)
     parser.add_argument("--seed", type=int, default=SEED)
+    parser.add_argument("--training-output", type=Path, default=None)
+    parser.add_argument("--training-samples", type=int, default=None, help="默认每个任务生成一个时间窗口")
+    parser.add_argument("--window-size", type=int, default=16, help="每个训练样本包含的源时间戳数量")
+    parser.add_argument("--build-training-jsonl", action=argparse.BooleanOptionalAction, default=True)
     args = parser.parse_args()
     if args.compute_nodes < 2:
         raise ValueError("算力节点数至少为 2")
@@ -476,8 +486,18 @@ def main() -> None:
         write_csv(frame, paths[key])
     paths["agents_json"].write_text(json.dumps(agents, ensure_ascii=False, indent=2), encoding="utf-8")
     paths["tasks_json"].write_text(json.dumps(tasks, ensure_ascii=False, indent=2), encoding="utf-8")
+    training_metadata = None
+    if args.build_training_jsonl:
+        training_output = args.training_output or args.data_root / "datasets" / "sixg_ma_state"
+        training_metadata = generate_foundation_dataset(
+            args.data_root,
+            training_output,
+            seed=args.seed,
+            window_size_timestamps=args.window_size,
+            samples=args.training_samples,
+        )
     manifest = {
-        "dataset_version": "1.0.0",
+        "dataset_version": "1.1.0",
         "generation_seed": args.seed,
         "counts": {
             "agents": len(agents_frame), "source_agent_types": agent_meta["source_type_count"],
@@ -486,6 +506,13 @@ def main() -> None:
         },
         "agent_generation": agent_meta,
         "compute_load_processing": load_meta,
+        "training_jsonl": None if training_metadata is None else {
+            "output_dir": str((args.training_output or args.data_root / "datasets" / "sixg_ma_state").relative_to(args.data_root)),
+            "samples": training_metadata["samples"],
+            "splits": training_metadata["splits"],
+            "window_size_timestamps": training_metadata["window_size_timestamps"],
+            "window_overlap": training_metadata["window_overlap"],
+        },
         "link_column_6_interpretation": "用户重复写了网络丢包；按模型现有 EDGE_METRICS 将第6列定义为网络抖动(ms)。",
         "files": {key: str(path.relative_to(args.data_root)) for key, path in paths.items()},
     }
@@ -497,6 +524,8 @@ def main() -> None:
     assert set(links["数据源"]).issubset({item["agent_key"] for item in agents})
     assert set(links.loc[links["数据目的地"].str.startswith("C"), "数据目的地"]).issubset(set(inventory["算力节点编号"]))
     assert agents_frame["接入知识库"].ne("无").mean() <= 0.20
+    assert "实验要求" not in tasks_frame.columns
+    assert "required_skill_id" not in json.dumps(tasks, ensure_ascii=False)
     print(json.dumps(manifest["counts"], ensure_ascii=False, indent=2))
     print(f"manifest={manifest_path}")
 

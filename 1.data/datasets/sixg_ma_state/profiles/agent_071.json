@@ -2,25 +2,64 @@
   "agent_id": 71,
   "capabilities": [
     {
-      "name": "知识检索",
-      "description": "知识检索",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_factory.maintenance.parts_need.assess",
+      "description": "smart_factory.maintenance.parts_need.assess",
+      "usage_count": 752,
+      "task_success_rate": 0.8655,
+      "mean_execution_time_ms": 9270.0,
+      "tool_call_failure_rate": 0.043,
+      "hallucination_rate": 0.04707499999999998
     },
     {
-      "name": "判断单个视频帧是否有火灾",
-      "description": "判断单个视频帧是否有火灾",
-      "usage_count": 1,
-      "task_success_rate": 0.8200000000000001,
-      "mean_execution_time_ms": 1894.0598743723742,
-      "tool_call_failure_rate": 0.09000000000000001,
-      "hallucination_rate": 0.09000000000000001
+      "name": "smart_factory.maintenance.root_cause.analyze",
+      "description": "smart_factory.maintenance.root_cause.analyze",
+      "usage_count": 752,
+      "task_success_rate": 0.8655,
+      "mean_execution_time_ms": 9270.0,
+      "tool_call_failure_rate": 0.043,
+      "hallucination_rate": 0.04707499999999998
+    },
+    {
+      "name": "smart_factory.maintenance.predict_failure",
+      "description": "smart_factory.maintenance.predict_failure",
+      "usage_count": 752,
+      "task_success_rate": 0.8655,
+      "mean_execution_time_ms": 9270.0,
+      "tool_call_failure_rate": 0.043,
+      "hallucination_rate": 0.04707499999999998
+    },
+    {
+      "name": "smart_factory.maintenance.preventive_decision.assess",
+      "description": "smart_factory.maintenance.preventive_decision.assess",
+      "usage_count": 752,
+      "task_success_rate": 0.8655,
+      "mean_execution_time_ms": 9270.0,
+      "tool_call_failure_rate": 0.043,
+      "hallucination_rate": 0.04707499999999998
+    },
+    {
+      "name": "smart_factory.maintenance.history.retrieve",
+      "description": "smart_factory.maintenance.history.retrieve",
+      "usage_count": 752,
+      "task_success_rate": 0.8655,
+      "mean_execution_time_ms": 9270.0,
+      "tool_call_failure_rate": 0.043,
+      "hallucination_rate": 0.04707499999999998
+    },
+    {
+      "name": "smart_factory.maintenance.remaining_life.estimate",
+      "description": "smart_factory.maintenance.remaining_life.estimate",
+      "usage_count": 752,
+      "task_success_rate": 0.8655,
+      "mean_execution_time_ms": 9270.0,
+      "tool_call_failure_rate": 0.043,
+      "hallucination_rate": 0.04707499999999998
     }
   ],
   "metadata": {
-    "role": "retrieval"
+    "agent_key": "A072",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-015",
+    "source_agent_type_name": "Smart Factory Maintenance Agent"
   }
 }

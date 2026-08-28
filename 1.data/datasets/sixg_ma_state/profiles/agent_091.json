@@ -2,16 +2,64 @@
   "agent_id": 91,
   "capabilities": [
     {
-      "name": "知识检索",
-      "description": "知识检索",
-      "usage_count": 1,
-      "task_success_rate": 0.8,
-      "mean_execution_time_ms": 2000.0,
-      "tool_call_failure_rate": 0.1,
-      "hallucination_rate": 0.1
+      "name": "smart_factory.logistics.inventory_turnover.analyze",
+      "description": "smart_factory.logistics.inventory_turnover.analyze",
+      "usage_count": 821,
+      "task_success_rate": 0.8499,
+      "mean_execution_time_ms": 9696.0,
+      "tool_call_failure_rate": 0.006,
+      "hallucination_rate": 0.052535
+    },
+    {
+      "name": "smart_factory.logistics.supply_delay.predict",
+      "description": "smart_factory.logistics.supply_delay.predict",
+      "usage_count": 821,
+      "task_success_rate": 0.8499,
+      "mean_execution_time_ms": 9696.0,
+      "tool_call_failure_rate": 0.006,
+      "hallucination_rate": 0.052535
+    },
+    {
+      "name": "smart_factory.logistics.material_shortage.detect",
+      "description": "smart_factory.logistics.material_shortage.detect",
+      "usage_count": 821,
+      "task_success_rate": 0.8499,
+      "mean_execution_time_ms": 9696.0,
+      "tool_call_failure_rate": 0.006,
+      "hallucination_rate": 0.052535
+    },
+    {
+      "name": "smart_factory.logistics.agv_route.plan",
+      "description": "smart_factory.logistics.agv_route.plan",
+      "usage_count": 821,
+      "task_success_rate": 0.8499,
+      "mean_execution_time_ms": 9696.0,
+      "tool_call_failure_rate": 0.006,
+      "hallucination_rate": 0.052535
+    },
+    {
+      "name": "smart_factory.logistics.outbound_product.track",
+      "description": "smart_factory.logistics.outbound_product.track",
+      "usage_count": 821,
+      "task_success_rate": 0.8499,
+      "mean_execution_time_ms": 9696.0,
+      "tool_call_failure_rate": 0.006,
+      "hallucination_rate": 0.052535
+    },
+    {
+      "name": "smart_factory.logistics.buffer_stock.calculate",
+      "description": "smart_factory.logistics.buffer_stock.calculate",
+      "usage_count": 821,
+      "task_success_rate": 0.8499,
+      "mean_execution_time_ms": 9696.0,
+      "tool_call_failure_rate": 0.006,
+      "hallucination_rate": 0.052535
     }
   ],
   "metadata": {
-    "role": "retrieval"
+    "agent_key": "A092",
+    "scenario": "智慧工厂",
+    "source_agent_type_id": "agent-019",
+    "source_agent_type_name": "Smart Factory Logistics Agent"
   }
 }

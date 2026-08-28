@@ -1,0 +1,56 @@
+{
+  "agent_id": 108,
+  "capabilities": [
+    {
+      "name": "smart_building.security.fire_evacuation.monitor",
+      "description": "smart_building.security.fire_evacuation.monitor",
+      "usage_count": 961,
+      "task_success_rate": 0.813,
+      "mean_execution_time_ms": 9629.0,
+      "tool_call_failure_rate": 0.12,
+      "hallucination_rate": 0.06545000000000002
+    },
+    {
+      "name": "smart_building.security.unauthorized_area.detect",
+      "description": "smart_building.security.unauthorized_area.detect",
+      "usage_count": 961,
+      "task_success_rate": 0.813,
+      "mean_execution_time_ms": 9629.0,
+      "tool_call_failure_rate": 0.12,
+      "hallucination_rate": 0.06545000000000002
+    },
+    {
+      "name": "smart_building.security.alarm_event.classify",
+      "description": "smart_building.security.alarm_event.classify",
+      "usage_count": 961,
+      "task_success_rate": 0.813,
+      "mean_execution_time_ms": 9629.0,
+      "tool_call_failure_rate": 0.12,
+      "hallucination_rate": 0.06545000000000002
+    },
+    {
+      "name": "smart_building.security.risk_score.calculate",
+      "description": "smart_building.security.risk_score.calculate",
+      "usage_count": 961,
+      "task_success_rate": 0.813,
+      "mean_execution_time_ms": 9629.0,
+      "tool_call_failure_rate": 0.12,
+      "hallucination_rate": 0.06545000000000002
+    },
+    {
+      "name": "smart_building.security.multisource_risk.assess",
+      "description": "smart_building.security.multisource_risk.assess",
+      "usage_count": 961,
+      "task_success_rate": 0.813,
+      "mean_execution_time_ms": 9629.0,
+      "tool_call_failure_rate": 0.12,
+      "hallucination_rate": 0.06545000000000002
+    }
+  ],
+  "metadata": {
+    "agent_key": "A109",
+    "scenario": "应急救援",
+    "source_agent_type_id": "agent-022",
+    "source_agent_type_name": "Smart Building Security & Access Agent"
+  }
+}
