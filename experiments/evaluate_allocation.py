@@ -17,7 +17,7 @@ def run_case(model, case):
     with torch.no_grad():
         for event in case.events:
             model.process_event(event)
-        return model.query(case.graph, case.task)
+        return model.assign(case.graph, case.task)
 
 
 def main() -> None:

@@ -1,0 +1,183 @@
+{
+  "dataset": "6G-Agent-Compute-Foundation-Sliding-Window",
+  "version": "6.0-task-agent-gru",
+  "dataset_origin": "1.data numbered foundation tables",
+  "num_agents": 120,
+  "num_compute_nodes": 12,
+  "compute_node_distribution": {
+    "cloud": 4,
+    "edge": 8
+  },
+  "samples": 72,
+  "splits": {
+    "train": 54,
+    "val": 9,
+    "test": 9
+  },
+  "split_source_timestamp_ranges": {
+    "train": {
+      "source_timestamp_start": 1662858720,
+      "source_timestamp_end": 1662920223
+    },
+    "val": {
+      "source_timestamp_start": 1662920508,
+      "source_timestamp_end": 1662930483
+    },
+    "test": {
+      "source_timestamp_start": 1662930768,
+      "source_timestamp_end": 1662940800
+    }
+  },
+  "window_size_timestamps": 16,
+  "candidate_count": 48,
+  "events_per_window": 96,
+  "neighbor_fanout": 8,
+  "window_overlap": false,
+  "source_timestamp_origin": 1662858720,
+  "source_timestamp_min": 1662858720,
+  "source_timestamp_max": 1662940800,
+  "task_distribution": {
+    "智慧工厂": 24,
+    "应急救援": 24,
+    "智慧家居": 24
+  },
+  "profile_format": "profiles/agent_NNN.json",
+  "derived_field_notes": {
+    "compute_features": "只使用 GPU 剩余算力、内存剩余量和显存剩余量",
+    "gpu_total_tflops": "剩余 GPU 算力基于云侧/边侧 4000/400 TFLOPS 容量假设计算",
+    "hallucination_rate": "基础可靠性表没有该字段，按 (1-task_success_rate)*0.35 截断到 0.5%-10%"
+  },
+  "design_constraints": {
+    "chronological_split": true,
+    "scenario_difficulty_stratified_split": true,
+    "non_overlapping_windows": true,
+    "required_skill_present_in_candidates": true,
+    "label_agent_has_required_skill": true,
+    "queue_batch_in_graph": false,
+    "queue_batch_used_for_decision": false,
+    "link_path_type_encoded": false,
+    "explicit_task_node": true,
+    "task_representation": "每个子任务是瞬时任务节点，并连接到所有候选智能体",
+    "node_history_encoder": "GRU",
+    "edge_history_encoder": "GRU",
+    "one_hop_agent_aggregation": true,
+    "confidence_used_by_model": false,
+    "explicit_trend_feature_used_by_model": false,
+    "required_skill_hard_mask": true,
+    "skills_shared_within_agent_type": true,
+    "task_and_agent_text_in_jsonl": false,
+    "task_encoding_fields": [
+      "required_skill_id",
+      "latency",
+      "accuracy"
+    ],
+    "capability_representation": "精确 Skill ID 集合；不使用能力槽"
+  },
+  "schema": {
+    "node_types": [
+      "agent",
+      "compute",
+      "task"
+    ],
+    "compute_kinds": [
+      "cloud",
+      "edge"
+    ],
+    "agent_context_metrics": [
+      "context_window_tokens",
+      "context_utilization"
+    ],
+    "agent_environment_metrics": [
+      "tool_api_rate_limit_remaining",
+      "tool_api_request_occupancy",
+      "knowledge_api_rate_limit_remaining",
+      "knowledge_api_request_occupancy",
+      "user_context_available",
+      "physical_sensor_available",
+      "physical_environment_match"
+    ],
+    "agent_workload_metrics": [
+      "active_unfinished_tasks"
+    ],
+    "agent_reliability_metrics": [
+      "task_success_rate",
+      "mean_execution_time_ms",
+      "tool_call_failure_rate",
+      "hallucination_rate"
+    ],
+    "compute_metrics": [
+      "gpu_remaining_tflops",
+      "memory_remaining_gb",
+      "vram_remaining_gb"
+    ],
+    "compute_decision_metrics": [
+      "gpu_remaining_tflops",
+      "memory_remaining_gb",
+      "vram_remaining_gb"
+    ],
+    "compute_observability_only_metrics": [],
+    "edge_metrics": [
+      "latency_ms",
+      "bandwidth_mbps",
+      "packet_loss_rate",
+      "jitter_ms"
+    ],
+    "task_qos_metrics": [
+      "latency",
+      "accuracy"
+    ],
+    "units": {
+      "context_window_tokens": "token",
+      "gpu_remaining_tflops": "TFLOPS",
+      "memory_remaining_gb": "GB",
+      "vram_remaining_gb": "GB",
+      "latency_ms": "ms",
+      "bandwidth_mbps": "Mbps",
+      "jitter_ms": "ms",
+      "mean_execution_time_ms": "ms"
+    },
+    "confidence": {
+      "used_by_current_model": false,
+      "note": "保留序列化兼容字段，但不进入节点、边或任务编码"
+    },
+    "normalization_scales": {
+      "agent_context": [
+        262144.0,
+        1.0
+      ],
+      "agent_environment": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "compute": [
+        10000.0,
+        2048.0,
+        1024.0
+      ],
+      "edge": [
+        1000.0,
+        100000.0,
+        1.0,
+        200.0
+      ],
+      "reliability": [
+        1.0,
+        120000.0,
+        1.0,
+        1.0
+      ]
+    },
+    "v2_normalization": "train-split-only typewise z-score; statistics stored in checkpoint",
+    "relation_types": [
+      "compute_access",
+      "communication",
+      "task_assignment"
+    ],
+    "task_representation": "transient task nodes connected to every candidate agent"
+  }
+}

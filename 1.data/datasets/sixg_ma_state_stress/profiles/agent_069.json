@@ -1,0 +1,32 @@
+{
+  "agent_id": 69,
+  "agent_key": "A070",
+  "scenario": "智慧工厂",
+  "source_agent_type_id": "agent-014",
+  "source_agent_type_name": "Smart Factory Production Management Agent",
+  "skill_ids": [
+    "smart_factory.production.bottleneck.detect",
+    "smart_factory.production.capacity.assess",
+    "smart_factory.production.changeover.optimize",
+    "smart_factory.production.cycle_time.analyze",
+    "smart_factory.production.daily_report.generate",
+    "smart_factory.production.kpi.calculate",
+    "smart_factory.production.line_balance.analyze",
+    "smart_factory.production.material_shortage.detect",
+    "smart_factory.production.order_progress.track",
+    "smart_factory.production.output.forecast",
+    "smart_factory.production.process_deviation.detect",
+    "smart_factory.production.process_parameter.recommend",
+    "smart_factory.production.qa.answer",
+    "smart_factory.production.schedule.optimize",
+    "smart_factory.production.shift_performance.compare",
+    "smart_factory.production.throughput.monitor",
+    "smart_factory.production.work_order.dispatch"
+  ],
+  "reliability": [
+    0.9272000193595886,
+    9577.0,
+    0.08139999955892563,
+    0.02548000030219555
+  ]
+}

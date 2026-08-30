@@ -1,0 +1,33 @@
+{
+  "agent_id": 46,
+  "agent_key": "A047",
+  "scenario": "智慧家居",
+  "source_agent_type_id": "agent-010",
+  "source_agent_type_name": "Smart Home Automation Agent",
+  "skill_ids": [
+    "smart_home.automation.action.execute",
+    "smart_home.automation.away_mode.activate",
+    "smart_home.automation.condition.evaluate",
+    "smart_home.automation.conflict.detect",
+    "smart_home.automation.energy_saving.optimize",
+    "smart_home.automation.execution_log.summarize",
+    "smart_home.automation.priority.resolve",
+    "smart_home.automation.qa.answer",
+    "smart_home.automation.routine.recommend",
+    "smart_home.automation.rule.create",
+    "smart_home.automation.rule.update",
+    "smart_home.automation.rule.validate",
+    "smart_home.automation.scene.activate",
+    "smart_home.automation.scene.create",
+    "smart_home.automation.schedule.create",
+    "smart_home.automation.security_mode.activate",
+    "smart_home.automation.sleep_mode.activate",
+    "smart_home.automation.trigger.detect"
+  ],
+  "reliability": [
+    0.8242999911308289,
+    8284.0,
+    0.017999999225139618,
+    0.06149499863386154
+  ]
+}

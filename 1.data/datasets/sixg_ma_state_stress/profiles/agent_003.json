@@ -1,0 +1,38 @@
+{
+  "agent_id": 3,
+  "agent_key": "A004",
+  "scenario": "智慧工厂",
+  "source_agent_type_id": "agent-001",
+  "source_agent_type_name": "Video Understanding Agent",
+  "skill_ids": [
+    "smart_factory.video.abnormal_operation.detect",
+    "smart_factory.video.crowd_density.monitor",
+    "smart_factory.video.danger_zone.intrusion.detect",
+    "smart_factory.video.equipment_panel.read",
+    "smart_factory.video.event_timeline.generate",
+    "smart_factory.video.forklift_activity.monitor",
+    "smart_factory.video.machine_operation.monitor",
+    "smart_factory.video.safety_event.detect",
+    "smart_factory.video.smoke_fire.detect",
+    "smart_factory.video.spill_leak.detect",
+    "smart_factory.video.worker_behavior.analyze",
+    "smart_home.video.abnormal_behavior.detect",
+    "smart_home.video.elderly_activity.monitor",
+    "smart_home.video.fall.detect",
+    "smart_home.video.intrusion.detect",
+    "smart_home.video.motion_event.detect",
+    "smart_home.video.object_left_behind.detect",
+    "smart_home.video.package_delivery.detect",
+    "smart_home.video.person.detect",
+    "smart_home.video.scene_summary.generate",
+    "smart_home.video.sleep_behavior.analyze",
+    "smart_home.video.smoke_fire.detect",
+    "smart_home.video.water_leak_sign.detect"
+  ],
+  "reliability": [
+    0.9150999784469604,
+    5811.0,
+    0.006800000090152025,
+    0.029714999720454216
+  ]
+}

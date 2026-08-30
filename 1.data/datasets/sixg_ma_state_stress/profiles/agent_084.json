@@ -1,0 +1,33 @@
+{
+  "agent_id": 84,
+  "agent_key": "A085",
+  "scenario": "智慧工厂",
+  "source_agent_type_id": "agent-017",
+  "source_agent_type_name": "Smart Factory Robotics Coordination Agent",
+  "skill_ids": [
+    "smart_factory.robotics.human_robot_interaction.monitor",
+    "smart_factory.robotics.multi_robot.coordinate",
+    "smart_factory.robotics.qa.answer",
+    "smart_factory.robotics.robot.collision_risk.assess",
+    "smart_factory.robotics.robot.grasp_quality.assess",
+    "smart_factory.robotics.robot.operation_log.summarize",
+    "smart_factory.robotics.robot.path.plan",
+    "smart_factory.robotics.robot.status.monitor",
+    "smart_factory.robotics.robot.task.assign",
+    "smart_factory.robotics.robot.vision_guidance.process",
+    "smart_factory.robotics.robot_cell.safety_check",
+    "smart_factory.robotics.robot_energy.analyze",
+    "smart_factory.robotics.robot_fault.detect",
+    "smart_factory.robotics.robot_maintenance.recommend",
+    "smart_factory.robotics.robot_payload.assess",
+    "smart_factory.robotics.robot_speed.optimize",
+    "smart_factory.robotics.robot_tool_change.manage",
+    "smart_factory.robotics.robot_workflow.optimize"
+  ],
+  "reliability": [
+    0.9603000283241272,
+    10417.0,
+    0.034299999475479126,
+    0.013895000331103802
+  ]
+}

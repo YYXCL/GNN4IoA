@@ -1,0 +1,28 @@
+{
+  "agent_id": 115,
+  "agent_key": "A116",
+  "scenario": "应急救援",
+  "source_agent_type_id": "agent-024",
+  "source_agent_type_name": "Smart Campus Vehicle & Traffic Agent",
+  "skill_ids": [
+    "smart_campus.vehicle.accident.detect",
+    "smart_campus.vehicle.delivery.track",
+    "smart_campus.vehicle.entry_exit.control",
+    "smart_campus.vehicle.forklift_safety.monitor",
+    "smart_campus.vehicle.parking_space.detect",
+    "smart_campus.vehicle.pedestrian_conflict.detect",
+    "smart_campus.vehicle.qa.answer",
+    "smart_campus.vehicle.speeding.detect",
+    "smart_campus.vehicle.traffic_flow.analyze",
+    "smart_campus.vehicle.traffic_report.generate",
+    "smart_campus.vehicle.visitor_vehicle.manage",
+    "smart_campus.vehicle.whitelist.manage",
+    "smart_campus.vehicle.wrong_way.detect"
+  ],
+  "reliability": [
+    0.8690999746322632,
+    8264.0,
+    0.061400000005960464,
+    0.04581499844789505
+  ]
+}

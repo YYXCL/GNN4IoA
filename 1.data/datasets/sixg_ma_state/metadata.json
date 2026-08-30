@@ -1,6 +1,6 @@
 {
   "dataset": "6G-Agent-Compute-Foundation-Sliding-Window",
-  "version": "5.0-dag-query",
+  "version": "6.0-task-agent-gru",
   "dataset_origin": "1.data numbered foundation tables",
   "num_agents": 120,
   "num_compute_nodes": 12,
@@ -35,37 +35,47 @@
   "source_timestamp_origin": 1662858720,
   "source_timestamp_min": 1662858720,
   "source_timestamp_max": 1662940800,
-  "confidence_tau_seconds": 600.0,
   "task_distribution": {
-    "智慧家居": 29,
-    "智慧工厂": 33,
-    "应急救援": 10
+    "智慧工厂": 24,
+    "应急救援": 24,
+    "智慧家居": 24
   },
   "profile_format": "profiles/agent_NNN.json",
   "derived_field_notes": {
-    "gpu_total_tflops": "按云侧/边侧节点类型使用 4000/400 TFLOPS 仿真假设",
-    "gpu_memory_bandwidth": "按节点类型设定总带宽，并以 server_load_rate_proxy 推算已用带宽",
-    "queue_and_batch": "由 queue_rt_ms、active_gpu_container_count 和节点类型推导",
+    "compute_features": "只使用 GPU 剩余算力、内存剩余量和显存剩余量",
+    "gpu_total_tflops": "剩余 GPU 算力基于云侧/边侧 4000/400 TFLOPS 容量假设计算",
     "hallucination_rate": "基础可靠性表没有该字段，按 (1-task_success_rate)*0.35 截断到 0.5%-10%"
   },
   "design_constraints": {
     "chronological_split": true,
+    "scenario_difficulty_stratified_split": true,
     "non_overlapping_windows": true,
     "required_skill_present_in_candidates": true,
     "label_agent_has_required_skill": true,
-    "queue_batch_in_graph": true,
+    "queue_batch_in_graph": false,
     "queue_batch_used_for_decision": false,
     "link_path_type_encoded": false,
-    "explicit_task_node": false,
-    "task_representation": "dependency-aware DAG query; system graph nodes are agent/compute only",
+    "explicit_task_node": true,
+    "task_representation": "每个子任务是瞬时任务节点，并连接到所有候选智能体",
+    "node_history_encoder": "GRU",
+    "edge_history_encoder": "GRU",
+    "one_hop_agent_aggregation": true,
+    "confidence_used_by_model": false,
+    "explicit_trend_feature_used_by_model": false,
     "required_skill_hard_mask": true,
-    "task_and_agent_text_in_jsonl": true,
+    "task_and_agent_text_in_jsonl": false,
+    "task_encoding_fields": [
+      "required_skill_id",
+      "latency",
+      "accuracy"
+    ],
     "capability_slots": 8
   },
   "schema": {
     "node_types": [
       "agent",
-      "compute"
+      "compute",
+      "task"
     ],
     "compute_kinds": [
       "cloud",
@@ -84,6 +94,9 @@
       "physical_sensor_available",
       "physical_environment_match"
     ],
+    "agent_workload_metrics": [
+      "active_unfinished_tasks"
+    ],
     "capability_reliability_metrics": [
       "task_success_rate",
       "mean_execution_time_ms",
@@ -91,29 +104,16 @@
       "hallucination_rate"
     ],
     "compute_metrics": [
-      "gpu_total_tflops",
       "gpu_remaining_tflops",
-      "vram_total_gb",
-      "vram_used_gb",
-      "gpu_memory_bandwidth_total_mbps",
-      "gpu_memory_bandwidth_used_mbps",
-      "task_queue_length",
-      "active_batch_size",
-      "max_batch_size"
+      "memory_remaining_gb",
+      "vram_remaining_gb"
     ],
     "compute_decision_metrics": [
-      "gpu_total_tflops",
       "gpu_remaining_tflops",
-      "vram_total_gb",
-      "vram_used_gb",
-      "gpu_memory_bandwidth_total_mbps",
-      "gpu_memory_bandwidth_used_mbps"
+      "memory_remaining_gb",
+      "vram_remaining_gb"
     ],
-    "compute_observability_only_metrics": [
-      "task_queue_length",
-      "active_batch_size",
-      "max_batch_size"
-    ],
+    "compute_observability_only_metrics": [],
     "edge_metrics": [
       "latency_ms",
       "bandwidth_mbps",
@@ -122,39 +122,21 @@
     ],
     "task_qos_metrics": [
       "latency",
-      "accuracy",
-      "cost",
-      "reliability",
-      "privacy",
-      "context",
-      "tool",
-      "multimodal"
+      "accuracy"
     ],
     "units": {
       "context_window_tokens": "token",
-      "gpu_total_tflops": "TFLOPS",
       "gpu_remaining_tflops": "TFLOPS",
-      "vram_total_gb": "GB",
-      "vram_used_gb": "GB",
-      "gpu_memory_bandwidth_total_mbps": "Mbps",
-      "gpu_memory_bandwidth_used_mbps": "Mbps",
+      "memory_remaining_gb": "GB",
+      "vram_remaining_gb": "GB",
       "latency_ms": "ms",
       "bandwidth_mbps": "Mbps",
       "jitter_ms": "ms",
       "mean_execution_time_ms": "ms"
     },
     "confidence": {
-      "applies_to": [
-        "agent_context",
-        "agent_environment",
-        "compute",
-        "edge"
-      ],
-      "excluded_from": [
-        "capability",
-        "capability_reliability"
-      ],
-      "decay": "effective_confidence = observed_confidence * exp(-age_seconds / tau_seconds)"
+      "used_by_current_model": false,
+      "note": "保留序列化兼容字段，但不进入节点、边或任务编码"
     },
     "normalization_scales": {
       "agent_context": [
@@ -172,14 +154,8 @@
       ],
       "compute": [
         10000.0,
-        10000.0,
-        512.0,
-        512.0,
-        10000000.0,
-        10000000.0,
-        256.0,
-        128.0,
-        128.0
+        2048.0,
+        1024.0
       ],
       "edge": [
         1000.0,
@@ -198,8 +174,8 @@
     "relation_types": [
       "compute_access",
       "communication",
-      "task_dependency"
+      "task_assignment"
     ],
-    "task_representation": "DAG query sequence conditioned outside the agent-compute system graph"
+    "task_representation": "transient task nodes connected to every candidate agent"
   }
 }

@@ -21,12 +21,10 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(PROJECT_ROOT / "2.模型"))
 sys.path.insert(0, str(PROJECT_ROOT / "1.data"))
 
-from ma_tgn_data.foundation import generate_foundation_dataset  # noqa: E402
-
-
 SEED = 20260814
 VARIANTS_PER_TYPE = 5
 DEFAULT_COMPUTE_NODES = 12
+DEFAULT_LINK_TIMESTAMPS = 48
 EMERGENCY_WORDS = (
     "emergency", "rescue", "fire", "smoke", "fall", "intrusion", "alarm",
     "danger", "accident", "collision", "leak", "safety", "urgent", "evacuation",
@@ -182,7 +180,7 @@ def build_agents(source_path: Path, seed: int) -> tuple[pd.DataFrame, list[dict]
             names = "、".join(item["name"] for item in selected[:3])
             description = (
                 f"【{scenario}】【{source['name']}】{focus}型智能体，重点承担{names}等任务；"
-                f"仅配置源能力卡中的 {len(selected)} 项技能，不具备该类型的全部能力。"
+                f"可使用已登记的技能和工具完成对应场景工作。"
             )
             row = {
                 "智能体编号": agent_id,
@@ -307,6 +305,19 @@ def build_compute_load(source_dir: Path, num_nodes: int) -> tuple[pd.DataFrame, 
         load["gpu_memory_used_gb"] / load["gpu_memory_total_gb_estimated"]
     ).clip(0, 1)
     load["server_load_rate_proxy"] = load[["memory_utilization", "gpu_memory_utilization_estimated"]].max(axis=1)
+    node_kind = {row["算力节点编号"]: row["节点类型"] for row in inventory.to_dict("records")}
+    load["gpu_total_tflops_estimated"] = load["compute_node_id"].map(
+        lambda node: 4_000.0 if node_kind[node] == "云侧" else 400.0
+    )
+    load["gpu_remaining_tflops_estimated"] = (
+        load["gpu_total_tflops_estimated"] * (1.0 - load["gpu_duty_cycle_percent"].clip(0, 100) / 100.0)
+    )
+    load["memory_remaining_gb_estimated"] = (
+        load["memory_total_gb_estimated"] - load["memory_used_gb_estimated"]
+    ).clip(lower=0)
+    load["gpu_memory_remaining_gb_estimated"] = (
+        load["gpu_memory_total_gb_estimated"] - load["gpu_memory_used_gb"]
+    ).clip(lower=0)
     load["data_quality_flag"] = raw_missing.map({True: "含插值", False: "原始聚合"})
     output_columns = [
         "timestamp_anon", "compute_node_id", "active_gpu_container_count", "server_load_rate_proxy",
@@ -314,8 +325,21 @@ def build_compute_load(source_dir: Path, num_nodes: int) -> tuple[pd.DataFrame, 
         "gpu_duty_cycle_percent", "gpu_memory_total_gb_estimated", "gpu_memory_used_gb",
         "gpu_memory_utilization_estimated", "queue_rt_ms", "model_predict_value",
         "pipeline_inference_value", "data_quality_flag",
+        "gpu_remaining_tflops_estimated", "memory_remaining_gb_estimated",
+        "gpu_memory_remaining_gb_estimated",
     ]
-    load = load[output_columns]
+    load = load[output_columns].rename(columns={
+        "timestamp_anon": "时间戳", "compute_node_id": "算力节点编号",
+        "active_gpu_container_count": "活跃GPU容器数量", "server_load_rate_proxy": "服务器负载率代理",
+        "memory_utilization": "内存使用率", "memory_total_gb_estimated": "估计内存总量(GB)",
+        "memory_used_gb_estimated": "估计内存已用量(GB)", "gpu_duty_cycle_percent": "GPU利用率(%)",
+        "gpu_memory_total_gb_estimated": "估计显存总量(GB)", "gpu_memory_used_gb": "显存已用量(GB)",
+        "gpu_memory_utilization_estimated": "估计显存使用率", "queue_rt_ms": "队列响应时间(ms)",
+        "model_predict_value": "模型预测请求量", "pipeline_inference_value": "流水线推理请求量",
+        "data_quality_flag": "数据质量标记", "gpu_remaining_tflops_estimated": "GPU算力剩余量(TFLOPS)",
+        "memory_remaining_gb_estimated": "内存剩余量(GB)",
+        "gpu_memory_remaining_gb_estimated": "显存剩余量(GB)",
+    })
     metadata = {
         "virtual_compute_nodes": num_nodes,
         "node_mapping": "sha256(container_ip) mod N; this is not a recovered physical server mapping",
@@ -323,91 +347,237 @@ def build_compute_load(source_dir: Path, num_nodes: int) -> tuple[pd.DataFrame, 
         "cpu_metric": "source data does not contain CPU utilization; no CPU value was fabricated",
         "memory_capacity": "synthetic fixed capacities 512/768/1024 GB, used only to estimate used memory",
         "gpu_memory_capacity": "per-node maximum observed aggregate rounded up to a multiple of 64 GiB",
+        "model_compute_features": (
+            "仅编码 GPU算力剩余量(TFLOPS)、内存剩余量(GB)、显存剩余量(GB)；"
+            "利用率、队列和 batch 仅保留作数据溯源，不进入模型"
+        ),
         "interpolation": "only missing memory utilization and GPU memory usage are interpolated within each node",
     }
     return load, inventory, metadata
 
 
-def build_links(agents: list[dict], inventory: pd.DataFrame, seed: int) -> pd.DataFrame:
-    rng = random.Random(seed + 2)
+def build_links(
+    agents: list[dict], inventory: pd.DataFrame, timestamps: list[int], seed: int,
+    observation_count: int = DEFAULT_LINK_TIMESTAMPS,
+) -> pd.DataFrame:
+    """生成固定全连接拓扑上的动态链路状态。
+
+    智能体—算力节点是一对一固定部署关系；智能体之间使用一条无向逻辑边表示
+    双向可达。任务依赖只属于任务 DAG，不是通信链路属性。
+    """
+    if observation_count < 2:
+        raise ValueError("链路观测时间戳数量至少为 2")
     node_ids = inventory["算力节点编号"].tolist()
-    rows: list[dict] = []
-
-    def link(source: str, target: str, dependency: bool, cross_type: bool) -> dict:
-        latency = rng.uniform(7, 85) if cross_type else rng.uniform(1, 35)
-        loss = min(0.12, rng.betavariate(1.4, 45))
-        return {
-            "数据源": source,
-            "数据目的地": target,
-            "时延(ms)": round(latency, 3),
-            "带宽(Mbps)": round(rng.uniform(150, 20000) / (1.6 if cross_type else 1), 3),
-            "网络丢包率": round(loss, 5),
-            "网络抖动(ms)": round(max(0.05, latency * rng.uniform(0.03, 0.25)), 3),
-            "是否有任务依赖关系": "是" if dependency else "否",
-        }
-
-    by_source: dict[str, list[dict]] = {}
-    by_scenario: dict[str, list[dict]] = {}
+    positions = [round(index * (len(timestamps) - 1) / (observation_count - 1)) for index in range(observation_count)]
+    observed_timestamps = [int(timestamps[position]) for position in dict.fromkeys(positions)]
+    topology: list[tuple[str, str, str]] = []
     for agent in agents:
-        by_source.setdefault(agent["源智能体类型id"], []).append(agent)
-        by_scenario.setdefault(agent["场景"], []).append(agent)
         agent_key = agent["agent_key"]
-        primary = node_ids[(agent["智能体编号"] - 1) % len(node_ids)]
-        secondary = node_ids[stable_int(agent_key + agent["包含的skill"]) % len(node_ids)]
-        if secondary == primary:
-            secondary = node_ids[(node_ids.index(primary) + 1) % len(node_ids)]
-        rows.append(link(agent_key, primary, True, True))
-        rows.append(link(agent_key, secondary, False, True))
-    for members in by_source.values():
-        for index, agent in enumerate(members):
-            peer = members[(index + 1) % len(members)]
-            rows.append(link(agent["agent_key"], peer["agent_key"], True, False))
-    for scenario_members in by_scenario.values():
-        for agent in scenario_members:
-            candidates = [item for item in scenario_members if item["源智能体类型id"] != agent["源智能体类型id"]]
-            if not candidates:
-                continue
-            peer = min(candidates, key=lambda item: stable_int(agent["agent_key"] + item["agent_key"]))
-            rows.append(link(agent["agent_key"], peer["agent_key"], False, False))
+        compute = node_ids[(agent["智能体编号"] - 1) % len(node_ids)]
+        topology.append((agent_key, compute, "智能体-算力节点"))
+    for left in range(len(agents)):
+        for right in range(left + 1, len(agents)):
+            topology.append((agents[left]["agent_key"], agents[right]["agent_key"], "智能体-智能体"))
+
+    rows: list[dict] = []
+    previous: dict[str, tuple[float, float, float, float]] = {}
+    for tick, timestamp in enumerate(observed_timestamps):
+        global_congestion = 0.5 + 0.28 * math.sin(2 * math.pi * tick / 24.0) + 0.12 * math.sin(2 * math.pi * tick / 7.0)
+        for source, target, link_type in topology:
+            link_id = f"L-{source}-{target}"
+            local = random.Random(seed + stable_int(f"{link_id}:{tick}"))
+            cross_type = link_type == "智能体-算力节点"
+            if link_id not in previous:
+                latency = local.uniform(7, 85) if cross_type else local.uniform(1, 35)
+                bandwidth = float(local.choice((500, 1000, 2000, 3000)))
+                loss = min(0.08, local.betavariate(1.4, 55))
+                jitter = max(0.05, latency * local.uniform(0.03, 0.18))
+            else:
+                old_latency, old_bandwidth, old_loss, old_jitter = previous[link_id]
+                pressure = max(0.0, min(1.0, global_congestion + local.uniform(-0.12, 0.12)))
+                latency = 0.86 * old_latency + 0.14 * old_latency * (0.72 + 0.75 * pressure) + local.gauss(0, 0.35)
+                bandwidth = old_bandwidth
+                loss = 0.90 * old_loss + 0.10 * (0.001 + 0.035 * pressure) + local.gauss(0, 0.0008)
+                jitter = 0.84 * old_jitter + 0.16 * latency * (0.025 + 0.13 * pressure)
+            latency = max(0.2, latency)
+            bandwidth = max(25.0, bandwidth)
+            loss = max(0.0, min(0.12, loss))
+            jitter = max(0.02, jitter)
+            previous[link_id] = (latency, bandwidth, loss, jitter)
+            rows.append({
+                "时间戳": timestamp, "链路id": link_id, "链路类型": link_type,
+                "数据源": source, "数据目的地": target, "是否双向可达": "是",
+                "时延(ms)": round(latency, 3), "带宽(Mbps)": int(bandwidth),
+                "网络丢包率": round(loss, 5), "网络抖动(ms)": round(jitter, 3),
+            })
     return pd.DataFrame(rows)
 
 
+SCENARIO_GOALS = {
+    "智慧工厂": (
+        "产线设备异常诊断与停机风险处置", "产品质量缺陷追踪与工艺校正", "厂内物流拥堵疏解与补料调度",
+        "机器人协同作业安全检查", "能源异常定位与节能控制", "危险区域入侵联动处置",
+        "预测性维护计划编排", "生产事件复盘与班组交接",
+    ),
+    "智慧家居": (
+        "独居老人异常活动发现与照护响应", "家庭火灾隐患识别与设备联动", "门口可疑人员与遗留物处置",
+        "室内舒适度分析与环境调节", "家庭能耗诊断与用电优化", "婴幼儿活动安全看护",
+        "多房间设备故障排查", "家庭日程与设备自动化协同",
+    ),
+    "应急救援": (
+        "火灾现场态势研判与疏散路线制定", "地震受困人员搜索与救援资源调度", "危化品泄漏范围评估与隔离",
+        "交通事故伤员分级与通道保障", "洪涝区域风险监测与转移组织", "园区大面积停电应急恢复",
+        "高层建筑人员滞留排查", "多源告警核验与指挥简报生成",
+    ),
+}
+SCENARIO_GOAL_KEYWORDS = {
+    "智慧工厂": (
+        ("fault", "maintenance", "equipment", "diagnos", "predict", "故障", "维护", "设备"),
+        ("quality", "defect", "inspect", "image", "label", "质量", "缺陷", "工艺"),
+        ("logistics", "agv", "warehouse", "inventory", "route", "物流", "仓储", "补料"),
+        ("robot", "collision", "safety", "control", "机器人", "碰撞", "安全"),
+        ("energy", "power", "battery", "consumption", "能源", "电力", "能耗"),
+        ("intrusion", "danger", "fire", "alarm", "safety", "入侵", "危险", "火灾"),
+        ("maintenance", "fault", "predict", "schedule", "维修", "预测", "计划"),
+        ("report", "timeline", "log", "summary", "event", "报告", "时间线", "日志"),
+    ),
+    "智慧家居": (
+        ("elderly", "fall", "activity", "health", "老人", "跌倒", "照护"),
+        ("fire", "smoke", "gas", "alarm", "火灾", "烟雾", "燃气"),
+        ("intrusion", "person", "object", "door", "security", "可疑", "门口", "遗留"),
+        ("temperature", "humidity", "comfort", "air", "hvac", "温度", "湿度", "舒适"),
+        ("energy", "power", "electric", "consumption", "能源", "用电", "能耗"),
+        ("baby", "child", "person", "activity", "cry", "婴幼儿", "儿童"),
+        ("device", "fault", "status", "diagnos", "设备", "故障", "状态"),
+        ("automation", "schedule", "control", "scene", "自动化", "日程", "控制"),
+    ),
+    "应急救援": (
+        ("fire", "smoke", "evacuat", "person", "火灾", "烟雾", "疏散"),
+        ("fall", "person", "location", "rescue", "跌倒", "人员", "定位", "救援"),
+        ("leak", "gas", "danger", "risk", "泄漏", "气体", "危险"),
+        ("traffic", "accident", "collision", "health", "交通", "事故", "伤员"),
+        ("water", "flood", "risk", "weather", "洪涝", "积水", "风险"),
+        ("power", "energy", "device", "alarm", "停电", "能源", "设备"),
+        ("person", "building", "location", "detect", "人员", "建筑", "位置"),
+        ("alarm", "report", "summary", "verify", "告警", "报告", "核验"),
+    ),
+}
+DIFFICULTY_COUNTS = {"简单": (1, 2, 3), "中等": (4, 5, 6), "困难": (7, 8, 9)}
+OUTPUT_STYLES = (
+    "形成按优先级排序的处置清单，并标明触发条件", "给出处置结论、责任对象和可执行动作",
+    "生成事件时间线与风险分级表", "输出资源调度方案及无法满足的约束",
+    "汇总关键状态、异常位置和建议操作", "形成便于值守人员直接执行的操作卡",
+    "给出诊断结论、候选原因与验证顺序", "生成阶段性结果和最终决策摘要",
+)
+SUBTASK_ENDINGS = (
+    "记录发现的异常与位置。", "将结果交给后续步骤并标明时间范围。", "列出无法确认的信息。",
+    "优先返回会改变处置决策的信号。", "保留原始设备或传感器标识。", "明确成功条件与失败原因。",
+)
+
+
+def _dag_for_subtasks(subtask_ids: list[str]) -> tuple[list[int], list[tuple[str, str]]]:
+    """生成含串并行结构的 DAG；相同 step 的子任务可并行。"""
+    count = len(subtask_ids)
+    if count == 1:
+        return [1], []
+    if count == 2:
+        steps = [1, 2]
+    elif count == 3:
+        steps = [1, 1, 2]
+    else:
+        middle = count - 2
+        steps = [1] + [2 + (index // 2) for index in range(middle)] + [2 + ((middle - 1) // 2) + 1]
+    edges: list[tuple[str, str]] = []
+    for target_index, target_step in enumerate(steps):
+        if target_step == 1:
+            continue
+        predecessors = [index for index, step in enumerate(steps) if step == target_step - 1]
+        for source_index in predecessors:
+            edges.append((subtask_ids[source_index], subtask_ids[target_index]))
+    return steps, edges
+
+
 def build_tasks(source_path: Path, agents: list[dict]) -> tuple[pd.DataFrame, list[dict]]:
-    sources = json.loads(source_path.read_text(encoding="utf-8"))
-    selected_by_source: dict[str, set[str]] = {}
+    del source_path  # Skill 只取最终派生智能体实际拥有的集合，保证能力硬匹配可执行。
+    scenario_skills: dict[str, dict[str, dict]] = {scenario: {} for scenario in SCENARIO_GOALS}
+    skill_source: dict[str, str] = {}
     for agent in agents:
-        selected_by_source.setdefault(agent["源智能体类型id"], set()).update(skill["id"] for skill in agent["skills"])
-    rows = []
-    structured = []
-    for source_index, source in enumerate(sources, start=1):
-        available = [skill for skill in source["skills"] if skill["id"] in selected_by_source[source["id"]]]
-        picks = [available[0], available[len(available) // 2], available[-1]]
-        for skill in picks:
-            task_id = len(rows) + 1
-            text = skill_text(skill)
-            critical = any(word in text for word in EMERGENCY_WORDS)
-            accuracy = 0.94 if critical else (0.90 if "control" in text or "控制" in text else 0.86)
-            tags = set(skill.get("tags", []))
-            if "smart-home" in tags:
-                scenario = "智慧家居"
-            elif "smart-factory" in tags:
-                scenario = "智慧工厂"
-            else:
-                # 源数据中的智慧楼宇/园区任务映射到三场景实验中的应急救援侧。
-                scenario = "应急救援"
-            prompt = f"在{scenario}场景中，{skill['description']}请给出结构化结果、关键证据和置信度。"
-            row = {
-                "任务id": f"T{task_id:04d}",
-                "任务具体提示词": prompt,
-                "必需的Skill id": skill["id"],
-                "输出结果的要求": "JSON",
-                "字段完整率要求": 0.95,
-                "端到端完成时延要求(s)": 5 if critical else 15,
-                "准确率要求": accuracy,
-            }
-            rows.append(row)
-            structured.append({**row, "场景": scenario, "source_agent_type_id": source["id"]})
-    return pd.DataFrame(rows), structured
+        for skill in agent["skills"]:
+            scenario_skills[agent["场景"]].setdefault(skill["id"], skill)
+            skill_source.setdefault(skill["id"], agent["源智能体类型id"])
+
+    flat_rows: list[dict] = []
+    complex_tasks: list[dict] = []
+    complex_index = 0
+    for scenario, goals in SCENARIO_GOALS.items():
+        pool = sorted(scenario_skills[scenario].values(), key=lambda item: item["id"])
+        if len(pool) < 9:
+            raise ValueError(f"{scenario} 可用 Skill 少于 9 项，无法构造困难任务")
+        for difficulty, counts in DIFFICULTY_COUNTS.items():
+            for goal_index, goal in enumerate(goals):
+                complex_index += 1
+                count = counts[goal_index % len(counts)]
+                keywords = SCENARIO_GOAL_KEYWORDS[scenario][goal_index]
+                selected = sorted(
+                    pool,
+                    key=lambda skill: (
+                        -sum(keyword in skill_text(skill) for keyword in keywords),
+                        stable_int(f"{scenario}:{difficulty}:{goal}:{skill['id']}") % 10_000,
+                    ),
+                )[:count]
+                complex_id = f"CT{complex_index:04d}"
+                subtask_ids = [f"{complex_id}-S{index + 1:02d}" for index in range(count)]
+                steps, edges = _dag_for_subtasks(subtask_ids)
+                critical = scenario == "应急救援" or any(
+                    word in skill_text(skill) for skill in selected for word in EMERGENCY_WORDS
+                )
+                latency = {"简单": 20, "中等": 45, "困难": 90}[difficulty]
+                if critical:
+                    latency = max(8, round(latency * 0.65))
+                accuracy = {"简单": 0.88, "中等": 0.91, "困难": 0.94}[difficulty]
+                output = OUTPUT_STYLES[goal_index]
+                completeness = {"简单": 0.90, "中等": 0.93, "困难": 0.96}[difficulty]
+                prompt_openers = (
+                    f"请协调多个智能体完成“{goal}”。",
+                    f"当前需要在{scenario}环境中处理“{goal}”，请组织协同执行。",
+                    f"围绕“{goal}”发起一次{difficulty}级联合任务。",
+                    f"值守系统收到“{goal}”请求，请按依赖关系推进各项工作。",
+                )
+                complex_prompt = prompt_openers[(goal_index + complex_index) % len(prompt_openers)]
+                complex_row = {
+                    "任务id": complex_id, "父任务id": "", "任务类型": "复杂任务", "执行步骤": "",
+                    "前置子任务id": "", "场景": scenario, "难度级别": difficulty,
+                    "任务具体提示词": complex_prompt, "必需的Skill id": "|".join(skill["id"] for skill in selected),
+                    "输出结果的要求": output, "字段完整率要求": completeness,
+                    "端到端完成时延要求(s)": latency, "准确率要求": accuracy,
+                    "DAG边列表": "|".join(f"{source}->{target}" for source, target in edges),
+                }
+                flat_rows.append(complex_row)
+                subtasks: list[dict] = []
+                for sub_index, (subtask_id, skill, step) in enumerate(zip(subtask_ids, selected, steps)):
+                    predecessors = [source for source, target in edges if target == subtask_id]
+                    sub_prompt = (
+                        f"{skill.get('description', skill.get('name', skill['id']))}"
+                        f"{SUBTASK_ENDINGS[(sub_index + goal_index) % len(SUBTASK_ENDINGS)]}"
+                    )
+                    subtask = {
+                        "任务id": subtask_id, "父任务id": complex_id, "任务类型": "子任务", "执行步骤": step,
+                        "前置子任务id": "|".join(predecessors), "场景": scenario, "难度级别": difficulty,
+                        "任务具体提示词": sub_prompt, "必需的Skill id": skill["id"],
+                        "输出结果的要求": output if sub_index == count - 1 else "返回本步骤可供下游消费的结果",
+                        "字段完整率要求": completeness,
+                        "端到端完成时延要求(s)": round(latency / max(1, max(steps)), 2),
+                        "准确率要求": accuracy, "DAG边列表": "",
+                        "source_agent_type_id": skill_source[skill["id"]],
+                    }
+                    flat_rows.append(subtask)
+                    subtasks.append(subtask)
+                complex_tasks.append({
+                    **complex_row, "子任务数量": count,
+                    "DAG": {"节点": subtask_ids, "边": [[source, target] for source, target in edges]},
+                    "子任务": subtasks,
+                })
+    return pd.DataFrame(flat_rows), complex_tasks
 
 
 def build_event_tables(agents: list[dict], links: pd.DataFrame, tasks: list[dict]) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
@@ -422,7 +592,6 @@ def build_event_tables(agents: list[dict], links: pd.DataFrame, tasks: list[dict
     relations = pd.DataFrame([
         (0, "compute_access", "智能体访问算力节点"),
         (1, "communication", "智能体之间通信"),
-        (2, "task_dependency", "具有任务依赖的历史协作"),
     ], columns=["关系类型编码", "关系类型名称", "含义"])
     events = []
     timestamp = 0.0
@@ -431,11 +600,11 @@ def build_event_tables(agents: list[dict], links: pd.DataFrame, tasks: list[dict
         events.append((f"E{len(events)+1:06d}", round(timestamp, 1), 0, agent["agent_key"], agent["agent_key"], -1, "agent_capabilities.csv"))
         link_row = links.iloc[(index * 2) % len(links)]
         timestamp += 0.1
-        relation = 0 if str(link_row["数据目的地"]).startswith("C") else (2 if link_row["是否有任务依赖关系"] == "是" else 1)
+        relation = 0 if str(link_row["数据目的地"]).startswith("C") else 1
         events.append((f"E{len(events)+1:06d}", round(timestamp, 1), 3, link_row["数据源"], link_row["数据目的地"], relation, "communication_links.csv"))
         task = tasks[index % len(tasks)]
         timestamp += 0.1
-        events.append((f"E{len(events)+1:06d}", round(timestamp, 1), 4, task["任务id"], agent["agent_key"], 2, "tasks.csv"))
+        events.append((f"E{len(events)+1:06d}", round(timestamp, 1), 4, task["任务id"], agent["agent_key"], 1, "tasks.csv"))
     event_stream = pd.DataFrame(events, columns=[
         "事件id", "相对时间戳(s)", "事件类型编码", "数据源", "数据目的地", "关系类型编码", "载荷引用文件"
     ])
@@ -451,6 +620,7 @@ def main() -> None:
     parser.add_argument("--training-output", type=Path, default=None)
     parser.add_argument("--training-samples", type=int, default=None, help="默认每个任务生成一个时间窗口")
     parser.add_argument("--window-size", type=int, default=16, help="每个训练样本包含的源时间戳数量")
+    parser.add_argument("--link-timestamps", type=int, default=DEFAULT_LINK_TIMESTAMPS, help="覆盖全时间范围的链路观测点数量")
     parser.add_argument("--build-training-jsonl", action=argparse.BooleanOptionalAction, default=True)
     args = parser.parse_args()
     if args.compute_nodes < 2:
@@ -460,7 +630,8 @@ def main() -> None:
     agents_frame, agents, agent_meta = build_agents(source_path, args.seed)
     reliability = build_reliability(agents, args.seed)
     compute_load, inventory, load_meta = build_compute_load(alibaba_source, args.compute_nodes)
-    links = build_links(agents, inventory, args.seed)
+    compute_timestamps = sorted(compute_load["时间戳"].astype(int).unique().tolist())
+    links = build_links(agents, inventory, compute_timestamps, args.seed, args.link_timestamps)
     tasks_frame, tasks = build_tasks(source_path, agents)
     event_types, relations, event_stream = build_event_tables(agents, links, tasks)
 
@@ -488,6 +659,8 @@ def main() -> None:
     paths["tasks_json"].write_text(json.dumps(tasks, ensure_ascii=False, indent=2), encoding="utf-8")
     training_metadata = None
     if args.build_training_jsonl:
+        from ma_tgn_data.foundation import generate_foundation_dataset
+
         training_output = args.training_output or args.data_root / "datasets" / "sixg_ma_state"
         training_metadata = generate_foundation_dataset(
             args.data_root,
@@ -497,12 +670,14 @@ def main() -> None:
             samples=args.training_samples,
         )
     manifest = {
-        "dataset_version": "1.1.0",
+        "dataset_version": "3.0.0",
         "generation_seed": args.seed,
         "counts": {
             "agents": len(agents_frame), "source_agent_types": agent_meta["source_type_count"],
             "compute_nodes": len(inventory), "compute_load_rows": len(compute_load),
-            "links": len(links), "tasks": len(tasks_frame), "events": len(event_stream),
+            "link_state_rows": len(links), "link_topology_edges": int(links["链路id"].nunique()),
+            "link_timestamps": int(links["时间戳"].nunique()), "complex_tasks": len(tasks),
+            "task_table_rows": len(tasks_frame), "events": len(event_stream),
         },
         "agent_generation": agent_meta,
         "compute_load_processing": load_meta,
@@ -513,7 +688,10 @@ def main() -> None:
             "window_size_timestamps": training_metadata["window_size_timestamps"],
             "window_overlap": training_metadata["window_overlap"],
         },
-        "link_column_6_interpretation": "用户重复写了网络丢包；按模型现有 EDGE_METRICS 将第6列定义为网络抖动(ms)。",
+        "link_design": (
+            "智能体间采用无向全连接逻辑拓扑；每个智能体固定且仅连接一个算力节点；"
+            "通信边不携带任务依赖，任务依赖只保存在复杂任务 DAG 中"
+        ),
         "files": {key: str(path.relative_to(args.data_root)) for key, path in paths.items()},
     }
     manifest_path = args.data_root / "dataset_manifest.json"
@@ -524,6 +702,12 @@ def main() -> None:
     assert set(links["数据源"]).issubset({item["agent_key"] for item in agents})
     assert set(links.loc[links["数据目的地"].str.startswith("C"), "数据目的地"]).issubset(set(inventory["算力节点编号"]))
     assert agents_frame["接入知识库"].ne("无").mean() <= 0.20
+    first_snapshot = links[links["时间戳"] == links["时间戳"].min()]
+    compute_degree = first_snapshot[first_snapshot["链路类型"] == "智能体-算力节点"].groupby("数据源").size()
+    assert compute_degree.eq(1).all() and len(compute_degree) == len(agents)
+    assert len(first_snapshot[first_snapshot["链路类型"] == "智能体-智能体"]) == len(agents) * (len(agents) - 1) // 2
+    assert "是否有任务依赖关系" not in links.columns
+    assert len(tasks) == 72 and set(tasks_frame["任务类型"]) == {"复杂任务", "子任务"}
     assert "实验要求" not in tasks_frame.columns
     assert "required_skill_id" not in json.dumps(tasks, ensure_ascii=False)
     print(json.dumps(manifest["counts"], ensure_ascii=False, indent=2))

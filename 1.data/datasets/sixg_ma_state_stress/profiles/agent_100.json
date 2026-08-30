@@ -1,0 +1,31 @@
+{
+  "agent_id": 100,
+  "agent_key": "A101",
+  "scenario": "智慧工厂",
+  "source_agent_type_id": "agent-021",
+  "source_agent_type_name": "Smart Factory Report Generation Agent",
+  "skill_ids": [
+    "smart_factory.report.audit_report.generate",
+    "smart_factory.report.corrective_action_report.generate",
+    "smart_factory.report.daily_digest.generate",
+    "smart_factory.report.defect_analysis.generate",
+    "smart_factory.report.downtime_analysis.generate",
+    "smart_factory.report.energy_report.generate",
+    "smart_factory.report.executive_summary.generate",
+    "smart_factory.report.maintenance_report.generate",
+    "smart_factory.report.multimodal_evidence.generate",
+    "smart_factory.report.oee_report.generate",
+    "smart_factory.report.production_report.generate",
+    "smart_factory.report.quality_report.generate",
+    "smart_factory.report.safety_report.generate",
+    "smart_factory.report.sensor_anomaly_report.generate",
+    "smart_factory.report.shift_report.generate",
+    "smart_factory.report.weekly_digest.generate"
+  ],
+  "reliability": [
+    0.8432999849319458,
+    4050.0,
+    0.011099999770522118,
+    0.05484500154852867
+  ]
+}

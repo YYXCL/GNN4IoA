@@ -1,0 +1,37 @@
+{
+  "agent_id": 22,
+  "agent_key": "A023",
+  "scenario": "智慧工厂",
+  "source_agent_type_id": "agent-005",
+  "source_agent_type_name": "Sensor Monitoring Agent",
+  "skill_ids": [
+    "smart_factory.sensor.current.monitor",
+    "smart_factory.sensor.data_quality.assess",
+    "smart_factory.sensor.displacement.monitor",
+    "smart_factory.sensor.failure_warning.generate",
+    "smart_factory.sensor.gas_concentration.monitor",
+    "smart_factory.sensor.humidity.monitor",
+    "smart_factory.sensor.multi_source.fuse",
+    "smart_factory.sensor.qa.answer",
+    "smart_factory.sensor.temperature.monitor",
+    "smart_factory.sensor.vibration.monitor",
+    "smart_home.sensor.air_quality.monitor",
+    "smart_home.sensor.device_status.monitor",
+    "smart_home.sensor.energy_meter.read",
+    "smart_home.sensor.gas_leak.detect",
+    "smart_home.sensor.noise_level.monitor",
+    "smart_home.sensor.pm25.monitor",
+    "smart_home.sensor.qa.answer",
+    "smart_home.sensor.sleep_environment.analyze",
+    "smart_home.sensor.smoke.detect",
+    "smart_home.sensor.temperature.monitor",
+    "smart_home.sensor.trend.analyze",
+    "smart_home.sensor.water_leak.detect"
+  ],
+  "reliability": [
+    0.8916000127792358,
+    9527.0,
+    0.008200000040233135,
+    0.037939999252557755
+  ]
+}

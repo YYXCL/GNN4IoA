@@ -1,0 +1,32 @@
+{
+  "agent_id": 54,
+  "agent_key": "A055",
+  "scenario": "智慧家居",
+  "source_agent_type_id": "agent-011",
+  "source_agent_type_name": "Smart Home Multimodal Context Agent",
+  "skill_ids": [
+    "smart_home.multimodal.abnormal_routine.detect",
+    "smart_home.multimodal.audio_video_event.fuse",
+    "smart_home.multimodal.child_safety.assess",
+    "smart_home.multimodal.context_aware_recommendation.generate",
+    "smart_home.multimodal.elderly_care.assess",
+    "smart_home.multimodal.energy_context.analyze",
+    "smart_home.multimodal.event_timeline.generate",
+    "smart_home.multimodal.evidence_chain.generate",
+    "smart_home.multimodal.fall_event.verify",
+    "smart_home.multimodal.fire_risk.fuse",
+    "smart_home.multimodal.intrusion_event.verify",
+    "smart_home.multimodal.pet_activity.assess",
+    "smart_home.multimodal.qa.answer",
+    "smart_home.multimodal.room_context.infer",
+    "smart_home.multimodal.sleep_environment.assess",
+    "smart_home.multimodal.sleep_environment.optimize",
+    "smart_home.multimodal.voice_video_command.fuse"
+  ],
+  "reliability": [
+    0.8999999761581421,
+    10373.0,
+    0.03150000050663948,
+    0.03500000014901161
+  ]
+}

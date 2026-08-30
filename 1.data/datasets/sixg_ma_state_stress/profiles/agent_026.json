@@ -1,0 +1,33 @@
+{
+  "agent_id": 26,
+  "agent_key": "A027",
+  "scenario": "智慧家居",
+  "source_agent_type_id": "agent-006",
+  "source_agent_type_name": "Smart Home Security Agent",
+  "skill_ids": [
+    "smart_home.security.access_log.analyze",
+    "smart_home.security.alarm.trigger",
+    "smart_home.security.camera_tamper.detect",
+    "smart_home.security.child_safety.monitor",
+    "smart_home.security.door_lock_status.check",
+    "smart_home.security.emergency_contact.notify",
+    "smart_home.security.event.verify",
+    "smart_home.security.event_report.generate",
+    "smart_home.security.false_alarm.filter",
+    "smart_home.security.intrusion.detect",
+    "smart_home.security.package_theft.detect",
+    "smart_home.security.perimeter.monitor",
+    "smart_home.security.pet_safety.monitor",
+    "smart_home.security.qa.answer",
+    "smart_home.security.risk_score.calculate",
+    "smart_home.security.stranger.detect",
+    "smart_home.security.visitor.identify",
+    "smart_home.security.window_status.check"
+  ],
+  "reliability": [
+    0.8921999931335449,
+    8122.0,
+    0.05609999969601631,
+    0.03773000091314316
+  ]
+}

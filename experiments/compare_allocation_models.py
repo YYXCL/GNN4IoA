@@ -1,4 +1,4 @@
-"""训练 V1、DAG-query V2 与 GMATANN/GCAN 基线，并生成两张场景对比图。"""
+"""训练 V1、任务节点 V2 与 GMATANN/GCAN 基线，并生成两张场景对比图。"""
 
 from __future__ import annotations
 
@@ -83,7 +83,7 @@ def main() -> None:
         methods.append(("V1 MA-TGN", args.v1_root, output / "v1" / "model.pt", "native"))
     methods.extend([
         ("GMATANN/GCAN", args.baseline_root, output / "gcan" / "model.pt", "baseline"),
-        ("DAG-query HGT-GRU", ROOT, output / "dag_query" / "model.pt", "native"),
+        ("Task-node HGT-GRU", ROOT, output / "task_node" / "model.pt", "native"),
     ])
 
     if not args.skip_training:

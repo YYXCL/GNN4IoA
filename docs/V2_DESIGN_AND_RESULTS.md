@@ -1,93 +1,32 @@
-# GNN4IoA V2：DAG-query 条件化任务分配
+# V2：任务节点条件化的异构时序图分配
 
-## 1. 建模边界
+V2 是一条自定义的任务条件异构时序 GNN 路线：
 
-系统异构图只允许两类节点：
+- 节点/边历史由 GRU 编码，接近 TGN 的“事件序列 + 记忆”思想；
+- 智能体、算力、任务三类节点和两类系统关系，接近 HGT 的异构关系建模思想；
+- 瞬时任务节点与所有候选智能体形成二部边，再做任务—智能体交叉注意力；
+- DAG Skill 硬约束和逐子任务分配接近 dependency-aware heterogeneous task allocation。
 
-```text
-agent <-- communication/task_dependency --> agent
-  ^
-  | compute_access
-  |
-compute
-```
+它不是标准 HGT：邻居聚合尚未为每种节点/边类型分别设置完整 Q/K/V；也不是标准 TGN：当前使用节点 GRUCell、边 GRUCell 和一层自定义聚合器。
 
-复杂任务及其子任务不进入系统图。拆分器输出的 DAG 被表示为独立 query：
+## 两阶段注意力
 
-```text
-subtask description + required Skill id + QoS
-                         |
-               bidirectional DAG encoder
-                         |
-        current dependency-conditioned task vector
-                         |
-agent/compute HGT state --+--> allocation decision
-```
+第一阶段在每个候选智能体的入边内归一化：
 
-这样做避免把一次性任务与长期存在的智能体/算力实体混成同一节点空间，也使同一张系统图能被不同任务需求重复查询。
+`alpha(u→a) = softmax_a(MLP([h_a, h_u, h_edge, r_type]))`
 
-## 2. 条件化分配决策
+它聚合相邻智能体、固定算力节点和通信边。当前任务需求不直接参与这一层边注意力。
 
-每个子任务 query 包含：任务描述、必需 Skill id、8 维 QoS（时延、准确率、成本、可靠性、隐私、上下文、工具、多模态）以及 DAG 中的前驱/后继边。
+第二阶段由子任务节点决定五组聚合结果的重要性：
 
-1. 智能体能力描述、Skill、API、知识库、运行环境和传感器组成能力文本，和任务文本共用 subword hashing + 可训练投影编码器。
-2. DAG 编码器分别聚合前驱与后继消息，保留依赖方向、入度和出度，得到当前子任务的依赖条件向量。
-3. HGT-GRU 编码智能体/算力动态图，Cross-Attention 让每个候选智能体读取 DAG query token。
-4. 状态头预测成功率、归一化完成时间、工具失败率、幻觉率和可执行性。
-5. 最终 logit 由学习分数、能力语义匹配和 QoS 加权效用共同构成；缺少必需 Skill 的候选由结构化硬掩码排除。
+`beta(s,a,f) = softmax_f(q_task(z_s)^T k_feature(c_a,f) / sqrt(d))`
 
-主要文件：
+其中 `f` 是自身、智能体邻居、算力节点、通信边和未完成任务。不同 Skill、时延要求、准确率要求及 DAG 位置生成不同的任务节点向量，因此可以学习不同的属性权重。
 
-- `2.模型/ma_tgn/dag_query.py`
-- `2.模型/ma_tgn/v2_model.py`
-- `2.模型/ma_tgn/text_encoder.py`
-- `1.data/ma_tgn_data/foundation.py`
+任务—智能体边的 logit 为：
 
-## 3. 数据中的 DAG
+`l(s,a) = q_agent(z_s)^T k_agent(h_s,a)/sqrt(d) + MLP([z_s,h_s,a])`
 
-现有 72 条任务是单子任务记录，没有人工标注 DAG。数据构建器采用可审计规则生成局部复杂任务：
+精确 Skill ID 不匹配的边被硬掩码，然后在候选智能体维度 softmax。候选集由数据层和 Skill 约束给出，注意力负责在可执行候选中排序，并不会凭空生成候选。
 
-- 只从同一业务场景选择相关子任务；
-- 优先同源智能体类型和相同 Skill 能力域；
-- 按 `采集/查询/监测/检测 -> 分析/分类 -> 融合/评估 -> 优化/控制 -> 生成/问答` 建立有向无环依赖；
-- 每个 query 保存子任务列表、边、当前子任务索引和复杂任务 id。
-
-生成结果位于 `1.data/datasets/sixg_ma_state/task_dag_catalog.json`。这些边是研究用派生标签，不应被描述为真实生产工作流标注；获得人工 DAG 后可以直接替换，模型接口不变。
-
-## 4. 论文对应关系
-
-- G-Designer：使用 agent 能力/角色文本和 task-specific 条件共同学习多智能体结构。本项目保留能力文本编码与任务条件思想，但遵照当前研究假设，不把 task 放入系统图。
-- HGRL-TA：复杂任务拆成有依赖、异质 Skill 需求的子任务，并以多关系图编码依赖状态。本项目据此加入方向敏感的 DAG query 编码。
-- TARGETNET（NeurIPS 2025）：用残差异构图 Transformer 联合编码智能体能力与时空约束。本项目据此保留 agent/compute HGT，并把依赖条件放在 query 侧。
-- GMATANN/GCAN：baseline 目录实现单子任务 task-agent 图、条件变分编码、图注意力和全局/局部融合；它有意忽略 DAG 边。
-
-参考：
-
-- <https://arxiv.org/abs/2410.11782>
-- <https://arxiv.org/abs/2410.15449>
-- <https://papers.nips.cc/paper_files/paper/2025/hash/82a227f51354b7ebafea51023d547d29-Abstract-Conference.html>
-- <https://doi.org/10.1109/JIOT.2025.3535641>
-
-## 5. 公平比较与输出
-
-`experiments/compare_allocation_models.py` 使用同一 JSONL、同一时间划分、同一候选顺序、标签和随机种子训练：
-
-- V1 MA-TGN；
-- GMATANN/GCAN 单子任务基线；
-- DAG-query HGT-GRU。
-
-两张主图分别报告三种场景（智慧家居、智慧工厂、应急救援）的平均任务分配准确率和平均完成时延。完成时延严格按 `agent_reliability.csv` 中所选智能体的 `平均任务完成时间(秒)` 估算。
-
-输出目录：`outputs/scenario_comparison/`。
-
-注意：当前测试集仅 9 个样本（三场景分别为 3/4/2），图表适合验证端到端实验链路，不足以支持统计显著性结论。正式论文实验应增加样本和随机种子，并报告均值、标准差或置信区间。
-
-## 6. 本次实测（10 epochs, seed=7）
-
-| 模型 | 总体平均准确率 | 总体平均完成时延(s) |
-|---|---:|---:|
-| V1 MA-TGN | 0.2222 | 8.7094 |
-| GMATANN/GCAN | 0.8889 | 8.4769 |
-| DAG-query HGT-GRU | 1.0000 | 8.6852 |
-
-按场景的准确率：智慧家居为 `0.3333 / 0.6667 / 1.0000`，智慧工厂为 `0 / 1 / 1`，应急救援为 `0.5 / 1 / 1`（顺序均为 V1 / GCAN / DAG-query）。DAG-query 比 GCAN 多正确分配 1 个智慧家居测试任务；其总体平均时延略高，是因为该任务改为选择正确但可靠性表平均完成时间更长的智能体。测试集过小且 DAG 是研究用派生流程，当前结果仍不能作为统计显著的优越性结论。后续应增加同一 Skill 下能力/可靠性不同的候选、人工 DAG 和更大的测试集。
+V2 不使用 Task Query 对象、能力槽、人工状态置信度、显式趋势或快/慢更新尺度。代码位于 `2.模型/ma_tgn/v2/`；历史 V1 位于 `2.模型/ma_tgn/v1/`。

@@ -44,6 +44,7 @@ def case_to_dict(case: TrainingCase) -> dict:
             "candidate_skill_mask": (
                 _list(graph.candidate_skill_mask) if graph.candidate_skill_mask is not None else []
             ),
+            "candidate_skill_ids": [list(items) for items in graph.candidate_skill_ids],
         },
         "task": {
             "qos": _list(case.task.values),
@@ -64,7 +65,15 @@ def case_to_dict(case: TrainingCase) -> dict:
 
 def case_from_dict(data: dict) -> TrainingCase:
     def tensors(values: dict) -> dict[str, torch.Tensor]:
-        return {key: torch.tensor(value, dtype=torch.float32) for key, value in values.items()}
+        converted = {key: torch.tensor(value, dtype=torch.float32) for key, value in values.items()}
+        # 读取 6.0 以前的能力槽数据时，只迁移为智能体总体可靠性；V2 不暴露槽结构。
+        if "reliability" not in converted and "capability_reliability" in converted:
+            reliability = converted["capability_reliability"]
+            mask = converted.get("capability_mask", torch.ones(reliability.shape[0])).bool()
+            converted["reliability"] = reliability[mask].mean(0) if mask.any() else torch.zeros(4)
+        for legacy in ("capability_embeddings", "capability_mask", "capability_usage", "capability_reliability"):
+            converted.pop(legacy, None)
+        return converted
     events = [GraphEvent(
         src=item["src"], dst=item["dst"], src_node_type=item["src_node_type"], dst_node_type=item["dst_node_type"],
         timestamp=item["timestamp"], event_type=item["event_type"], relation_type=item["relation_type"],
@@ -87,6 +96,7 @@ def case_from_dict(data: dict) -> TrainingCase:
             torch.tensor(raw["candidate_skill_mask"], dtype=torch.bool)
             if raw.get("candidate_skill_mask") else None
         ),
+        candidate_skill_ids=tuple(tuple(items) for items in raw.get("candidate_skill_ids", ())),
     )
     task = data["task"]
     return TrainingCase(
@@ -142,8 +152,16 @@ def generate_dataset(output_dir: Path, num_agents: int = 100, num_compute_nodes:
         write_cases(output_dir/f"{split}.jsonl", cases)
         if split == "train":
             profile_dir = output_dir/"profiles"
-            for agent_id, registry in enumerate(simulator.registries):
-                registry.save_profile(profile_dir/f"agent_{agent_id:03d}.json", agent_id, {"role": simulator.roles[agent_id]})
+            profile_dir.mkdir(parents=True, exist_ok=True)
+            for agent_id, skills in enumerate(simulator.agent_skills):
+                profile = {
+                    "agent_id": agent_id, "role": simulator.roles[agent_id],
+                    "skill_ids": list(skills),
+                    "reliability": simulator.agent_reliability[agent_id].tolist(),
+                }
+                (profile_dir/f"agent_{agent_id:03d}.json").write_text(
+                    json.dumps(profile, ensure_ascii=False, indent=2), encoding="utf-8"
+                )
             compute_counts = {kind: simulator.compute_kinds.count(kind) for kind in set(simulator.compute_kinds)}
     metadata = {
         "dataset": "6G-Agent-Compute-Heterogeneous-State", "version": "2.0",
@@ -154,10 +172,9 @@ def generate_dataset(output_dir: Path, num_agents: int = 100, num_compute_nodes:
         "splits": split_counts, "task_distribution": task_counts, "profile_format": "profiles/agent_NNN.json",
         "design_constraints": {
             "queue_batch_in_graph": True,
-            "queue_batch_used_for_decision": config.use_queue_batch_in_decision,
+            "queue_batch_used_for_decision": False,
             "link_path_type_encoded": False,
-            "capability_slots": config.max_capabilities,
-            "capability_growth": "append on unmatched task capability; evict least-used slot at capacity",
+            "capability_representation": "exact Skill ID set; no capability slots",
         },
         "schema": schema_dict(),
     }

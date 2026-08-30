@@ -1,0 +1,32 @@
+{
+  "agent_id": 77,
+  "agent_key": "A078",
+  "scenario": "智慧工厂",
+  "source_agent_type_id": "agent-016",
+  "source_agent_type_name": "Smart Factory Safety Monitoring Agent",
+  "skill_ids": [
+    "smart_factory.safety.chemical_handling.monitor",
+    "smart_factory.safety.confined_space.monitor",
+    "smart_factory.safety.danger_zone.detect",
+    "smart_factory.safety.emergency_exit.check",
+    "smart_factory.safety.emergency_response.recommend",
+    "smart_factory.safety.equipment_guard.check",
+    "smart_factory.safety.fire_risk.detect",
+    "smart_factory.safety.forklift_collision_risk.assess",
+    "smart_factory.safety.gas_leak.detect",
+    "smart_factory.safety.high_temperature_risk.assess",
+    "smart_factory.safety.noise_exposure.assess",
+    "smart_factory.safety.ppe.detect",
+    "smart_factory.safety.qa.answer",
+    "smart_factory.safety.safety_training_record.check",
+    "smart_factory.safety.unsafe_behavior.detect",
+    "smart_factory.safety.violation_report.generate",
+    "smart_factory.safety.worker_fall.detect"
+  ],
+  "reliability": [
+    0.9602000117301941,
+    7330.0,
+    0.007000000216066837,
+    0.013930000364780426
+  ]
+}

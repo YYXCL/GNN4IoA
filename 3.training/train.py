@@ -29,7 +29,7 @@ def run_case(model: TaskConditionedHeterogeneousTGN, case: TrainingCase, train: 
             model.process_event(event)
     for event in case.events[warmup:]:
         model.process_event(event, track_grad=train)
-    return model.query(case.graph, case.task)
+    return model.assign(case.graph, case.task)
 
 
 def evaluate(model: TaskConditionedHeterogeneousTGN, cases: list[TrainingCase]) -> dict[str, float]:
@@ -96,17 +96,15 @@ def dashboard_payload(config: ModelConfig, case: TrainingCase, output: dict[str,
         raw = compute_states[compute_index]
         nodes.append({
             "id": config.num_agents+compute_index, "node_type": "compute", "kind": compute_kinds[compute_index],
-            "gpu_total_tflops": raw[0], "gpu_remaining_tflops": raw[1], "gpu_load_rate": 1-raw[1]/raw[0],
-            "vram_total_gb": raw[2], "vram_used_gb": raw[3],
-            "memory_bandwidth_total_mbps": raw[4], "memory_bandwidth_used_mbps": raw[5],
-            "task_queue_length": raw[6], "active_batch_size": raw[7], "max_batch_size": raw[8],
+            "gpu_remaining_tflops": raw[0], "memory_remaining_gb": raw[1],
+            "vram_remaining_gb": raw[2],
         })
     edges = []
     edge_attention = output["attention_weights"].detach().cpu().mean(dim=1).tolist()
     for index in range(case.graph.edge_index.shape[1]):
         src = int(case.graph.edge_index[0, index]); dst = int(case.graph.edge_index[1, index])
         raw = case.graph.edge_state[index].tolist()
-        relation = config.relation_types[int(case.graph.relation_type[index])]
+        relation = ("compute_access", "communication")[int(case.graph.relation_type[index])]
         src_type = "agent" if src < config.num_agents else "compute"
         edges.append({
             "source": src, "target": dst, "source_type": src_type, "relation": relation,
@@ -117,18 +115,27 @@ def dashboard_payload(config: ModelConfig, case: TrainingCase, output: dict[str,
         "task_type": case.metadata["task_type"],
         "required_capability": case.metadata["required_capability"],
         "task_requirements": dict(zip(TASK_QOS_METRICS, case.task.values.tolist())),
-        "task_query": {
+        "task_nodes": {
             "complex_task_id": case.task.complex_task_id,
             "subtask_count": len(case.task.dag_descriptions) or 1,
             "dag_edge_index": (
                 case.task.dag_edge_index.tolist() if case.task.dag_edge_index is not None else [[], []]
             ),
             "current_subtask_index": case.task.dag_current_index,
-            "representation": "conditioned query (not a system graph node)",
+            "representation": "transient task nodes connected to every candidate agent",
+            "subtask_assignments": output["subtask_assignments"].detach().cpu().tolist(),
+            "selected_agent_ids": output["selected_agent_ids"].detach().cpu().tolist(),
+            "complex_agent_attention": output["complex_agent_attention"].detach().cpu().tolist(),
+            "feature_names": list(output["feature_names"]),
+            "average_feature_weights": output["modality_weights"].detach().cpu().tolist(),
         },
         "nodes": nodes, "edges": edges,
         "metrics": metrics, "history": history,
-        "model_constraints": {"queue_batch_used_for_decision": config.use_queue_batch_in_decision, "link_path_type_encoded": False},
+        "model_constraints": {
+            "queue_batch_used_for_decision": False, "link_path_type_encoded": False,
+            "confidence_used": False, "explicit_trend_feature_used": False,
+            "node_history_encoder": "GRU", "edge_history_encoder": "GRU",
+        },
     }
 
 
@@ -174,7 +181,6 @@ def main() -> None:
     config = ModelConfig(
         num_agents=int(metadata["num_agents"]),
         num_compute_nodes=int(metadata["num_compute_nodes"]),
-        confidence_tau_seconds=float(metadata.get("confidence_tau_seconds", 2.0)),
         dropout=0.05,
     )
     train_cases = list(iter_cases(args.dataset / "train.jsonl"))

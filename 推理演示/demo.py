@@ -12,7 +12,6 @@ sys.path.insert(0, str(PROJECT_ROOT / "2.模型"))
 sys.path.insert(0, str(PROJECT_ROOT / "1.data"))
 
 from ma_tgn import ModelConfig, TaskConditionedHeterogeneousTGN  # noqa: E402
-from ma_tgn.encoders import HeterogeneousStateEncoder  # noqa: E402
 from ma_tgn_data.dataset import iter_cases  # noqa: E402
 
 
@@ -39,7 +38,7 @@ def main() -> None:
         model.reset_state()
         for event in case.events:
             model.process_event(event)
-        output = model.query(case.graph, case.task)
+        output = model.assign(case.graph, case.task)
         topk = model.topk(output, args.top_k)
     predictions = output["state_predictions"]
     id_to_row = {int(node): i for i, node in enumerate(output["candidate_ids"])}
@@ -55,7 +54,7 @@ def main() -> None:
         } for node, score in zip(topk["node_ids"], topk["scores"])],
         "task_conditioned_modality_weights": {
             name: round(float(weight), 4)
-            for name, weight in zip(HeterogeneousStateEncoder.modality_names, output["modality_weights"])
+            for name, weight in zip(model.feature_names, output["modality_weights"])
         },
     }
     print(json.dumps(result, ensure_ascii=False, indent=2))

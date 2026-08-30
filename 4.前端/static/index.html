@@ -13,7 +13,7 @@
     </section>
     <section class="grid lower">
       <article class="panel note-panel"><div class="panel-head"><div><span class="step">05 · LINK</span><h3>链路建模说明</h3></div></div><p>链路直接保留智能体—智能体与智能体—算力节点的微观连接，不再按能力角色聚合成簇或宏观骨干。</p></article>
-      <article class="panel note-panel"><div class="panel-head"><div><span class="step">MODEL CONTRACT</span><h3>当前建模约束</h3></div></div><p>能力槽按任务反馈动态新增，达到上限后保留高频能力。能力与可靠性不使用置信度；上下文、环境、算力和链路的观测置信度随时间衰减。</p><div id="constraints" class="constraints"></div></article>
+      <article class="panel note-panel"><div class="panel-head"><div><span class="step">MODEL CONTRACT</span><h3>当前建模约束</h3></div></div><p>智能体使用固定的精确 Skill ID 集合，不维护能力槽。V2 用 GRU 编码节点与链路历史，不使用人工状态置信度、显式趋势或快慢更新尺度。</p><div id="constraints" class="constraints"></div></article>
     </section>
   </main>
   <footer>数据源：6G-Agent-Compute-Heterogeneous-State · 原始数据保留 ms / Mbps / TFLOPS / GB，进入模型时归一化</footer><script src="/app.js"></script>

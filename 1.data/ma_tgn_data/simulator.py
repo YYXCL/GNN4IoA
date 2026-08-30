@@ -7,7 +7,6 @@ from typing import Dict, List
 
 import torch
 
-from ma_tgn.capabilities import CapabilityRegistry, HashTextEmbedder
 from ma_tgn.config import ModelConfig
 from ma_tgn.state_schema import NORMALIZATION_SCALES
 from ma_tgn.types import EventType, GraphEvent, QueryGraph, RelationType, TaskRequirement, TrainingCase
@@ -24,11 +23,9 @@ ROLE_CAPABILITIES = {
 }
 
 TASK_QOS = {
-    "fire_frame": (0.90, 0.94, 0.35, 0.90, 0.65, 0.45, 0.40, 1.00),
-    "code_fix": (0.55, 0.90, 0.40, 0.88, 0.50, 0.75, 0.90, 0.10),
-    "network_diagnosis": (0.95, 0.82, 0.45, 0.92, 0.72, 0.42, 0.72, 0.25),
-    "knowledge_answer": (0.65, 0.94, 0.50, 0.90, 0.55, 0.82, 0.75, 0.20),
-    "task_planning": (0.60, 0.90, 0.42, 0.92, 0.60, 0.72, 0.52, 0.15),
+    "fire_frame": (0.90, 0.94), "code_fix": (0.55, 0.90),
+    "network_diagnosis": (0.95, 0.82), "knowledge_answer": (0.65, 0.94),
+    "task_planning": (0.60, 0.90),
 }
 
 TASK_CAPABILITY = {
@@ -51,9 +48,12 @@ class SixGStateSimulator:
         self.rng = random.Random(seed)
         self.gen = torch.Generator().manual_seed(seed)
         self.update_interval_ms = update_interval_ms
-        self.embedder = HashTextEmbedder()
         self.roles = [self.rng.choice(tuple(ROLE_CAPABILITIES)) for _ in range(config.num_agents)]
-        self.registries = [self._registry(role) for role in self.roles]
+        self.agent_skills = [tuple(ROLE_CAPABILITIES[role][1]) for role in self.roles]
+        self.agent_reliability = [torch.tensor([
+            self.rng.uniform(0.78, 0.98), self.rng.uniform(500, 12_000),
+            self.rng.uniform(0.01, 0.12), self.rng.uniform(0.005, 0.08),
+        ]) for _ in self.roles]
         self.agent_states = [self._initial_agent(index) for index in range(config.num_agents)]
         self.compute_kinds = ["cloud" if index < max(1, config.num_compute_nodes // 3) else "edge" for index in range(config.num_compute_nodes)]
         self.compute_states = [self._initial_compute(kind) for kind in self.compute_kinds]
@@ -61,12 +61,6 @@ class SixGStateSimulator:
         weights = [5 if kind == "cloud" else 1 for kind in self.compute_kinds]
         population = list(range(config.num_compute_nodes))
         self.agent_compute = [self.rng.choices(population, weights=weights, k=1)[0] for _ in range(config.num_agents)]
-
-    def _registry(self, role: str) -> CapabilityRegistry:
-        registry = CapabilityRegistry(self.config.max_capabilities, self.config.capability_embedding_dim, self.embedder)
-        # 初始只有一个宽粒度能力，后续任务反馈发现细粒度能力。
-        registry.add_or_touch(ROLE_CAPABILITIES[role][0])
-        return registry
 
     def _initial_agent(self, index: int) -> Dict[str, Tensor]:
         window = float(self.rng.choice((8_192, 32_768, 131_072, 262_144)))
@@ -76,7 +70,10 @@ class SixGStateSimulator:
             self.rng.uniform(0.35, 1.0), self.rng.uniform(0.0, 0.75),
             self.rng.uniform(0.4, 1.0), self.rng.uniform(0.0, 1.0), self.rng.uniform(0.2, 1.0),
         ])
-        return {"context": context, "environment": environment, **self.registries[index].tensors()}
+        return {
+            "context": context, "workload": torch.tensor([self.rng.uniform(0, 8)]),
+            "environment": environment, "reliability": self.agent_reliability[index].clone(),
+        }
 
     def _initial_compute(self, kind: str) -> Tensor:
         if kind == "cloud":
@@ -85,14 +82,12 @@ class SixGStateSimulator:
         else:
             total_flops = self.rng.uniform(40, 480); vram = self.rng.uniform(16, 96); bus = self.rng.uniform(100_000, 900_000)
             utilization = self.rng.uniform(0.30, 0.92); queue = self.rng.randint(0, 48); max_batch = self.rng.choice((4, 8, 16))
-        return torch.tensor([
-            total_flops, total_flops * (1-utilization), vram, vram * utilization,
-            bus, bus * utilization, float(queue), float(self.rng.randint(1, max_batch)), float(max_batch),
-        ])
+        memory_total = 1024.0 if kind == "cloud" else 256.0
+        return torch.tensor([total_flops * (1-utilization), memory_total * (1-utilization), vram * (1-utilization)])
 
     def _agent_state(self, agent_id: int) -> Dict[str, Tensor]:
         state = self.agent_states[agent_id]
-        state.update(self.registries[agent_id].tensors())
+        state["reliability"] = self.agent_reliability[agent_id].clone()
         return {key: value.clone() for key, value in state.items()}
 
     def _compute_state(self, compute_index: int) -> Dict[str, Tensor]:
@@ -103,17 +98,12 @@ class SixGStateSimulator:
         state["context"][1] = float(_clip(0.86 * state["context"][1] + 0.14 * torch.tensor(self.rng.uniform(0.02, 1.0))))
         drift = torch.randn(7, generator=self.gen) * 0.04
         state["environment"] = _clip(0.90 * state["environment"] + 0.10 * _clip(state["environment"] + drift))
+        state["workload"] = (0.8 * state["workload"] + 0.2 * torch.tensor([self.rng.uniform(0, 10)])).clamp(0, 16)
 
     def _step_compute(self, compute_index: int) -> None:
         state = self.compute_states[compute_index]
-        total_flops, total_vram, total_bus = state[0], state[2], state[4]
-        utilization = float((1-state[1]/state[0]).clamp(0, 1))
-        utilization = min(0.99, max(0.05, 0.80*utilization + 0.20*self.rng.uniform(0.05, 1.0)))
-        state[1] = total_flops * (1-utilization)
-        state[3] = total_vram * min(0.99, max(0.04, utilization + self.rng.uniform(-0.08, 0.08)))
-        state[5] = total_bus * min(0.99, max(0.03, utilization + self.rng.uniform(-0.10, 0.10)))
-        state[6] = max(0, min(256, state[6] + self.rng.randint(-3, 5)))
-        state[7] = max(1, min(float(state[8]), state[7] + self.rng.randint(-2, 2)))
+        factors = torch.tensor([self.rng.uniform(0.90, 1.08) for _ in range(3)])
+        state.mul_(factors).clamp_(min=0.0)
 
     def _link(self, src_type: int, dst_type: int) -> Tensor:
         # 路径性质只影响仿真分布，不写入图特征。
@@ -126,6 +116,7 @@ class SixGStateSimulator:
         return torch.tensor([latency, bandwidth, loss, jitter])
 
     def _task_feedback(self, agent_id: int, capability: str) -> None:
+        del capability
         compute = self.compute_states[self.agent_compute[agent_id]]
         remaining = max(1.0, float(compute[1]))
         execution_ms = min(120_000.0, 400.0 + 240_000.0 / remaining + self.rng.uniform(0, 900))
@@ -134,13 +125,19 @@ class SixGStateSimulator:
         success = self.rng.random() < success_probability
         tool_failed = self.rng.random() < float(1-environment[[0, 2]].mean()) * 0.35
         hallucinated = self.rng.random() < (0.06 if success else 0.28)
-        self.registries[agent_id].record_result(capability, success, execution_ms, tool_failed, hallucinated)
+        old = self.agent_reliability[agent_id]
+        observation = torch.tensor([float(success), execution_ms, float(tool_failed), float(hallucinated)])
+        self.agent_reliability[agent_id] = 0.9 * old + 0.1 * observation
 
     def make_case(self, max_candidates: int = 16, event_count: int = 24) -> TrainingCase:
         task_name = self.rng.choice(tuple(TASK_QOS))
         fine_capability = TASK_CAPABILITY[task_name]
-        task_capability = self.embedder.embed(fine_capability, self.config.capability_embedding_dim)
-        task = TaskRequirement(torch.tensor(TASK_QOS[task_name]), task_capability)
+        task = TaskRequirement(
+            torch.tensor(TASK_QOS[task_name]), torch.empty(0),
+            description=task_name, required_capability=fine_capability,
+            dag_descriptions=(task_name,), dag_required_capabilities=(fine_capability,),
+            dag_qos=torch.tensor([TASK_QOS[task_name]]), dag_edge_index=torch.empty(2, 0, dtype=torch.long),
+        )
         candidates = torch.tensor(self.rng.sample(range(self.config.num_agents), min(max_candidates, self.config.num_agents)))
         events: List[GraphEvent] = []
         timestamp = 0.0
@@ -167,7 +164,7 @@ class SixGStateSimulator:
                     event_type = self.rng.choice((EventType.CONTEXT_UPDATE, EventType.ENVIRONMENT_UPDATE, EventType.LINK_UPDATE))
                 src, dst, src_type, dst_type = other, agent, 0, 0
                 src_state, dst_state = self._agent_state(other), self._agent_state(agent)
-                relation = RelationType.TASK_DEPENDENCY if event_type == EventType.TASK_RESULT else RelationType.COMMUNICATION
+                relation = RelationType.COMMUNICATION
             confidence = self.rng.uniform(0.82, 0.99)
             observed_delay = self.rng.uniform(0.0, 0.35)
             events.append(GraphEvent(
@@ -194,38 +191,39 @@ class SixGStateSimulator:
             edge_times.append(timestamp-self.rng.uniform(0, .5)); edge_confidences.append(self.rng.uniform(.85, .99))
             peers = self.rng.sample([i for i in range(self.config.num_agents) if i != dst], min(2, self.config.num_agents-1))
             for peer in peers:
-                sources.append(peer); destinations.append(dst); edges.append(self._link(0, 0)); relations.append(self.rng.choice((RelationType.COMMUNICATION, RelationType.TASK_DEPENDENCY)))
+                sources.append(peer); destinations.append(dst); edges.append(self._link(0, 0)); relations.append(RelationType.COMMUNICATION)
                 edge_times.append(timestamp-self.rng.uniform(0, .8)); edge_confidences.append(self.rng.uniform(.80, .98))
         graph = QueryGraph(
             candidate_ids=candidates, edge_index=torch.tensor([sources, destinations]), edge_state=torch.stack(edges),
             relation_type=torch.tensor(relations), edge_timestamp=torch.tensor(edge_times),
             edge_confidence=torch.tensor(edge_confidences), query_time=timestamp+0.1,
+            candidate_skill_ids=tuple(
+                self.agent_skills[index] for index in candidates.tolist()
+            ),
         )
 
         teacher_scores: list[Tensor] = []; targets: list[Tensor] = []
         for agent_id in candidates.tolist():
-            registry = self.registries[agent_id]
-            matched = registry.match(fine_capability, threshold=0.25)
-            slot = registry.slots[matched] if matched is not None else registry.slots[0]
-            capability_similarity = max(float(torch.dot(task_capability, self.embedder.embed(item.description, self.config.capability_embedding_dim))) for item in registry.slots)
+            exact = fine_capability in self.agent_skills[agent_id]
+            capability_similarity = float(exact)
+            reliability = self.agent_reliability[agent_id]
             state = self.agent_states[agent_id]
             context_score = (1-state["context"][1]) * min(1.0, float(state["context"][0])/32_768)
             environment_score = state["environment"].mean()
             compute = self.compute_states[candidate_compute[agent_id]]
-            gpu_available = compute[1]/compute[0]; vram_available = 1-compute[3]/compute[2]; bus_available = 1-compute[5]/compute[4]
-            compute_score = (gpu_available + vram_available + bus_available)/3
+            compute_score = (compute / torch.tensor([9000.0, 1024.0, 512.0])).clamp(0, 1).mean()
             link = candidate_link[agent_id]
             link_score = (1-min(1, link[0]/1000)) * min(1, link[1]/10_000) * (1-link[2]) * (1-min(1, link[3]/200))
-            execution_norm = min(1.0, slot.mean_execution_time_ms/120_000)
+            execution_norm = min(1.0, float(reliability[1])/120_000)
             executability = float(environment_score * min(1.0, capability_similarity))
             score = (
                 0.24*capability_similarity + 0.12*context_score + 0.16*environment_score + 0.20*compute_score + 0.10*link_score
-                + 0.09*slot.task_success_rate + 0.04*(1-execution_norm) + 0.025*(1-slot.tool_call_failure_rate) + 0.025*(1-slot.hallucination_rate)
+                + 0.09*float(reliability[0]) + 0.04*(1-execution_norm) + 0.025*(1-float(reliability[2])) + 0.025*(1-float(reliability[3]))
             )
             teacher_scores.append(torch.as_tensor(score))
             targets.append(torch.tensor([
-                slot.task_success_rate, execution_norm, slot.tool_call_failure_rate,
-                slot.hallucination_rate, executability,
+                float(reliability[0]), execution_norm, float(reliability[2]),
+                float(reliability[3]), executability,
             ]))
         scores = torch.stack(teacher_scores)
         return TrainingCase(

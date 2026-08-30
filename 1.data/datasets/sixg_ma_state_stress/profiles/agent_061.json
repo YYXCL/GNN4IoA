@@ -1,0 +1,30 @@
+{
+  "agent_id": 61,
+  "agent_key": "A062",
+  "scenario": "智慧工厂",
+  "source_agent_type_id": "agent-013",
+  "source_agent_type_name": "Smart Factory Quality Control Agent",
+  "skill_ids": [
+    "smart_factory.quality.audit_record.generate",
+    "smart_factory.quality.corrective_action.recommend",
+    "smart_factory.quality.defect.classify",
+    "smart_factory.quality.defect_root_cause.analyze",
+    "smart_factory.quality.defect_trend.analyze",
+    "smart_factory.quality.inspection_report.generate",
+    "smart_factory.quality.nonconformance.detect",
+    "smart_factory.quality.pass_rate.calculate",
+    "smart_factory.quality.process_capability.analyze",
+    "smart_factory.quality.qa.answer",
+    "smart_factory.quality.rework_risk.assess",
+    "smart_factory.quality.sampling_plan.recommend",
+    "smart_factory.quality.spc.analyze",
+    "smart_factory.quality.supplier_quality.compare",
+    "smart_factory.quality.tolerance_check.perform"
+  ],
+  "reliability": [
+    0.8652999997138977,
+    10669.0,
+    0.05180000141263008,
+    0.04714500159025192
+  ]
+}

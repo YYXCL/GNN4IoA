@@ -1,4 +1,3 @@
 ﻿关系类型编码,关系类型名称,含义
 0,compute_access,智能体访问算力节点
 1,communication,智能体之间通信
-2,task_dependency,具有任务依赖的历史协作

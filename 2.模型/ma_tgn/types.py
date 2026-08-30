@@ -25,7 +25,6 @@ class RelationType(IntEnum):
 
     COMPUTE_ACCESS = 0
     COMMUNICATION = 1
-    TASK_DEPENDENCY = 2
 
 
 @dataclass
@@ -55,7 +54,7 @@ class TaskRequirement:
     capability_embedding: Tensor
     description: str = ""
     required_capability: str = ""
-    # DAG 是条件化 query 序列，不属于系统图节点。
+    # 每个 DAG 子任务在分配阶段编码为瞬时任务节点。
     dag_descriptions: tuple[str, ...] = ()
     dag_required_capabilities: tuple[str, ...] = ()
     dag_qos: Optional[Tensor] = None
@@ -73,10 +72,12 @@ class QueryGraph:
     edge_timestamp: Tensor
     edge_confidence: Tensor
     query_time: float
-    # 与 candidate_ids 等长。V2 用于任务文本和智能体能力文本的语义匹配。
+    # 旧数据兼容字段；V2 不做能力描述的语义匹配。
     candidate_texts: tuple[str, ...] = ()
     # 必需 Skill 是可执行性硬约束，不依赖文本相似度猜测。
     candidate_skill_mask: Optional[Tensor] = None
+    # 每个候选智能体的精确 Skill id 集合，用于所有子任务的硬匹配。
+    candidate_skill_ids: tuple[tuple[str, ...], ...] = ()
 
 
 @dataclass

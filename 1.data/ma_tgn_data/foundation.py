@@ -6,12 +6,12 @@ import hashlib
 import json
 import math
 import random
+from bisect import bisect_right
 from pathlib import Path
 
 import pandas as pd
 import torch
 
-from ma_tgn.capabilities import CapabilityRegistry, CapabilitySlot, HashTextEmbedder
 from ma_tgn.config import ModelConfig
 from ma_tgn.state_schema import schema_dict
 from ma_tgn.types import EventType, GraphEvent, QueryGraph, RelationType, TaskRequirement, TrainingCase
@@ -63,31 +63,22 @@ def _edge_tensor(row: pd.Series | dict) -> torch.Tensor:
     ], dtype=torch.float32)
 
 
-def _build_registries(agents: list[dict], reliability: dict[int, dict], config: ModelConfig) -> list[CapabilityRegistry]:
-    embedder = HashTextEmbedder()
-    registries: list[CapabilityRegistry] = []
+def _build_agent_reliability(agents: list[dict], reliability: dict[int, dict]) -> list[torch.Tensor]:
+    rows: list[torch.Tensor] = []
     for agent in agents:
         agent_id = int(agent["智能体编号"])
         metrics = reliability[agent_id]
         hallucination_rate = _clip((1.0 - float(metrics["任务成功率"])) * 0.35, 0.005, 0.10)
-        registry = CapabilityRegistry(config.max_capabilities, config.capability_embedding_dim, embedder)
-        registry.slots = [
-            CapabilitySlot(
-                name=skill["id"],
-                description=skill["id"],
-                usage_count=max(1, int(metrics["被调用次数"]) // max(1, len(agent["skills"]))),
-                task_success_rate=float(metrics["任务成功率"]),
-                mean_execution_time_ms=float(metrics["平均任务完成时间(秒)"]) * 1_000.0,
-                tool_call_failure_rate=float(metrics["工具调用失败率"]),
-                hallucination_rate=hallucination_rate,
-            )
-            for skill in agent["skills"][: config.max_capabilities]
-        ]
-        registries.append(registry)
-    return registries
+        rows.append(torch.tensor([
+            float(metrics["任务成功率"]),
+            float(metrics["平均任务完成时间(秒)"]) * 1_000.0,
+            float(metrics["工具调用失败率"]),
+            hallucination_rate,
+        ], dtype=torch.float32))
+    return rows
 
 
-def _agent_state(agent: dict, registry: CapabilityRegistry, tick: int) -> dict[str, torch.Tensor]:
+def _agent_state(agent: dict, reliability: torch.Tensor, tick: int) -> dict[str, torch.Tensor]:
     total_tokens = float(agent["上下文窗口总量(tokens)"])
     base_usage = float(agent["上下文窗口当前占用率"])
     utilization = _clip(base_usage + 0.035 * math.sin((tick + int(agent["智能体编号"])) / 7.0))
@@ -107,49 +98,28 @@ def _agent_state(agent: dict, registry: CapabilityRegistry, tick: int) -> dict[s
     ], dtype=torch.float32)
     return {
         "context": torch.tensor([total_tokens, utilization], dtype=torch.float32),
+        "workload": torch.tensor([
+            max(0.0, round(6.0 * utilization + (2.0 if api_occupied else 0.0) + 1.5 * math.sin((tick + int(agent["智能体编号"])) / 5.0)))
+        ], dtype=torch.float32),
         "environment": environment,
-        **registry.tensors(),
+        "reliability": reliability.clone(),
     }
 
 
 def _compute_state(load_row: pd.Series, inventory_row: dict) -> torch.Tensor:
-    is_cloud = inventory_row["节点类型"] == "云侧"
-    gpu_total_tflops = 4_000.0 if is_cloud else 400.0
-    gpu_utilization = _clip(float(load_row["gpu_duty_cycle_percent"]) / 100.0)
-    vram_total = float(load_row["gpu_memory_total_gb_estimated"])
-    vram_used = min(vram_total, float(load_row["gpu_memory_used_gb"]))
-    bandwidth_total = 4_000_000.0 if is_cloud else 600_000.0
-    bandwidth_used = bandwidth_total * _clip(float(load_row["server_load_rate_proxy"]))
-    queue_length = min(256.0, max(0.0, round(float(load_row["queue_rt_ms"]) / 50.0)))
-    max_batch = 64.0 if is_cloud else 16.0
-    active_batch = min(max_batch, max(1.0, float(load_row["active_gpu_container_count"])))
+    del inventory_row
     return torch.tensor([
-        gpu_total_tflops,
-        gpu_total_tflops * (1.0 - gpu_utilization),
-        vram_total,
-        vram_used,
-        bandwidth_total,
-        bandwidth_used,
-        queue_length,
-        active_batch,
-        max_batch,
+        float(load_row["GPU算力剩余量(TFLOPS)"]),
+        float(load_row["内存剩余量(GB)"]),
+        float(load_row["显存剩余量(GB)"]),
     ], dtype=torch.float32)
 
 
 def _task_qos(task: dict) -> torch.Tensor:
     latency_seconds = float(task[TASK_LATENCY_FIELD])
-    required_skill = str(task[TASK_SKILL_FIELD])
-    scenario = str(task["场景"])
-    multimodal = 0.90 if any(token in required_skill for token in ("video", "image", "audio", "sensor")) else 0.45
     return torch.tensor([
-        _clip(1.0 - latency_seconds / 30.0),
+        _clip(1.0 - latency_seconds / 120.0),
         float(task["准确率要求"]),
-        0.55,
-        max(0.80, float(task[TASK_COMPLETENESS_FIELD])),
-        0.82 if scenario == "智慧家居" else 0.62,
-        0.72,
-        0.85,
-        multimodal,
     ], dtype=torch.float32)
 
 
@@ -181,6 +151,17 @@ def _task_similarity(left: dict, right: dict) -> float:
 
 def _build_task_dag(current: dict, tasks: list[dict], max_subtasks: int = 5) -> tuple[list[dict], list[list[int]], int, str]:
     """从同场景、同能力域任务构造可审计的局部复杂任务 DAG。"""
+    if current.get("任务类型") == "复杂任务" and current.get("子任务"):
+        selected = list(current["子任务"])
+        id_to_index = {item["任务id"]: index for index, item in enumerate(selected)}
+        edges = [(id_to_index[source], id_to_index[target]) for source, target in current["DAG"]["边"]]
+        current_index = _stable_int(str(current["任务id"])) % len(selected)
+        return (
+            selected,
+            [[source for source, _ in edges], [target for _, target in edges]],
+            current_index,
+            str(current["任务id"]),
+        )
     task_by_id = {str(task["任务id"]): task for task in tasks}
     template_index = next(
         (index for index, template in enumerate(WORKFLOW_TEMPLATES) if current["任务id"] in template),
@@ -211,14 +192,15 @@ def _build_task_dag(current: dict, tasks: list[dict], max_subtasks: int = 5) -> 
     return selected, edge_index, current_index, complex_task_id
 
 
-def _task_requirement(task: dict, tasks: list[dict], embedder: HashTextEmbedder, config: ModelConfig) -> TaskRequirement:
-    required_skill = str(task[TASK_SKILL_FIELD])
+def _task_requirement(task: dict, tasks: list[dict]) -> TaskRequirement:
     selected, edge_index, current_index, complex_task_id = _build_task_dag(task, tasks)
-    qos = _task_qos(task)
+    active = selected[current_index]
+    required_skill = str(active[TASK_SKILL_FIELD])
+    qos = _task_qos(active)
     return TaskRequirement(
         qos,
-        embedder.embed(required_skill, config.capability_embedding_dim),
-        description=str(task["任务具体提示词"]),
+        torch.empty(0),
+        description=str(active["任务具体提示词"]),
         required_capability=required_skill,
         dag_descriptions=tuple(str(item["任务具体提示词"]) for item in selected),
         dag_required_capabilities=tuple(str(item[TASK_SKILL_FIELD]) for item in selected),
@@ -263,12 +245,84 @@ def _candidate_agents(task: dict, agents: list[dict], candidate_count: int, seed
     return candidates
 
 
+def _candidate_agents_for_dag(
+    subtasks: list[dict], active_task: dict, agents: list[dict], candidate_count: int, seed: int,
+    min_eligible_per_skill: int = 4,
+) -> list[int]:
+    """候选集中为每个子任务保留多个精确 Skill 候选。"""
+    skill_sets = [{skill["id"] for skill in agent["skills"]} for agent in agents]
+    mandatory: list[int] = []
+    for subtask in subtasks:
+        skill = str(subtask[TASK_SKILL_FIELD])
+        exact = [index for index, available in enumerate(skill_sets) if skill in available]
+        if not exact:
+            raise AssertionError(f"子任务 {subtask['任务id']} 的 Skill {skill} 没有可用智能体")
+        exact.sort(key=lambda index: _stable_int(f"{subtask['任务id']}:{index}:{seed}"))
+        for chosen in exact[:min(min_eligible_per_skill, len(exact))]:
+            if chosen not in mandatory:
+                mandatory.append(chosen)
+    if len(mandatory) > candidate_count:
+        raise ValueError("candidate_count 小于复杂任务所需的不同 Skill 智能体数量")
+    preferred = _candidate_agents(active_task, agents, candidate_count, seed)
+    scenario = str(active_task["场景"])
+    remainder = [index for index, agent in enumerate(agents) if agent["场景"] == scenario]
+    remainder += list(range(len(agents)))
+    candidates = mandatory.copy()
+    for index in [*preferred, *remainder]:
+        if index not in candidates:
+            candidates.append(index)
+        if len(candidates) == candidate_count:
+            break
+    random.Random(seed + _stable_int(str(active_task["父任务id"]))).shuffle(candidates)
+    return candidates
+
+
+def _share_skills_within_agent_type(agents: list[dict]) -> None:
+    """同一智能体类型的实例共享能力卡，避免 Skill 筛选后退化为唯一候选。"""
+
+    by_type: dict[str, dict[str, dict]] = {}
+    for agent in agents:
+        role = str(agent["源智能体类型id"])
+        union = by_type.setdefault(role, {})
+        for skill in agent["skills"]:
+            union[str(skill["id"])] = skill
+    for agent in agents:
+        role = str(agent["源智能体类型id"])
+        agent["skills"] = [by_type[role][skill_id] for skill_id in sorted(by_type[role])]
+
+
 def _split_counts(total: int) -> dict[str, int]:
     train = max(1, int(total * 0.75))
     val = max(1, int(total * 0.125))
     if train + val >= total:
         train = total - 2
     return {"train": train, "val": val, "test": total - train - val}
+
+
+def _stratified_task_order(tasks: list[dict], seed: int) -> tuple[list[dict], bool]:
+    """让时间顺序切分后的 val/test 均覆盖每个场景×难度组合。"""
+
+    groups: dict[tuple[str, str], list[dict]] = {}
+    for task in tasks:
+        key = (str(task.get("场景", "")), str(task.get("难度级别", "")))
+        groups.setdefault(key, []).append(task)
+    if len(groups) != 9 or any(len(items) < 3 for items in groups.values()):
+        shuffled = tasks.copy()
+        random.Random(seed).shuffle(shuffled)
+        return shuffled, False
+    partitions: dict[str, list[dict]] = {"train": [], "val": [], "test": []}
+    for key in sorted(groups):
+        items = groups[key].copy()
+        random.Random(seed + _stable_int("|".join(key))).shuffle(items)
+        counts = _split_counts(len(items))
+        cursor = 0
+        for split, count in counts.items():
+            partitions[split].extend(items[cursor:cursor + count])
+            cursor += count
+    for offset, split in enumerate(("train", "val", "test")):
+        random.Random(seed + 10_000 + offset).shuffle(partitions[split])
+    ordered = partitions["train"] + partitions["val"] + partitions["test"]
+    return ordered, True
 
 
 def generate_foundation_dataset(
@@ -279,6 +333,8 @@ def generate_foundation_dataset(
     window_size_timestamps: int = 16,
     candidate_count: int = 12,
     event_count: int = 24,
+    neighbor_fanout: int = 8,
+    share_role_skills: bool = True,
     samples: int | None = None,
 ) -> dict:
     """从基础表生成按时间滑动的 train/val/test JSONL。
@@ -299,6 +355,8 @@ def generate_foundation_dataset(
     links_path = data_root / "2.链路数据" / "communication_links.csv"
     tasks_path = data_root / "5.任务数据" / "tasks.json"
     agents = json.loads(agents_path.read_text(encoding="utf-8"))
+    if share_role_skills:
+        _share_skills_within_agent_type(agents)
     tasks = json.loads(tasks_path.read_text(encoding="utf-8"))
     reliability_frame = pd.read_csv(reliability_path)
     inventory_frame = pd.read_csv(inventory_path)
@@ -306,7 +364,7 @@ def generate_foundation_dataset(
     links = pd.read_csv(links_path)
     required_task_fields = {
         "任务id", "任务具体提示词", TASK_SKILL_FIELD, TASK_OUTPUT_FIELD,
-        TASK_COMPLETENESS_FIELD, TASK_LATENCY_FIELD, "准确率要求", "场景", "source_agent_type_id",
+        TASK_COMPLETENESS_FIELD, TASK_LATENCY_FIELD, "准确率要求", "场景", "任务类型", "子任务", "DAG",
     }
     for task in tasks:
         missing = required_task_fields - set(task)
@@ -314,6 +372,8 @@ def generate_foundation_dataset(
             raise ValueError(f"任务 {task.get('任务id')} 缺少字段: {sorted(missing)}")
         if "required_skill_id" in task or "实验要求" in task:
             raise ValueError("任务 JSON 仍含旧字段 required_skill_id 或 实验要求")
+        if not task["子任务"]:
+            raise ValueError(f"复杂任务 {task['任务id']} 没有子任务")
     if samples is None:
         samples = len(tasks)
     if samples < 3:
@@ -326,50 +386,48 @@ def generate_foundation_dataset(
     config = ModelConfig(num_agents=num_agents, num_compute_nodes=num_compute_nodes)
     reliability = {int(row["智能体编号"]): row for row in reliability_frame.to_dict("records")}
     inventory = {str(row["算力节点编号"]): row for row in inventory_frame.to_dict("records")}
-    embedder = HashTextEmbedder()
-    registries = _build_registries(agents, reliability, config)
+    agent_reliability = _build_agent_reliability(agents, reliability)
     roles = [str(agent["源智能体类型名称"]) for agent in agents]
     compute_ids = inventory_frame["算力节点编号"].astype(str).tolist()
     compute_kinds = ["cloud" if inventory[node]["节点类型"] == "云侧" else "edge" for node in compute_ids]
 
+    links["时间戳"] = links["时间戳"].astype("int64")
+    link_timestamps = sorted(links["时间戳"].unique().tolist())
+    first_links = links[links["时间戳"] == link_timestamps[0]]
+    link_lookup = {
+        (int(row["时间戳"]), *sorted((str(row["数据源"]), str(row["数据目的地"])))): row
+        for row in links.to_dict("records")
+    }
+
+    def link_at(raw_timestamp: int, source: str, target: str) -> dict:
+        position = max(0, bisect_right(link_timestamps, int(raw_timestamp)) - 1)
+        return link_lookup[(link_timestamps[position], *sorted((source, target)))]
+
     agent_compute: list[int] = []
-    compute_link_rows: dict[tuple[int, int], pd.Series] = {}
-    peer_rows: dict[int, list[tuple[int, pd.Series]]] = {index: [] for index in range(num_agents)}
     for index, agent in enumerate(agents):
         agent_key = str(agent["agent_key"])
-        attached = links[(links["数据源"] == agent_key) & links["数据目的地"].astype(str).str.startswith("C")]
+        attached = first_links[(first_links["数据源"] == agent_key) & (first_links["链路类型"] == "智能体-算力节点")]
         if attached.empty:
             raise ValueError(f"{agent_key} 没有算力节点链路")
-        preferred = attached[attached["是否有任务依赖关系"] == "是"]
-        row = (preferred.iloc[0] if not preferred.empty else attached.iloc[0])
+        if len(attached) != 1:
+            raise ValueError(f"{agent_key} 必须有且只有一个固定算力节点链路")
+        row = attached.iloc[0]
         compute_index = compute_ids.index(str(row["数据目的地"]))
         agent_compute.append(compute_index)
-        for _, link_row in attached.iterrows():
-            compute_link_rows[(index, compute_ids.index(str(link_row["数据目的地"])))] = link_row
-    for _, row in links.iterrows():
-        source = str(row["数据源"])
-        destination = str(row["数据目的地"])
-        if not (source.startswith("A") and destination.startswith("A")):
-            continue
-        source_index = int(source[1:]) - 1
-        destination_index = int(destination[1:]) - 1
-        peer_rows[destination_index].append((source_index, row))
-        peer_rows[source_index].append((destination_index, row))
 
-    load_frame["timestamp_anon"] = load_frame["timestamp_anon"].astype("int64")
-    timestamps = sorted(load_frame["timestamp_anon"].unique().tolist())
+    load_frame["时间戳"] = load_frame["时间戳"].astype("int64")
+    timestamps = sorted(load_frame["时间戳"].unique().tolist())
     if len(timestamps) < window_size_timestamps * samples:
         raise ValueError("时间戳数量不足以构造默认无重叠窗口")
     load_lookup = {
-        (int(row["timestamp_anon"]), str(row["compute_node_id"])): row
+        (int(row["时间戳"]), str(row["算力节点编号"])): row
         for row in load_frame.to_dict("records")
     }
     max_start = len(timestamps) - window_size_timestamps
     starts = [round(index * max_start / max(1, samples - 1)) for index in range(samples)]
     if any(starts[index + 1] < starts[index] + window_size_timestamps for index in range(len(starts) - 1)):
         raise AssertionError("默认滑动窗口发生重叠，请减少样本数或窗口长度")
-    shuffled_tasks = tasks.copy()
-    random.Random(seed).shuffle(shuffled_tasks)
+    shuffled_tasks, stratified_split = _stratified_task_order(tasks, seed)
     shuffled_tasks = shuffled_tasks[:samples]
     origin_timestamp = timestamps[0]
     cases: list[TrainingCase] = []
@@ -380,9 +438,11 @@ def generate_foundation_dataset(
         window_timestamps = timestamps[start : start + window_size_timestamps]
         window_start, window_end = window_timestamps[0], window_timestamps[-1]
         case_ranges.append((window_start, window_end))
-        required_skill = str(task[TASK_SKILL_FIELD])
-        candidates = _candidate_agents(task, agents, candidate_count, seed)
-        task_requirement = _task_requirement(task, tasks, embedder, config)
+        task_requirement = _task_requirement(task, tasks)
+        selected_subtasks, _, current_index, _ = _build_task_dag(task, tasks)
+        active_task = selected_subtasks[current_index]
+        required_skill = str(active_task[TASK_SKILL_FIELD])
+        candidates = _candidate_agents_for_dag(selected_subtasks, active_task, agents, candidate_count, seed)
         query_time = float(window_end - origin_timestamp) + 0.1
         query_compute_states = [
             _compute_state(pd.Series(load_lookup[(window_end, node)]), inventory[node])
@@ -396,11 +456,9 @@ def generate_foundation_dataset(
             compute_node = compute_ids[compute_index]
             load_row = pd.Series(load_lookup[(raw_timestamp, compute_node)])
             compute_state = _compute_state(load_row, inventory[compute_node])
-            agent_state = _agent_state(agents[agent_index], registries[agent_index], start + position)
-            edge_row = compute_link_rows.get((agent_index, compute_index))
-            if edge_row is None:
-                edge_row = links[(links["数据源"] == agents[agent_index]["agent_key"]) & (links["数据目的地"] == compute_node)].iloc[0]
-            confidence = 0.88 if str(load_row["data_quality_flag"]) == "含插值" else 0.97
+            agent_state = _agent_state(agents[agent_index], agent_reliability[agent_index], start + position)
+            edge_row = link_at(raw_timestamp, agents[agent_index]["agent_key"], compute_node)
+            confidence = 1.0
             events.append(GraphEvent(
                 src=num_agents + compute_index,
                 dst=agent_index,
@@ -422,29 +480,20 @@ def generate_foundation_dataset(
         peer_cursor = 0
         while len(events) < event_count:
             dst = candidates[peer_cursor % len(candidates)]
-            available = peer_rows.get(dst, [])
-            if available:
-                src, edge_row = available[peer_cursor % len(available)]
-            else:
-                src = candidates[(peer_cursor + 1) % len(candidates)]
-                edge_row = {
-                    "时延(ms)": 20.0, "带宽(Mbps)": 1_000.0,
-                    "网络丢包率": 0.01, "网络抖动(ms)": 2.0,
-                    "是否有任务依赖关系": "否",
-                }
+            src = candidates[(peer_cursor + 1) % len(candidates)]
             raw_timestamp = window_timestamps[(len(events) - len(candidates)) % len(window_timestamps)]
+            edge_row = link_at(raw_timestamp, agents[src]["agent_key"], agents[dst]["agent_key"])
             timestamp = float(raw_timestamp - origin_timestamp) + 0.01 * (peer_cursor + 1)
-            dependency = str(edge_row["是否有任务依赖关系"]) == "是"
             events.append(GraphEvent(
                 src=src,
                 dst=dst,
                 src_node_type=0,
                 dst_node_type=0,
                 timestamp=timestamp,
-                event_type=int(EventType.TASK_RESULT if dependency else EventType.LINK_UPDATE),
-                relation_type=int(RelationType.TASK_DEPENDENCY if dependency else RelationType.COMMUNICATION),
-                src_state=_agent_state(agents[src], registries[src], start + peer_cursor),
-                dst_state=_agent_state(agents[dst], registries[dst], start + peer_cursor),
+                event_type=int(EventType.LINK_UPDATE),
+                relation_type=int(RelationType.COMMUNICATION),
+                src_state=_agent_state(agents[src], agent_reliability[src], start + peer_cursor),
+                dst_state=_agent_state(agents[dst], agent_reliability[dst], start + peer_cursor),
                 edge_state=_edge_tensor(edge_row),
                 src_confidence={"context": torch.tensor([0.95]), "environment": torch.tensor([0.93])},
                 dst_confidence={"context": torch.tensor([0.95]), "environment": torch.tensor([0.93])},
@@ -465,7 +514,7 @@ def generate_foundation_dataset(
         candidate_link: dict[int, torch.Tensor] = {}
         for agent_index in candidates:
             compute_index = agent_compute[agent_index]
-            edge_row = compute_link_rows[(agent_index, compute_index)]
+            edge_row = link_at(window_end, agents[agent_index]["agent_key"], compute_ids[compute_index])
             edge_state = _edge_tensor(edge_row)
             candidate_link[agent_index] = edge_state
             edge_sources.append(num_agents + compute_index)
@@ -474,12 +523,17 @@ def generate_foundation_dataset(
             relation_types.append(int(RelationType.COMPUTE_ACCESS))
             edge_timestamps.append(query_time - 0.05)
             edge_confidences.append(0.96)
-            for peer, peer_row in peer_rows.get(agent_index, [])[:2]:
+            peer_candidates = [peer for peer in candidates if peer != agent_index]
+            peer_candidates.sort(key=lambda peer: _stable_int(
+                f"{task['任务id']}:{agent_index}:{peer}:{seed}"
+            ))
+            peer_candidates = peer_candidates[:neighbor_fanout]
+            for peer in peer_candidates:
+                peer_row = link_at(window_end, agents[peer]["agent_key"], agents[agent_index]["agent_key"])
                 edge_sources.append(peer)
                 edge_destinations.append(agent_index)
                 edge_states.append(_edge_tensor(peer_row))
-                dependency = str(peer_row["是否有任务依赖关系"]) == "是"
-                relation_types.append(int(RelationType.TASK_DEPENDENCY if dependency else RelationType.COMMUNICATION))
+                relation_types.append(int(RelationType.COMMUNICATION))
                 edge_timestamps.append(query_time - 0.08)
                 edge_confidences.append(0.93)
         graph = QueryGraph(
@@ -490,11 +544,15 @@ def generate_foundation_dataset(
             edge_timestamp=torch.tensor(edge_timestamps, dtype=torch.float32),
             edge_confidence=torch.tensor(edge_confidences, dtype=torch.float32),
             query_time=query_time,
-            candidate_texts=tuple(_agent_ability_text(agents[index]) for index in candidates),
+            candidate_texts=(),
             candidate_skill_mask=torch.tensor([
                 required_skill in {skill["id"] for skill in agents[index]["skills"]}
                 for index in candidates
             ], dtype=torch.bool),
+            candidate_skill_ids=tuple(
+                tuple(skill["id"] for skill in agents[index]["skills"])
+                for index in candidates
+            ),
         )
 
         targets: list[torch.Tensor] = []
@@ -504,39 +562,36 @@ def generate_foundation_dataset(
             metrics = reliability[int(agent["智能体编号"])]
             skill_ids = [skill["id"] for skill in agent["skills"]]
             exact = required_skill in skill_ids
-            similarity = max(
-                float(torch.dot(task_requirement.capability_embedding, embedder.embed(skill_id, config.capability_embedding_dim)))
-                for skill_id in skill_ids
-            )
-            capability_score = 1.0 if exact else 0.60 * similarity
-            agent_state = _agent_state(agent, registries[agent_index], start + window_size_timestamps)
+            capability_score = 1.0 if exact else 0.0
+            agent_state = _agent_state(agent, agent_reliability[agent_index], start + window_size_timestamps)
             context_score = float(1.0 - agent_state["context"][1]) * min(1.0, float(agent_state["context"][0]) / 32_768.0)
             environment_score = float(agent_state["environment"].mean())
             compute_state = query_compute_states[agent_compute[agent_index]]
-            compute_score = float(((compute_state[1] / compute_state[0]) + (1.0 - compute_state[3] / compute_state[2]) + (1.0 - compute_state[5] / compute_state[4])) / 3.0)
+            compute_node = compute_ids[agent_compute[agent_index]]
+            gpu_total = 4_000.0 if inventory[compute_node]["节点类型"] == "云侧" else 400.0
+            compute_score = float((
+                compute_state[0] / gpu_total
+                + compute_state[1] / float(inventory[compute_node]["估计内存总量(GB)"])
+                + compute_state[2] / float(inventory[compute_node]["估计显存总量(GB)"])
+            ) / 3.0)
             link_state = candidate_link[agent_index]
             link_score = float((1.0 - min(1.0, link_state[0] / 1_000.0)) * min(1.0, link_state[1] / 10_000.0) * (1.0 - link_state[2]) * (1.0 - min(1.0, link_state[3] / 200.0)))
             success = float(metrics["任务成功率"])
             execution_norm = min(1.0, float(metrics["平均任务完成时间(秒)"]) / 120.0)
             tool_failure = float(metrics["工具调用失败率"])
             hallucination = _clip((1.0 - success) * 0.35, 0.005, 0.10)
-            executability = _clip(environment_score * (1.0 if exact else similarity))
+            executability = _clip(environment_score if exact else 0.0)
             targets.append(torch.tensor([success, execution_norm, tool_failure, hallucination, executability], dtype=torch.float32))
             latency_priority = float(task_requirement.values[0])
             accuracy_priority = float(task_requirement.values[1])
-            reliability_priority = float(task_requirement.values[3])
             teacher_scores.append(
                 (1.0 if exact else -1.0)
                 + 0.18 * capability_score + 0.10 * context_score + 0.14 * environment_score
                 + latency_priority * (
                     0.12 * compute_score + 0.08 * link_score + 0.18 * (1.0 - execution_norm)
                 )
-                + accuracy_priority * (
-                    0.20 * success + 0.08 * (1.0 - hallucination)
-                )
-                + reliability_priority * (
-                    0.06 * (1.0 - tool_failure) + 0.06 * executability
-                )
+                + accuracy_priority * (0.20 * success + 0.08 * (1.0 - hallucination))
+                + 0.06 * (1.0 - tool_failure) + 0.06 * executability
             )
         scores = torch.tensor(teacher_scores, dtype=torch.float32)
         label = int(scores.argmax())
@@ -552,18 +607,16 @@ def generate_foundation_dataset(
             teacher_scores=scores,
             metadata={
                 "dataset_origin": "foundation_tables",
-                "task_id": task["任务id"],
+                "task_id": active_task["任务id"],
                 "task_type": task["场景"],
-                "task_prompt": task["任务具体提示词"],
+                "difficulty_level": task["难度级别"],
+                "task_prompt": active_task["任务具体提示词"],
                 "required_capability": required_skill,
-                "output_requirement": task[TASK_OUTPUT_FIELD],
-                "field_completeness_min": float(task[TASK_COMPLETENESS_FIELD]),
-                "end_to_end_latency_s_max": float(task[TASK_LATENCY_FIELD]),
+                "output_requirement": active_task[TASK_OUTPUT_FIELD],
+                "field_completeness_min": float(active_task[TASK_COMPLETENESS_FIELD]),
+                "end_to_end_latency_s_max": float(active_task[TASK_LATENCY_FIELD]),
                 "complex_task_id": task_requirement.complex_task_id,
-                "dag_task_ids": [
-                    item["任务id"]
-                    for item in _build_task_dag(task, tasks)[0]
-                ],
+                "dag_task_ids": [item["任务id"] for item in selected_subtasks],
                 "dag_edge_index": task_requirement.dag_edge_index.tolist(),
                 "dag_current_index": task_requirement.dag_current_index,
                 "source_timestamp_start": int(window_start),
@@ -591,16 +644,22 @@ def generate_foundation_dataset(
         cursor += count
     profile_dir = output_dir / "profiles"
     profile_dir.mkdir(parents=True, exist_ok=True)
-    for agent_index, (agent, registry) in enumerate(zip(agents, registries)):
-        registry.save_profile(profile_dir / f"agent_{agent_index:03d}.json", agent_index, {
+    for agent_index, agent in enumerate(agents):
+        profile = {
+            "agent_id": agent_index,
             "agent_key": agent["agent_key"],
             "scenario": agent["场景"],
             "source_agent_type_id": agent["源智能体类型id"],
             "source_agent_type_name": agent["源智能体类型名称"],
-        })
+            "skill_ids": [skill["id"] for skill in agent["skills"]],
+            "reliability": agent_reliability[agent_index].tolist(),
+        }
+        (profile_dir / f"agent_{agent_index:03d}.json").write_text(
+            json.dumps(profile, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
     metadata = {
         "dataset": "6G-Agent-Compute-Foundation-Sliding-Window",
-        "version": "5.0-dag-query",
+        "version": "6.0-task-agent-gru",
         "dataset_origin": "1.data numbered foundation tables",
         "num_agents": num_agents,
         "num_compute_nodes": num_compute_nodes,
@@ -611,32 +670,39 @@ def generate_foundation_dataset(
         "window_size_timestamps": window_size_timestamps,
         "candidate_count": candidate_count,
         "events_per_window": event_count,
+        "neighbor_fanout": neighbor_fanout,
         "window_overlap": False,
         "source_timestamp_origin": int(origin_timestamp),
         "source_timestamp_min": int(timestamps[0]),
         "source_timestamp_max": int(timestamps[-1]),
-        "confidence_tau_seconds": 600.0,
         "task_distribution": task_counts,
         "profile_format": "profiles/agent_NNN.json",
         "derived_field_notes": {
-            "gpu_total_tflops": "按云侧/边侧节点类型使用 4000/400 TFLOPS 仿真假设",
-            "gpu_memory_bandwidth": "按节点类型设定总带宽，并以 server_load_rate_proxy 推算已用带宽",
-            "queue_and_batch": "由 queue_rt_ms、active_gpu_container_count 和节点类型推导",
+            "compute_features": "只使用 GPU 剩余算力、内存剩余量和显存剩余量",
+            "gpu_total_tflops": "剩余 GPU 算力基于云侧/边侧 4000/400 TFLOPS 容量假设计算",
             "hallucination_rate": "基础可靠性表没有该字段，按 (1-task_success_rate)*0.35 截断到 0.5%-10%",
         },
         "design_constraints": {
             "chronological_split": True,
+            "scenario_difficulty_stratified_split": stratified_split,
             "non_overlapping_windows": True,
             "required_skill_present_in_candidates": True,
             "label_agent_has_required_skill": True,
-            "queue_batch_in_graph": True,
-            "queue_batch_used_for_decision": config.use_queue_batch_in_decision,
+            "queue_batch_in_graph": False,
+            "queue_batch_used_for_decision": False,
             "link_path_type_encoded": False,
-            "explicit_task_node": False,
-            "task_representation": "dependency-aware DAG query; system graph nodes are agent/compute only",
+            "explicit_task_node": True,
+            "task_representation": "每个子任务是瞬时任务节点，并连接到所有候选智能体",
+            "node_history_encoder": "GRU",
+            "edge_history_encoder": "GRU",
+            "one_hop_agent_aggregation": True,
+            "confidence_used_by_model": False,
+            "explicit_trend_feature_used_by_model": False,
             "required_skill_hard_mask": True,
-            "task_and_agent_text_in_jsonl": True,
-            "capability_slots": config.max_capabilities,
+            "skills_shared_within_agent_type": share_role_skills,
+            "task_and_agent_text_in_jsonl": False,
+            "task_encoding_fields": ["required_skill_id", "latency", "accuracy"],
+            "capability_representation": "精确 Skill ID 集合；不使用能力槽",
         },
         "schema": schema_dict(),
     }

@@ -1,0 +1,34 @@
+{
+  "agent_id": 39,
+  "agent_key": "A040",
+  "scenario": "智慧家居",
+  "source_agent_type_id": "agent-008",
+  "source_agent_type_name": "Smart Home Energy Management Agent",
+  "skill_ids": [
+    "smart_home.energy.abnormal_consumption.detect",
+    "smart_home.energy.appliance_usage.analyze",
+    "smart_home.energy.automation_rule.recommend",
+    "smart_home.energy.battery_status.monitor",
+    "smart_home.energy.comfort_tradeoff.analyze",
+    "smart_home.energy.consumption.monitor",
+    "smart_home.energy.cost_forecast.generate",
+    "smart_home.energy.device_energy.rank",
+    "smart_home.energy.ev_charging.optimize",
+    "smart_home.energy.monthly_report.generate",
+    "smart_home.energy.multi_device.optimize",
+    "smart_home.energy.peak_usage.detect",
+    "smart_home.energy.qa.answer",
+    "smart_home.energy.room_energy.analyze",
+    "smart_home.energy.saving.recommend",
+    "smart_home.energy.schedule.optimize",
+    "smart_home.energy.solar_generation.analyze",
+    "smart_home.energy.standby_power.detect",
+    "smart_home.energy.tariff_aware.schedule"
+  ],
+  "reliability": [
+    0.886900007724762,
+    8536.0,
+    0.020500000566244125,
+    0.03958500176668167
+  ]
+}

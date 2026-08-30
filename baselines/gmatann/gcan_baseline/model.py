@@ -222,7 +222,7 @@ class GraphConvolutionalAssignmentNetwork(nn.Module):
         d = config.hidden_dim
         self.latest_numeric = nn.Sequential(nn.Linear(config.numeric_dim, d), nn.LayerNorm(d), nn.GELU())
         self.text = nn.Sequential(nn.Linear(config.text_dim, d), nn.LayerNorm(d), nn.GELU())
-        self.task_qos = nn.Sequential(nn.Linear(8, d), nn.LayerNorm(d), nn.GELU())
+        self.task_qos = nn.Sequential(nn.Linear(2, d), nn.LayerNorm(d), nn.GELU())
         self.task_fusion = nn.Sequential(nn.Linear(d * 3, d), nn.GELU())
         self.cvae_condition = nn.Sequential(nn.Linear(d * 2, d), nn.GELU())
         self.cvae = TimeSeriesConditionalVariationalAutoencoder(

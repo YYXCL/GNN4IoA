@@ -36,14 +36,13 @@ class GCANCase:
 
 
 def _compute_features(values: list[float]) -> list[float]:
-    total_gpu, remaining_gpu, total_vram, used_vram, total_bw, used_bw, queue, batch, max_batch = values
+    remaining_gpu, remaining_memory, remaining_vram = values
     return [
-        remaining_gpu / max(total_gpu, 1e-6),
-        1.0 - used_vram / max(total_vram, 1e-6),
-        1.0 - used_bw / max(total_bw, 1e-6),
-        min(1.0, queue / 256.0),
-        batch / max(max_batch, 1e-6),
-        math.log1p(total_gpu) / 10.0,
+        min(1.0, remaining_gpu / 10_000.0),
+        min(1.0, remaining_memory / 2_048.0),
+        min(1.0, remaining_vram / 1_024.0),
+        0.0, 0.0,
+        math.log1p(max(0.0, remaining_gpu)) / 10.0,
     ]
 
 
@@ -60,22 +59,22 @@ def _link_features(values: list[float]) -> list[float]:
 def _numeric_features(state: dict, compute: list[float], link: list[float]) -> list[float]:
     context = state["context"]
     environment = state["environment"]
-    mask = [bool(value) for value in state["capability_mask"]]
-    reliability = [row for row, keep in zip(state["capability_reliability"], mask) if keep]
-    usage = [value for value, keep in zip(state["capability_usage"], mask) if keep]
-    if reliability:
-        pooled_reliability = [sum(row[index] for row in reliability) / len(reliability) for index in range(4)]
-        # 第二维是毫秒级执行时间，不能与 [0, 1] 概率量直接混合。
-        pooled_reliability[1] = math.log1p(max(0.0, pooled_reliability[1])) / 10.0
+    if "reliability" in state:
+        pooled_reliability = [float(value) for value in state["reliability"]]
     else:
-        pooled_reliability = [0.0] * 4
-    pooled_usage = sum(usage) / max(1, len(usage))
+        # 仅用于直接读取旧 JSONL；当前数据加载器不会把能力槽送入模型。
+        mask = [bool(value) for value in state["capability_mask"]]
+        rows = [row for row, keep in zip(state["capability_reliability"], mask) if keep]
+        pooled_reliability = [
+            sum(row[index] for row in rows) / len(rows) for index in range(4)
+        ] if rows else [0.0] * 4
+    pooled_reliability[1] = math.log1p(max(0.0, pooled_reliability[1])) / 10.0
     return [
         math.log1p(float(context[0])) / 13.0,
         float(context[1]),
         *[float(value) for value in environment],
         *pooled_reliability,
-        math.log1p(pooled_usage) / 10.0,
+        math.log1p(float(state.get("workload", [0.0])[0])) / 10.0,
         *compute,
         *link,
     ]
@@ -189,9 +188,8 @@ def case_from_dict(raw: dict, hash_dimension: int = 256) -> GCANCase:
     task_agent_edge_state = torch.stack([
         torch.tensor([
             float(skill_mask[index]),
-            float((semantic[index] + 1.0) / 2.0),
-            float(qos[0]), float(qos[1]), float(qos[2]), float(qos[3]),
-            float(qos[6]), float(qos[7]),
+            0.0,
+            float(qos[0]), float(qos[1]), 0.0, 0.0, 0.0, 0.0,
         ])
         for index in range(len(candidate_ids))
     ])

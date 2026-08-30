@@ -1,0 +1,25 @@
+{
+  "agent_id": 108,
+  "agent_key": "A109",
+  "scenario": "应急救援",
+  "source_agent_type_id": "agent-022",
+  "source_agent_type_name": "Smart Building Security & Access Agent",
+  "skill_ids": [
+    "smart_building.security.alarm_event.classify",
+    "smart_building.security.black_list.alert",
+    "smart_building.security.daily_report.generate",
+    "smart_building.security.event_timeline.generate",
+    "smart_building.security.fire_evacuation.monitor",
+    "smart_building.security.multisource_risk.assess",
+    "smart_building.security.qa.answer",
+    "smart_building.security.risk_score.calculate",
+    "smart_building.security.tailgating.detect",
+    "smart_building.security.unauthorized_area.detect"
+  ],
+  "reliability": [
+    0.8130000233650208,
+    9629.0,
+    0.11999999731779099,
+    0.06544999778270721
+  ]
+}

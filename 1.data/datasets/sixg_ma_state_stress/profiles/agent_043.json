@@ -1,0 +1,32 @@
+{
+  "agent_id": 43,
+  "agent_key": "A044",
+  "scenario": "智慧家居",
+  "source_agent_type_id": "agent-009",
+  "source_agent_type_name": "Smart Home Environment Optimization Agent",
+  "skill_ids": [
+    "smart_home.environment.air_quality.assess",
+    "smart_home.environment.air_quality.optimize",
+    "smart_home.environment.child_room.assess",
+    "smart_home.environment.comfort_index.calculate",
+    "smart_home.environment.dust_risk.assess",
+    "smart_home.environment.elderly_room.assess",
+    "smart_home.environment.humidity.adjust",
+    "smart_home.environment.mold_risk.detect",
+    "smart_home.environment.noise.assess",
+    "smart_home.environment.pet_environment.assess",
+    "smart_home.environment.qa.answer",
+    "smart_home.environment.recommendation.generate",
+    "smart_home.environment.room_context.infer",
+    "smart_home.environment.sleep_environment.optimize",
+    "smart_home.environment.smell_abnormal.detect",
+    "smart_home.environment.temperature.adjust",
+    "smart_home.environment.ventilation.recommend"
+  ],
+  "reliability": [
+    0.940500020980835,
+    5861.0,
+    0.008500000461935997,
+    0.02082500047981739
+  ]
+}
