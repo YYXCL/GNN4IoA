@@ -1,4 +1,4 @@
-"""Inspect and merge Alibaba GenAI cluster trace metrics into dataset0."""
+"""把 Alibaba GenAI 集群 trace 的多份指标 CSV 聚合/合并成一张宽表 dataset0.csv"""
 
 from __future__ import annotations
 

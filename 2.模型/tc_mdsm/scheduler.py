@@ -1,4 +1,4 @@
-"""Shared CP-SAT backend with optional admission and explicit transfer intervals."""
+"""第3步：共享的 CP-SAT 调度后端：支持可选的任务接纳与显式传输时间区间。"""
 from __future__ import annotations
 
 import math
@@ -11,28 +11,33 @@ from .types import Plan
 class PlanningBudgetExceeded(RuntimeError):
     pass
 
-TICKS = 1000
-RISK_SCALE = 1_000_000
+TICKS = 1000            # 时间刻度：1 秒 = 1000 tick（毫秒）
+RISK_SCALE = 1_000_000  # 风险（负对数概率）的整数放大系数
 
 
 def ticks(value):
+    """把秒向上取整转换为 tick。"""
     return int(math.ceil(value*TICKS-1e-9))
 
 
 def risk(probability):
+    """把成功概率转换为整数风险值（-log p），便于在 CP-SAT 中用整数线性表达。"""
     return int(math.ceil(-math.log(max(1e-9,min(1.,probability)))*RISK_SCALE-1e-9))
 
 
 def solve(snapshot, workflows, predictions, time_limit=30., seed=7, workers=1, completed=None, running=None, warm_start=None):
+    """用 CP-SAT 求解调度：先最大化接纳数，再最小化归一化完成时间与风险。"""
     started = time.perf_counter()
     completed, running = completed or {}, running or {}
     horizon = max(ticks(w.deadline) for w in workflows)
     model = cp_model.CpModel()
-    resources = defaultdict(list)
+    resources = defaultdict(list)   # 资源名 -> [(区间变量, 需求)]
     admissions, choices, starts, finishes, transfers, total_risks, secondary = {}, {}, {}, {}, {}, {}, []
+    # 各类资源的容量：智能体=1，算力节点按 [GPU槽位,内存,显存]，链路按带宽
     capacities = {f"agent:{i}": 1 for i in range(len(snapshot.skills))}
     capacities.update({f"compute:{c}:{d}": cap for c, caps in enumerate(snapshot.capacities) for d,cap in enumerate(caps)})
     capacities.update({f"link:{l}": bw for l,bw in enumerate(snapshot.bandwidth)})
+    # 已存在的资源预留作为不可占用的固定区间
     for reservation in snapshot.reservations:
         lo,hi=ticks(reservation["start"]),ticks(reservation["end"])
         if hi > lo:
@@ -43,13 +48,13 @@ def solve(snapshot, workflows, predictions, time_limit=30., seed=7, workers=1, c
         w.validate(); p.validate()
         if w.id != p.workflow_id:
             raise ValueError("prediction/workflow mismatch")
-        accept=model.new_bool_var(f"accept:{w.id}")
+        accept=model.new_bool_var(f"accept:{w.id}")   # 是否接纳该工作流
         admissions[w.id]=accept
         risks=[]
         for task in w.tasks:
             key=(w.id,task.id)
-            done=completed.get(key)
-            active=running.get(key)
+            done=completed.get(key)     # 已完成的动作：固定其智能体与时间
+            active=running.get(key)     # 正在执行的动作：固定起点
             candidate_ids=[done["agent"]] if done else [active["agent"]] if active else p.candidates[task.id]
             st=model.new_int_var(0,horizon,f"start:{key}")
             en=model.new_int_var(0,horizon,f"end:{key}")
@@ -60,7 +65,7 @@ def solve(snapshot, workflows, predictions, time_limit=30., seed=7, workers=1, c
                     raise ValueError("candidate bypassed hard feasibility")
                 if not done and (task.id,i) not in p.nodes:
                     continue
-                x=model.new_bool_var(f"x:{key}:{i}")
+                x=model.new_bool_var(f"x:{key}:{i}")   # 是否把任务分配给智能体 i
                 choices[key,i]=x; opts.append(x)
                 duration=0 if done else ticks(p.nodes[task.id,i][0])
                 probability=1 if done else p.nodes[task.id,i][1]
@@ -68,6 +73,7 @@ def solve(snapshot, workflows, predictions, time_limit=30., seed=7, workers=1, c
                     duration=max(1,ticks(active["end"])-ticks(snapshot.time))
                 interval=model.new_optional_interval_var(st,duration,en,x,f"run:{key}:{i}")
                 if not done:
+                    # 占用智能体槽位与算力节点资源
                     resources[f"agent:{i}"].append((interval,1))
                     for dim,demand in enumerate(task.demand):
                         resources[f"compute:{snapshot.agent_compute[i]}:{dim}"].append((interval,demand))
@@ -75,14 +81,16 @@ def solve(snapshot, workflows, predictions, time_limit=30., seed=7, workers=1, c
                 if active:
                     model.add(st==ticks(snapshot.time)).only_enforce_if(x)
                 risks.append(risk(probability)*x)
-            model.add(sum(opts)==accept)
+            model.add(sum(opts)==accept)   # 被接纳时恰好选一个候选
             if done:
+                # 已完成任务的起止时间锁定
                 model.add(st==ticks(done["end"])).only_enforce_if(accept)
                 model.add(en==ticks(done["end"])).only_enforce_if(accept)
             model.add(st==0).only_enforce_if(accept.Not())
             model.add(en==0).only_enforce_if(accept.Not())
-            model.add(en<=int(math.floor(w.deadline*TICKS))).only_enforce_if(accept)
+            model.add(en<=int(math.floor(w.deadline*TICKS))).only_enforce_if(accept)   # 截止时间约束
         for parent,child,mb in w.edges:
+            # 依赖边：若父子分别选了 i、j，则需要一次传输区间，且子任务在传输结束后才能开始
             parent,child=int(parent),int(child)
             pk,ck=(w.id,parent),(w.id,child)
             if ck in completed or ck in running:
@@ -98,23 +106,24 @@ def solve(snapshot, workflows, predictions, time_limit=30., seed=7, workers=1, c
                     edge=(parent,child,i,j)
                     path=snapshot.path(i,j)
                     if path is None or edge not in p.edges:
-                        model.add(xi+xj<=1)
+                        model.add(xi+xj<=1)   # 不可达或未预测：禁止该组合
                         continue
-                    y=model.new_bool_var(f"y:{w.id}:{edge}")
+                    y=model.new_bool_var(f"y:{w.id}:{edge}")   # y = xi AND xj
                     model.add(y<=xi);model.add(y<=xj);model.add(y>=xi+xj-1)
                     duration,probability=p.edges[edge]
                     duration=0 if not path else ticks(duration)
                     st=model.new_int_var(0,horizon,"tx_start")
                     en=model.new_int_var(0,horizon,"tx_end")
                     interval=model.new_optional_interval_var(st,duration,en,y,"transfer")
-                    model.add(st>=finishes[pk]).only_enforce_if(y)
+                    model.add(st>=finishes[pk]).only_enforce_if(y)   # 传输在父任务完成后开始
                     model.add(st>=ticks(snapshot.time)).only_enforce_if(y)
-                    model.add(starts[ck]>=en).only_enforce_if(y)
+                    model.add(starts[ck]>=en).only_enforce_if(y)     # 子任务在传输完成后开始
                     demand=min(snapshot.bandwidth[l] for l in path) if path else 0
                     for l in path:
                         resources[f"link:{l}"].append((interval,demand))
                     transfers[w.id,edge]=(y,st,en,path,demand)
                     risks.append(risk(probability)*y)
+        # 该工作流的总风险（负对数成功率之和）
         risk_bound=(len(w.tasks)+len(w.edges))*risk(1e-9)
         total=model.new_int_var(0,risk_bound,"risk")
         model.add(total==sum(risks))
@@ -124,26 +133,28 @@ def solve(snapshot, workflows, predictions, time_limit=30., seed=7, workers=1, c
         elapsed=model.new_int_var(0,horizon,"elapsed")
         model.add(elapsed==finish-ticks(w.release)*accept)
         norm=model.new_int_var(0,1_000_000,"normalized_makespan")
-        # Integer division retains a bounded secondary objective; admission strictly dominates it.
+        # 整数除法得到有界的次级目标；接纳数严格优先于它。
         model.add_division_equality(norm,elapsed*1_000_000,max(1,ticks(w.deadline-w.release)))
         secondary.append(norm+total)
+    # 资源容量约束：智能体互斥（no_overlap），其余资源用累积约束（cumulative）
     for name,items in resources.items():
         intervals,demands=zip(*items)
         if name.startswith("agent:"):
             model.add_no_overlap(intervals)
         else:
             model.add_cumulative(intervals,demands,capacities[name])
+    # 目标：先最大化接纳数（权重远大于次级项），再最小化完成时间与风险
     upper=sum(1_000_000+(len(w.tasks)+len(w.edges))*risk(1e-9)+1 for w in workflows)
     model.minimize((upper+1)*sum(1-a for a in admissions.values())+sum(secondary))
     invalid=model.validate()
     if invalid:
         raise ValueError(invalid)
-    # A fully rejected batch is a valid starting incumbent, avoiding UNKNOWN when
-    # the search budget is small. The objective can then improve admission count.
+    # 全拒绝是一个合法初始解，避免搜索预算很小时返回 UNKNOWN；目标随后可提升接纳数。
     for index,variable in enumerate(model.proto.variables):
         value=0 if variable.domain[0]<=0<=variable.domain[-1] else variable.domain[0]
         model.add_hint(model.get_int_var_from_proto_index(index),value)
     if warm_start is not None:
+        # 用上一次的解作为热启动提示，加速收敛
         model.clear_hints()
         warm_rows={(r["workflow"],r["task"]):r for r in warm_start.assignments}
         warm_tx={(r["workflow"],(r["parent"],r["child"],r["source"],r["target"])):r for r in warm_start.transfers}
@@ -162,6 +173,7 @@ def solve(snapshot, workflows, predictions, time_limit=30., seed=7, workers=1, c
     admitted={w.id: bool(solver.value(admissions[w.id])) if valid else False for w in workflows}
     rows,tx=[],[]
     if valid:
+        # 抽取被选中的分配与传输
         for (key,i),x in choices.items():
             if solver.value(x):
                 rows.append({"workflow":key[0],"task":key[1],"agent":i,
@@ -175,6 +187,7 @@ def solve(snapshot, workflows, predictions, time_limit=30., seed=7, workers=1, c
               {w.id:("" if admitted[w.id] else "no_incumbent" if not valid else "not_admitted_under_constraints") for w in workflows},
               {"objective":solver.objective_value if valid else None,"best_bound":solver.best_objective_bound,
                "workers":workers,"integer_time_unit":"millisecond","objective_rule":"admission then normalized elapsed plus log-risk"})
+    # 为未被接纳的工作流补上可读的原因
     for w,p in zip(workflows,predictions):
         if plan.admitted[w.id]:continue
         if any(not snapshot.feasible(t) for t in w.tasks):plan.reasons[w.id]="no_permission_candidate"
@@ -186,7 +199,7 @@ def solve(snapshot, workflows, predictions, time_limit=30., seed=7, workers=1, c
 
 
 def check_plan(snapshot,workflows,predictions,plan,completed=None,running=None):
-    """Independent interval sweep; does not inspect CP-SAT variables."""
+    """独立的时间区间扫描校验：不依赖 CP-SAT 变量，复核方案的各类约束。"""
     completed,running=completed or {},running or {}
     workflow_map={w.id:w for w in workflows}
     pred_map={p.workflow_id:p for p in predictions}
@@ -244,6 +257,7 @@ def check_plan(snapshot,workflows,predictions,plan,completed=None,running=None):
             for l in path:
                 intervals[f"link:{l}"].append((transfer["start"],transfer["end"],transfer["demand"]))
         assert math.isfinite(total), "finite soft risk"
+    # 对每个资源做事件扫描，检查任意时刻的占用不超容量
     for resource,items in intervals.items():
         events=[]
         for lo,hi,demand in items:
@@ -258,6 +272,7 @@ def check_plan(snapshot,workflows,predictions,plan,completed=None,running=None):
 
 def plan_with_expansion(model,snapshot,workflows,budgets=(32,),time_limit=30.,seed=7,
                         fixed_candidates=None,completed=None,running=None,transferred=None):
+    """在给定候选预算下预测并求解，保留最优方案（v3 固定预算 32）。"""
     if tuple(budgets)!=(32,):
         raise ValueError("v3 uses a fixed candidate budget of 32")
     started=time.perf_counter();best=None;best_preds=None;attempts=[]
@@ -269,7 +284,7 @@ def plan_with_expansion(model,snapshot,workflows,budgets=(32,),time_limit=30.,se
         for w in workflows:
             if time.perf_counter()-started>=time_limit:break
             fixed=fixed_candidates.get(w.id) if fixed_candidates is not None else None
-            # Fixed completed/running actions must remain represented, even outside retrieved top-K.
+            # 已完成/正在执行的固定动作必须保留在候选中，即使不在检索 top-K 内。
             forced=[(k,i["agent"]) for (wid,k),i in {**(completed or {}),**(running or {})}.items() if wid==w.id]
             if forced and fixed is None:
                 preliminary=model.predict(snapshot,w,budget=budget)
@@ -278,11 +293,12 @@ def plan_with_expansion(model,snapshot,workflows,budgets=(32,),time_limit=30.,se
                     fixed[k]=[i]+[j for j in fixed[k] if j!=i]
             prediction=model.predict(snapshot,w,budget=budget,fixed_candidates=fixed)
             if transferred:
+                # 已成功传输过的依赖边：概率固定为 1、耗时为 0
                 prediction.edges=dict(prediction.edges)
                 for wid,parent,child,source,target in transferred:
                     key=(parent,child,source,target)
                     if wid==w.id and key in prediction.edges:
-                        prediction.edges[key]=(0.,1.)  # Already observed successful delivery.
+                        prediction.edges[key]=(0.,1.)
             predictions.append(prediction)
         remaining=time_limit-(time.perf_counter()-started)
         if remaining<=0 or len(predictions)!=len(workflows):
@@ -297,6 +313,7 @@ def plan_with_expansion(model,snapshot,workflows,budgets=(32,),time_limit=30.,se
         attempts.append({"budget":budget,"admitted":sum(plan.admitted.values()),"status":plan.status,
                          "elapsed":plan.elapsed,"prediction_seconds":sum(p.timing.get("total",0) for p in predictions)})
         objective=plan.diagnostics.get("objective")
+        # 评分：先比接纳数，再比目标值（越小越好）
         score=(sum(plan.admitted.values()),-objective if objective is not None else -float("inf"))
         best_objective=best.diagnostics.get("objective") if best is not None else None
         best_score=(-1,-float("inf")) if best is None else (sum(best.admitted.values()),-best_objective if best_objective is not None else -float("inf"))
@@ -307,6 +324,7 @@ def plan_with_expansion(model,snapshot,workflows,budgets=(32,),time_limit=30.,se
         if exhausted:
             break
     if best is None:
+        # 预算耗尽仍未得到方案：返回全拒绝的空方案
         best=Plan([],[],{w.id:False for w in workflows},"BUDGET_EXHAUSTED",time.perf_counter()-started,
                   {w.id:"prediction_budget_exhausted" for w in workflows})
         best_preds=[]
