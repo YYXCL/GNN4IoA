@@ -3,16 +3,20 @@ requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ma-tgn"
+name = "tc-mdsm"
 version = "0.4.0"
-description = "Dependency-aware task-node HGT-GRU for 6G multi-agent allocation"
+description = "Task-conditioned multidimensional state modeling for multi-agent scheduling"
 requires-python = ">=3.9"
-dependencies = ["torch>=2.1", "numpy>=1.23", "pandas>=2.0", "matplotlib>=3.8"]
+dependencies = ["torch>=2.1", "numpy>=1.26", "pandas>=2.0", "matplotlib>=3.8", "scipy>=1.11", "ortools>=9.10,<10"]
 
 [tool.setuptools]
-packages = ["ma_tgn", "ma_tgn_data", "gcan_baseline"]
+packages = ["tc_mdsm"]
 
 [tool.setuptools.package-dir]
-ma_tgn = "2.模型/ma_tgn"
-ma_tgn_data = "1.data/ma_tgn_data"
-gcan_baseline = "baselines/gmatann/gcan_baseline"
+tc_mdsm = "2.模型/tc_mdsm"
+
+[tool.pytest.ini_options]
+testpaths = ["自动化测试"]
+
+[project.optional-dependencies]
+test = ["pytest>=7"]

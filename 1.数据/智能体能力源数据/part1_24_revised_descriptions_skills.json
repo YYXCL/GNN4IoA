@@ -1,0 +1,6596 @@
+[
+  {
+    "id": "agent-001",
+    "name": "Video Understanding Agent",
+    "description": "该智能体面向视频理解与视频事件检测任务，融合智慧家居、智慧工厂及部分安防视频能力，能够分析摄像头、产线摄像头、门口/走廊/停车场/园区道路等视频中的人员、车辆、设备、行为、时间段、位置、异常事件和场景变化；支持陌生人停留、入侵、包裹投递/取走、跌倒、火烟、危险区域入侵、产线拥堵、交通拥堵等视频证据识别，并以结构化 JSON 输出事件类型、时间戳、位置、置信度、证据片段和简要判断；不负责跨模态风险融合、长期历史检索和正式业务报告生成。",
+    "url": "http://[fd10::1:2]:8051",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_home.video.person.detect",
+        "name": "Home Video Person Detection",
+        "description": "从家庭摄像头视频中检测人员出现、位置和活动状态，用于家庭安防、照护和房间占用分析。",
+        "tags": [
+          "smart-home",
+          "video",
+          "person-detection"
+        ]
+      },
+      {
+        "id": "smart_home.video.fall.detect",
+        "name": "Home Video Fall Detection",
+        "description": "基于家庭视频识别人员跌倒事件，并返回事件时间、位置和置信度。",
+        "tags": [
+          "smart-home",
+          "video",
+          "fall-detection"
+        ]
+      },
+      {
+        "id": "smart_home.video.intrusion.detect",
+        "name": "Home Video Intrusion Detection",
+        "description": "检测家庭场景中的疑似入侵行为，用于识别陌生人进入、异常闯入或非授权访问。",
+        "tags": [
+          "smart-home",
+          "video",
+          "intrusion-detection"
+        ]
+      },
+      {
+        "id": "smart_home.video.elderly_activity.monitor",
+        "name": "Elderly Activity Monitoring from Video",
+        "description": "基于家庭视频监测老人活动状态，识别活动减少、异常停留或长时间静止等照护风险。",
+        "tags": [
+          "smart-home",
+          "video",
+          "elderly-care"
+        ]
+      },
+      {
+        "id": "smart_home.video.child_activity.monitor",
+        "name": "Child Activity Monitoring from Video",
+        "description": "监测儿童在家庭环境中的活动状态，识别潜在危险行为、异常活动或无人看护风险。",
+        "tags": [
+          "smart-home",
+          "video",
+          "child-care"
+        ]
+      },
+      {
+        "id": "smart_home.video.pet.detect",
+        "name": "Pet Detection from Home Video",
+        "description": "从家庭视频中识别宠物出现、活动区域和行为状态，用于宠物看护和家庭场景理解。",
+        "tags": [
+          "smart-home",
+          "video",
+          "pet-detection"
+        ]
+      },
+      {
+        "id": "smart_home.video.doorway_activity.detect",
+        "name": "Doorway Activity Detection",
+        "description": "检测家庭门口区域的人员停留、进入、离开、包裹投递等活动。",
+        "tags": [
+          "smart-home",
+          "video",
+          "doorway-activity"
+        ]
+      },
+      {
+        "id": "smart_home.video.package_delivery.detect",
+        "name": "Package Delivery Detection",
+        "description": "识别门口包裹投递、放置和取走事件，用于包裹管理和防盗监测。",
+        "tags": [
+          "smart-home",
+          "video",
+          "package-delivery"
+        ]
+      },
+      {
+        "id": "smart_home.video.room_occupancy.detect",
+        "name": "Room Occupancy Detection",
+        "description": "检测房间内是否有人及人数变化，用于照明、空调和自动化场景联动。",
+        "tags": [
+          "smart-home",
+          "video",
+          "occupancy-detection"
+        ]
+      },
+      {
+        "id": "smart_home.video.sleep_behavior.analyze",
+        "name": "Sleep Behavior Analysis from Video",
+        "description": "基于卧室视频分析睡眠姿态、翻身频率和异常睡眠行为，用于睡眠质量评估。",
+        "tags": [
+          "smart-home",
+          "video",
+          "sleep-analysis"
+        ]
+      },
+      {
+        "id": "smart_home.video.abnormal_behavior.detect",
+        "name": "Abnormal Behavior Detection from Video",
+        "description": "检测家庭场景中的异常行为，例如异常徘徊、突然倒地、剧烈动作或危险动作。",
+        "tags": [
+          "smart-home",
+          "video",
+          "abnormal-behavior"
+        ]
+      },
+      {
+        "id": "smart_home.video.gesture_command.recognize",
+        "name": "Gesture Command Recognition",
+        "description": "识别家庭成员的手势控制指令，用于灯光、电视、窗帘等设备的自然交互控制。",
+        "tags": [
+          "smart-home",
+          "video",
+          "gesture-command"
+        ]
+      },
+      {
+        "id": "smart_home.video.smoke_fire.detect",
+        "name": "Smoke and Fire Detection from Video",
+        "description": "从家庭视频中识别烟雾、火光或疑似火灾迹象，用于火灾风险预警。",
+        "tags": [
+          "smart-home",
+          "video",
+          "fire-detection"
+        ]
+      },
+      {
+        "id": "smart_home.video.water_leak_sign.detect",
+        "name": "Water Leak Sign Detection from Video",
+        "description": "识别地面积水、水迹或异常反光等漏水迹象，用于家庭水浸风险监测。",
+        "tags": [
+          "smart-home",
+          "video",
+          "water-leak"
+        ]
+      },
+      {
+        "id": "smart_home.video.scene_summary.generate",
+        "name": "Home Video Scene Summary Generation",
+        "description": "对家庭视频片段进行场景摘要，概括人员、物品、活动和异常事件。",
+        "tags": [
+          "smart-home",
+          "video",
+          "scene-summary"
+        ]
+      },
+      {
+        "id": "smart_home.video.motion_event.detect",
+        "name": "Motion Event Detection",
+        "description": "检测家庭视频中的运动事件，并识别运动区域、持续时间和事件类型。",
+        "tags": [
+          "smart-home",
+          "video",
+          "motion-detection"
+        ]
+      },
+      {
+        "id": "smart_home.video.loitering.detect",
+        "name": "Loitering Detection",
+        "description": "识别门口、走廊或敏感区域的异常停留行为，用于家庭安全监测。",
+        "tags": [
+          "smart-home",
+          "video",
+          "loitering-detection"
+        ]
+      },
+      {
+        "id": "smart_home.video.object_left_behind.detect",
+        "name": "Object Left Behind Detection",
+        "description": "检测家庭或门口区域中被遗留的物品，用于包裹、危险物或异常物品识别。",
+        "tags": [
+          "smart-home",
+          "video",
+          "left-object-detection"
+        ]
+      },
+      {
+        "id": "smart_home.video.unsafe_activity.detect",
+        "name": "Unsafe Activity Detection",
+        "description": "检测老人、儿童或宠物相关的危险动作和不安全行为，例如攀爬、靠近危险区域或摔倒风险动作。",
+        "tags": [
+          "smart-home",
+          "video",
+          "unsafe-activity"
+        ]
+      },
+      {
+        "id": "smart_home.video.qa.answer",
+        "name": "Home Video Question Answering",
+        "description": "根据家庭视频内容回答用户关于人物、事件、时间、位置和异常情况的问题。",
+        "tags": [
+          "smart-home",
+          "video",
+          "question-answering"
+        ]
+      },
+      {
+        "id": "smart_factory.video.production_line.monitor",
+        "name": "Production Line Monitor",
+        "description": "监测工厂视频中的 production line状态，识别异常变化并输出结构化监测结果。",
+        "tags": [
+          "smart-factory",
+          "video",
+          "production-line",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_factory.video.worker_behavior.analyze",
+        "name": "Worker Behavior Analyze",
+        "description": "分析工厂视频中的 worker behavior相关数据，提取关键指标、趋势和异常信息。",
+        "tags": [
+          "smart-factory",
+          "video",
+          "worker-behavior",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_factory.video.ppe_compliance.detect",
+        "name": "PPE Compliance Detect",
+        "description": "检测工厂视频中的 PPE compliance相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "video",
+          "ppe-compliance",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.video.danger_zone.intrusion.detect",
+        "name": "Danger Zone Intrusion Detect",
+        "description": "检测工厂视频中的 danger zone intrusion相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "video",
+          "danger-zone",
+          "intrusion"
+        ]
+      },
+      {
+        "id": "smart_factory.video.machine_operation.monitor",
+        "name": "Machine Operation Monitor",
+        "description": "监测工厂视频中的 machine operation状态，识别异常变化并输出结构化监测结果。",
+        "tags": [
+          "smart-factory",
+          "video",
+          "machine-operation",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_factory.video.smoke_fire.detect",
+        "name": "Smoke Fire Detect",
+        "description": "检测工厂视频中的 smoke fire相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "video",
+          "smoke-fire",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.video.material_flow.track",
+        "name": "Material Flow Track",
+        "description": "跟踪工厂视频中的 material flow状态或流转过程，输出轨迹、进度和时间序列信息。",
+        "tags": [
+          "smart-factory",
+          "video",
+          "material-flow",
+          "track"
+        ]
+      },
+      {
+        "id": "smart_factory.video.product_count",
+        "name": "Product Count",
+        "description": "基于产线视频统计产品经过数量、节拍、排队和异常计数，输出计数值、时间窗口、置信度和异常说明。",
+        "tags": [
+          "smart-factory",
+          "video",
+          "product-count"
+        ]
+      },
+      {
+        "id": "smart_factory.video.abnormal_operation.detect",
+        "name": "Abnormal Operation Detect",
+        "description": "检测工厂视频中的 abnormal operation相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "video",
+          "abnormal-operation",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.video.forklift_activity.monitor",
+        "name": "Forklift Activity Monitor",
+        "description": "监测工厂视频中的 forklift activity状态，识别异常变化并输出结构化监测结果。",
+        "tags": [
+          "smart-factory",
+          "video",
+          "forklift-activity",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_factory.video.assembly_step.verify",
+        "name": "Assembly Step Verify",
+        "description": "验证工厂视频中的 assembly step是否满足预期要求或是否真实发生，并给出证据和判断结果。",
+        "tags": [
+          "smart-factory",
+          "video",
+          "assembly-step",
+          "verify"
+        ]
+      },
+      {
+        "id": "smart_factory.video.safety_event.detect",
+        "name": "Safety Event Detect",
+        "description": "检测工厂视频中的 safety event相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "video",
+          "safety-event",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.video.crowd_density.monitor",
+        "name": "Crowd Density Monitor",
+        "description": "监测工厂视频中的 crowd density状态，识别异常变化并输出结构化监测结果。",
+        "tags": [
+          "smart-factory",
+          "video",
+          "crowd-density",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_factory.video.line_congestion.detect",
+        "name": "Line Congestion Detect",
+        "description": "检测工厂视频中的 line congestion相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "video",
+          "line-congestion",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.video.robot_activity.monitor",
+        "name": "Robot Activity Monitor",
+        "description": "监测工厂视频中的 robot activity状态，识别异常变化并输出结构化监测结果。",
+        "tags": [
+          "smart-factory",
+          "video",
+          "robot-activity",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_factory.video.equipment_panel.read",
+        "name": "Equipment Panel Read",
+        "description": "读取工厂视频中的 equipment panel中的数值、文字或状态信息，并转换为可用的结构化结果。",
+        "tags": [
+          "smart-factory",
+          "video",
+          "equipment-panel",
+          "read"
+        ]
+      },
+      {
+        "id": "smart_factory.video.spill_leak.detect",
+        "name": "Spill Leak Detect",
+        "description": "检测工厂视频中的 spill leak相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "video",
+          "spill-leak",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.video.motion_trajectory.track",
+        "name": "Motion Trajectory Track",
+        "description": "跟踪工厂视频中的 motion trajectory状态或流转过程，输出轨迹、进度和时间序列信息。",
+        "tags": [
+          "smart-factory",
+          "video",
+          "motion-trajectory",
+          "track"
+        ]
+      },
+      {
+        "id": "smart_factory.video.event_timeline.generate",
+        "name": "Event Timeline Generate",
+        "description": "生成工厂视频中的 event timeline相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "video",
+          "event-timeline"
+        ]
+      },
+      {
+        "id": "smart_factory.video.qa.answer",
+        "name": "QA Answer",
+        "description": "回答用户关于Video Understanding Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。",
+        "tags": [
+          "smart-factory",
+          "video"
+        ]
+      },
+      {
+        "id": "smart_campus.vehicle.video_congestion.detect",
+        "name": "Campus Road Video Congestion Detection",
+        "description": "基于园区道路视频检测车辆排队、拥堵、通行缓慢和异常阻塞，输出拥堵等级、位置、时间窗口和视频证据。",
+        "tags": [
+          "smart-campus",
+          "video",
+          "traffic",
+          "congestion"
+        ]
+      },
+      {
+        "id": "smart_campus.vehicle.video_illegal_parking.detect",
+        "name": "Campus Video Illegal Parking Detection",
+        "description": "基于园区或停车场视频检测违停、异常停车、占道和堵塞通道行为，输出车辆位置、时间、事件类型和置信度。",
+        "tags": [
+          "smart-campus",
+          "video",
+          "traffic",
+          "illegal-parking"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-002",
+    "name": "Image Understanding Agent",
+    "description": "该智能体面向图像理解、视觉 OCR、设备面板读取和工业视觉质检任务，能够识别家庭图像、工业图像、仪表盘、指示灯、标签、条码、缺陷、占用、火烟、水迹和图像证据；支持将视觉识别结果整理为结构化 JSON，包括字段名、数值、单位、状态、位置、置信度和证据说明；可回答图像内容相关问题，但不负责跨模态融合、复杂业务决策或正式长报告生成。",
+    "url": "http://[fd10::1:2]:8052",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_home.image.room_scene.recognize",
+        "name": "Room Scene Recognition",
+        "description": "识别图像中的房间类型和家庭场景，例如客厅、卧室、厨房、卫生间或门口区域。",
+        "tags": [
+          "smart-home",
+          "image",
+          "scene-recognition"
+        ]
+      },
+      {
+        "id": "smart_home.image.object.recognize",
+        "name": "Home Object Recognition",
+        "description": "识别家庭图像中的常见物品、家具、家电和生活用品。",
+        "tags": [
+          "smart-home",
+          "image",
+          "object-recognition"
+        ]
+      },
+      {
+        "id": "smart_home.image.appliance_status.recognize",
+        "name": "Appliance Status Recognition",
+        "description": "从图像中识别家电设备的开启、关闭、运行或异常状态。",
+        "tags": [
+          "smart-home",
+          "image",
+          "appliance-status"
+        ]
+      },
+      {
+        "id": "smart_home.image.food_item.recognize",
+        "name": "Food Item Recognition",
+        "description": "识别家庭图像中的食物种类、存放状态和可能的过期或异常情况。",
+        "tags": [
+          "smart-home",
+          "image",
+          "food-recognition"
+        ]
+      },
+      {
+        "id": "smart_home.image.medicine_label.recognize",
+        "name": "Medicine Label Recognition",
+        "description": "识别药品包装、标签、名称和用药提示信息，用于家庭照护和用药提醒。",
+        "tags": [
+          "smart-home",
+          "image",
+          "medicine-label"
+        ]
+      },
+      {
+        "id": "smart_home.image.package.recognize",
+        "name": "Package Recognition",
+        "description": "识别门口、玄关或室内图像中的包裹、快递盒和相关状态。",
+        "tags": [
+          "smart-home",
+          "image",
+          "package-recognition"
+        ]
+      },
+      {
+        "id": "smart_home.image.document.ocr",
+        "name": "Home Document OCR",
+        "description": "从家庭相关图像中提取文字信息，例如账单、说明书、通知单或药品说明。",
+        "tags": [
+          "smart-home",
+          "image",
+          "ocr"
+        ]
+      },
+      {
+        "id": "smart_home.image.device_panel.read",
+        "name": "Device Panel Reading",
+        "description": "读取家电或仪表面板中的数值、状态灯和提示信息。",
+        "tags": [
+          "smart-home",
+          "image",
+          "device-panel"
+        ]
+      },
+      {
+        "id": "smart_home.image.damage.detect",
+        "name": "Home Damage Detection",
+        "description": "识别家庭设施、家具或设备的损坏、裂纹、破损和异常状态。",
+        "tags": [
+          "smart-home",
+          "image",
+          "damage-detection"
+        ]
+      },
+      {
+        "id": "smart_home.image.water_leak_evidence.detect",
+        "name": "Water Leak Evidence Detection",
+        "description": "从家庭图像中识别水迹、积水、潮湿痕迹或漏水相关证据。",
+        "tags": [
+          "smart-home",
+          "image",
+          "water-leak"
+        ]
+      },
+      {
+        "id": "smart_home.image.smoke_fire_evidence.detect",
+        "name": "Smoke and Fire Evidence Detection",
+        "description": "从图像中识别烟雾、火光、烧焦痕迹或火灾相关证据。",
+        "tags": [
+          "smart-home",
+          "image",
+          "fire-evidence"
+        ]
+      },
+      {
+        "id": "smart_home.image.door_window_status.recognize",
+        "name": "Door and Window Status Recognition",
+        "description": "识别图像中的门窗开启、关闭、破损或异常状态。",
+        "tags": [
+          "smart-home",
+          "image",
+          "door-window-status"
+        ]
+      },
+      {
+        "id": "smart_home.image.pet_activity.recognize",
+        "name": "Pet Activity Recognition from Image",
+        "description": "识别宠物在图像中的位置、动作和活动状态，用于宠物看护。",
+        "tags": [
+          "smart-home",
+          "image",
+          "pet-activity"
+        ]
+      },
+      {
+        "id": "smart_home.image.safety_risk.detect",
+        "name": "Home Safety Risk Detection from Image",
+        "description": "识别图像中的家庭安全隐患，例如地面障碍物、明火、积水或危险物品。",
+        "tags": [
+          "smart-home",
+          "image",
+          "safety-risk"
+        ]
+      },
+      {
+        "id": "smart_home.image.scene_change.detect",
+        "name": "Home Image Scene Change Detection",
+        "description": "比较家庭场景图像的变化，识别物品移动、门窗状态变化或异常场景变化。",
+        "tags": [
+          "smart-home",
+          "image",
+          "scene-change"
+        ]
+      },
+      {
+        "id": "smart_home.image.quality.assess",
+        "name": "Home Image Quality Assessment",
+        "description": "评估家庭图像的清晰度、亮度、遮挡和可用性，用于后续图像分析质量控制。",
+        "tags": [
+          "smart-home",
+          "image",
+          "quality-assessment"
+        ]
+      },
+      {
+        "id": "smart_home.image.batch.summarize",
+        "name": "Home Image Batch Summarization",
+        "description": "对多张家庭图像进行批量总结，概括场景、物品、人员和异常情况。",
+        "tags": [
+          "smart-home",
+          "image",
+          "batch-summary"
+        ]
+      },
+      {
+        "id": "smart_home.image.metadata.analyze",
+        "name": "Home Image Metadata Analysis",
+        "description": "分析图像时间、来源、设备信息和拍摄条件等元数据，用于证据整理和溯源。",
+        "tags": [
+          "smart-home",
+          "image",
+          "metadata"
+        ]
+      },
+      {
+        "id": "smart_home.image.evidence.classify",
+        "name": "Home Image Evidence Classification",
+        "description": "将家庭图像证据分类为安防、照护、环境、能耗或设备相关证据。",
+        "tags": [
+          "smart-home",
+          "image",
+          "evidence-classification"
+        ]
+      },
+      {
+        "id": "smart_home.image.qa.answer",
+        "name": "Home Image Question Answering",
+        "description": "根据家庭图像内容回答关于场景、物品、状态、异常和证据的问题。",
+        "tags": [
+          "smart-home",
+          "image",
+          "question-answering"
+        ]
+      },
+      {
+        "id": "smart_factory.image.defect.detect",
+        "name": "Defect Detect",
+        "description": "检测工业图像中的 defect相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "image",
+          "defect",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.image.surface_scratch.detect",
+        "name": "Surface Scratch Detect",
+        "description": "检测工业图像中的 surface scratch相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "image",
+          "surface-scratch",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.image.dimension.measure",
+        "name": "Dimension Measure",
+        "description": "处理工业图像中的 dimension 相关任务，并输出结构化结果。",
+        "tags": [
+          "smart-factory",
+          "image",
+          "dimension",
+          "measure"
+        ]
+      },
+      {
+        "id": "smart_factory.image.ocr_code.read",
+        "name": "Ocr Code Read",
+        "description": "读取工业图像中的 ocr code中的数值、文字或状态信息，并转换为可用的结构化结果。",
+        "tags": [
+          "smart-factory",
+          "image",
+          "ocr-code",
+          "read"
+        ]
+      },
+      {
+        "id": "smart_factory.image.label.verify",
+        "name": "Label Verify",
+        "description": "验证工业图像中的 label是否满足预期要求或是否真实发生，并给出证据和判断结果。",
+        "tags": [
+          "smart-factory",
+          "image",
+          "label",
+          "verify"
+        ]
+      },
+      {
+        "id": "smart_factory.image.package_integrity.check",
+        "name": "Package Integrity Check",
+        "description": "检查工业图像中的 package integrity状态、条件或合规性，并返回检查结果。",
+        "tags": [
+          "smart-factory",
+          "image",
+          "package-integrity",
+          "check"
+        ]
+      },
+      {
+        "id": "smart_factory.image.component_presence.check",
+        "name": "Component Presence Check",
+        "description": "检查工业图像中的 component presence状态、条件或合规性，并返回检查结果。",
+        "tags": [
+          "smart-factory",
+          "image",
+          "component-presence",
+          "check"
+        ]
+      },
+      {
+        "id": "smart_factory.image.assembly_correctness.check",
+        "name": "Assembly Correctness Check",
+        "description": "检查工业图像中的 assembly correctness状态、条件或合规性，并返回检查结果。",
+        "tags": [
+          "smart-factory",
+          "image",
+          "assembly-correctness",
+          "check"
+        ]
+      },
+      {
+        "id": "smart_factory.image.color_consistency.check",
+        "name": "Color Consistency Check",
+        "description": "检查工业图像中的 color consistency状态、条件或合规性，并返回检查结果。",
+        "tags": [
+          "smart-factory",
+          "image",
+          "color-consistency",
+          "check"
+        ]
+      },
+      {
+        "id": "smart_factory.image.batch_quality.summarize",
+        "name": "Batch Quality Summarize",
+        "description": "总结工业图像中的 batch quality内容，提取关键事件、结论和异常信息。",
+        "tags": [
+          "smart-factory",
+          "image",
+          "batch-quality",
+          "summarize"
+        ]
+      },
+      {
+        "id": "smart_factory.image.surface_contamination.detect",
+        "name": "Surface Contamination Detect",
+        "description": "检测工业图像中的 surface contamination相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "image",
+          "surface-contamination",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.image.crack.detect",
+        "name": "Crack Detect",
+        "description": "检测工业图像中的 crack相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "image",
+          "crack",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.image.deformation.detect",
+        "name": "Deformation Detect",
+        "description": "检测工业图像中的 deformation相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "image",
+          "deformation",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.image.missing_part.detect",
+        "name": "Missing Part Detect",
+        "description": "检测工业图像中的 missing part相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "image",
+          "missing-part",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.image.welding_quality.inspect",
+        "name": "Welding Quality Inspect",
+        "description": "检查工业图像中的 welding quality质量、状态或缺陷，并返回检测结果。",
+        "tags": [
+          "smart-factory",
+          "image",
+          "welding-quality",
+          "inspect"
+        ]
+      },
+      {
+        "id": "smart_factory.image.printing_quality.inspect",
+        "name": "Printing Quality Inspect",
+        "description": "检查工业图像中的 printing quality质量、状态或缺陷，并返回检测结果。",
+        "tags": [
+          "smart-factory",
+          "image",
+          "printing-quality",
+          "inspect"
+        ]
+      },
+      {
+        "id": "smart_factory.image.barcode_qr.read",
+        "name": "Barcode Qr Read",
+        "description": "读取工业图像中的 barcode qr中的数值、文字或状态信息，并转换为可用的结构化结果。",
+        "tags": [
+          "smart-factory",
+          "image",
+          "barcode-qr",
+          "read"
+        ]
+      },
+      {
+        "id": "smart_factory.image.instrument_panel.read",
+        "name": "Instrument Panel Read",
+        "description": "读取工业图像中的 instrument panel中的数值、文字或状态信息，并转换为可用的结构化结果。",
+        "tags": [
+          "smart-factory",
+          "image",
+          "instrument-panel",
+          "read"
+        ]
+      },
+      {
+        "id": "smart_factory.image.quality_evidence.classify",
+        "name": "Quality Evidence Classify",
+        "description": "对工业图像中的 quality evidence进行分类，输出类别标签、置信度和依据说明。",
+        "tags": [
+          "smart-factory",
+          "image",
+          "quality-evidence",
+          "classify"
+        ]
+      },
+      {
+        "id": "smart_factory.image.qa.answer",
+        "name": "QA Answer",
+        "description": "回答用户关于Image Understanding Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。",
+        "tags": [
+          "smart-factory",
+          "image"
+        ]
+      },
+      {
+        "id": "global.visual_result.json.generate",
+        "name": "Visual Recognition JSON Formatting",
+        "description": "将图像识别、OCR、仪表盘读取、指示灯状态、缺陷检测等视觉结果整理为结构化 JSON，包括字段名、数值、单位、状态、置信度和证据说明。",
+        "tags": [
+          "global",
+          "image",
+          "json",
+          "formatting"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-003",
+    "name": "Audio Understanding Agent",
+    "description": "该智能体面向音频理解、声音事件检测和设备声学诊断任务，融合智慧家居与智慧工厂音频能力，能够识别语音指令、说话人、报警声、呼救声、异常声音、睡眠噪声、环境噪声水平、设备异响、轴承噪声、电机噪声、气漏声和碰撞声；支持输出事件类型、时间段、置信度、噪声水平估计、波动趋势、声学异常依据和基础声学故障风险；不负责多源维修决策、跨模态最终报告或设备控制执行。",
+    "url": "http://[fd10::1:2]:8053",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_home.audio.voice_command.recognize",
+        "name": "Home Voice Command Recognition",
+        "description": "识别家庭成员的语音控制指令，用于智能设备控制和家庭自动化交互。",
+        "tags": [
+          "smart-home",
+          "audio",
+          "voice-command"
+        ]
+      },
+      {
+        "id": "smart_home.audio.speaker.identify",
+        "name": "Home Speaker Identification",
+        "description": "识别家庭音频中的说话人身份，用于个性化控制和安全验证。",
+        "tags": [
+          "smart-home",
+          "audio",
+          "speaker-identification"
+        ]
+      },
+      {
+        "id": "smart_home.audio.fall_sound.detect",
+        "name": "Fall Sound Detection",
+        "description": "检测疑似跌倒、撞击或重物落地声音，用于辅助判断跌倒事件。",
+        "tags": [
+          "smart-home",
+          "audio",
+          "fall-sound"
+        ]
+      },
+      {
+        "id": "smart_home.audio.glass_break.detect",
+        "name": "Glass Break Sound Detection",
+        "description": "识别玻璃破碎声，用于家庭入侵、破坏或异常安全事件检测。",
+        "tags": [
+          "smart-home",
+          "audio",
+          "glass-break"
+        ]
+      },
+      {
+        "id": "smart_home.audio.baby_cry.detect",
+        "name": "Baby Cry Detection",
+        "description": "识别婴儿哭声，并支持哭声持续时间和紧急程度判断。",
+        "tags": [
+          "smart-home",
+          "audio",
+          "baby-cry"
+        ]
+      },
+      {
+        "id": "smart_home.audio.elderly_call.detect",
+        "name": "Elderly Call Detection",
+        "description": "识别老人呼叫、呼救或异常求助声音，用于家庭照护提醒。",
+        "tags": [
+          "smart-home",
+          "audio",
+          "elderly-call"
+        ]
+      },
+      {
+        "id": "smart_home.audio.alarm_sound.detect",
+        "name": "Alarm Sound Detection",
+        "description": "识别家庭环境中的报警器、烟雾报警器、燃气报警器或安防告警声。",
+        "tags": [
+          "smart-home",
+          "audio",
+          "alarm-detection"
+        ]
+      },
+      {
+        "id": "smart_home.audio.doorbell.detect",
+        "name": "Doorbell Detection",
+        "description": "识别门铃声或门口呼叫声，用于访客提醒和门口事件联动。",
+        "tags": [
+          "smart-home",
+          "audio",
+          "doorbell"
+        ]
+      },
+      {
+        "id": "smart_home.audio.pet_sound.detect",
+        "name": "Pet Sound Detection",
+        "description": "识别宠物叫声或异常宠物声音，用于宠物状态监测。",
+        "tags": [
+          "smart-home",
+          "audio",
+          "pet-sound"
+        ]
+      },
+      {
+        "id": "smart_home.audio.appliance_noise.analyze",
+        "name": "Appliance Noise Analysis",
+        "description": "分析家电运行噪声，识别异常振动、异响或潜在设备故障。",
+        "tags": [
+          "smart-home",
+          "audio",
+          "appliance-noise"
+        ]
+      },
+      {
+        "id": "smart_home.audio.abnormal_sound.detect",
+        "name": "Abnormal Sound Detection",
+        "description": "检测家庭环境中的异常声音，例如撞击、尖叫、破裂、异常机械声或突发噪声。",
+        "tags": [
+          "smart-home",
+          "audio",
+          "abnormal-sound"
+        ]
+      },
+      {
+        "id": "smart_home.audio.noise_level.assess",
+        "name": "Home Noise Level Assessment",
+        "description": "评估家庭环境噪声水平，支持估算 dB 区间、持续时间、波动趋势、突发峰值和睡眠干扰程度，用于舒适度和睡眠环境优化。",
+        "tags": [
+          "smart-home",
+          "audio",
+          "noise-assessment"
+        ]
+      },
+      {
+        "id": "smart_home.audio.conversation_intent.extract",
+        "name": "Home Conversation Intent Extraction",
+        "description": "从家庭语音或对话中提取用户意图，用于设备控制、提醒和服务请求识别。",
+        "tags": [
+          "smart-home",
+          "audio",
+          "intent-extraction"
+        ]
+      },
+      {
+        "id": "smart_home.audio.emergency_keyword.detect",
+        "name": "Emergency Keyword Detection",
+        "description": "识别呼救、着火、漏水、摔倒等紧急关键词，用于家庭事件告警。",
+        "tags": [
+          "smart-home",
+          "audio",
+          "emergency-keyword"
+        ]
+      },
+      {
+        "id": "smart_home.audio.sleep_noise.analyze",
+        "name": "Sleep Noise Analysis",
+        "description": "分析睡眠期间的环境噪声、鼾声、突发声、持续噪声水平和噪声波动特征，输出时间段、强度、可能影响和置信度。",
+        "tags": [
+          "smart-home",
+          "audio",
+          "sleep-noise"
+        ]
+      },
+      {
+        "id": "smart_home.audio.tv_sound.detect",
+        "name": "TV Sound Detection",
+        "description": "识别电视声音状态，用于家庭场景推断、睡眠提醒和能耗优化。",
+        "tags": [
+          "smart-home",
+          "audio",
+          "tv-sound"
+        ]
+      },
+      {
+        "id": "smart_home.audio.water_running.detect",
+        "name": "Water Running Sound Detection",
+        "description": "识别持续流水声，用于漏水、忘关水龙头或异常用水事件判断。",
+        "tags": [
+          "smart-home",
+          "audio",
+          "water-running"
+        ]
+      },
+      {
+        "id": "smart_home.audio.gas_alarm.detect",
+        "name": "Gas Alarm Sound Detection",
+        "description": "识别燃气报警器声音，用于燃气泄漏风险提示。",
+        "tags": [
+          "smart-home",
+          "audio",
+          "gas-alarm"
+        ]
+      },
+      {
+        "id": "smart_home.audio.summary.generate",
+        "name": "Home Audio Summary Generation",
+        "description": "对家庭音频片段进行摘要，概括语音、声音事件和异常情况。",
+        "tags": [
+          "smart-home",
+          "audio",
+          "summary"
+        ]
+      },
+      {
+        "id": "smart_home.audio.qa.answer",
+        "name": "Home Audio Question Answering",
+        "description": "根据家庭音频内容回答用户关于声音事件、说话人、时间和异常情况的问题。",
+        "tags": [
+          "smart-home",
+          "audio",
+          "question-answering"
+        ]
+      },
+      {
+        "id": "smart_factory.audio.machine_noise.analyze",
+        "name": "Machine Noise Analyze",
+        "description": "分析工厂音频中的 machine noise相关数据，提取关键指标、趋势和异常信息。",
+        "tags": [
+          "smart-factory",
+          "audio",
+          "machine-noise",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_factory.audio.abnormal_sound.detect",
+        "name": "Abnormal Sound Detect",
+        "description": "检测工厂音频中的 abnormal sound相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "audio",
+          "abnormal-sound",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.audio.bearing_noise.detect",
+        "name": "Bearing Noise Detect",
+        "description": "检测轴承相关异常声音，包括周期性冲击、摩擦、滚动体缺陷、润滑不足等声学特征，输出异常类型、时间段、置信度和严重程度。",
+        "tags": [
+          "smart-factory",
+          "audio",
+          "bearing-noise",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.audio.motor_noise.detect",
+        "name": "Motor Noise Detect",
+        "description": "检测电机相关异常声音，包括转子偏心、轴承耦合噪声、换向火花、频带调制、过载异响等特征，输出异常类型、置信度和风险提示。",
+        "tags": [
+          "smart-factory",
+          "audio",
+          "motor-noise",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.audio.air_leak_sound.detect",
+        "name": "Air Leak Sound Detect",
+        "description": "检测工厂音频中的 air leak sound相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "audio",
+          "air-leak-sound",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.audio.collision_sound.detect",
+        "name": "Collision Sound Detect",
+        "description": "检测工厂音频中的 collision sound相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "audio",
+          "collision-sound",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.audio.alarm_sound.detect",
+        "name": "Alarm Sound Detect",
+        "description": "检测工厂音频中的 alarm sound相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "audio",
+          "alarm-sound",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.audio.worker_voice_command.recognize",
+        "name": "Worker Voice Command Recognize",
+        "description": "识别工厂音频中的 worker voice command相关对象、状态或指令，并返回标准化识别结果。",
+        "tags": [
+          "smart-factory",
+          "audio",
+          "worker-voice-command",
+          "recognize"
+        ]
+      },
+      {
+        "id": "smart_factory.audio.intercom_transcript.generate",
+        "name": "Intercom Transcript Generate",
+        "description": "生成工厂音频中的 intercom transcript相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "audio",
+          "intercom-transcript"
+        ]
+      },
+      {
+        "id": "smart_factory.audio.safety_keyword.detect",
+        "name": "Safety Keyword Detect",
+        "description": "检测工厂音频中的 safety keyword相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "audio",
+          "safety-keyword",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.audio.noise_level.assess",
+        "name": "Noise Level Assess",
+        "description": "评估工厂音频中的 noise level风险、状态或性能，并输出评分、等级和解释。",
+        "tags": [
+          "smart-factory",
+          "audio",
+          "noise-level",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_factory.audio.equipment_fault_sound.classify",
+        "name": "Equipment Fault Sound Classify",
+        "description": "根据异常声、轴承声、电机声、气漏声、碰撞声等声学证据对设备故障声进行分类，并给出基础故障风险等级与依据。",
+        "tags": [
+          "smart-factory",
+          "audio",
+          "equipment-fault-sound",
+          "classify"
+        ]
+      },
+      {
+        "id": "smart_factory.audio.production_event.detect",
+        "name": "Production Event Detect",
+        "description": "检测工厂音频中的 production event相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "audio",
+          "production-event",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.audio.multi_source_sound.localize",
+        "name": "Multi Source Sound Localize",
+        "description": "定位工厂音频中的 multi source sound来源或位置，用于现场事件分析和故障排查。",
+        "tags": [
+          "smart-factory",
+          "audio",
+          "multi-source-sound",
+          "localize"
+        ]
+      },
+      {
+        "id": "smart_factory.audio.shift_briefing.summarize",
+        "name": "Shift Briefing Summarize",
+        "description": "总结工厂音频中的 shift briefing内容，提取关键事件、结论和异常信息。",
+        "tags": [
+          "smart-factory",
+          "audio",
+          "shift-briefing",
+          "summarize"
+        ]
+      },
+      {
+        "id": "smart_factory.audio.maintenance_note.transcribe",
+        "name": "Maintenance Note Transcribe",
+        "description": "将工厂音频中的 maintenance note转写为文本，并保留关键时间点和说话内容。",
+        "tags": [
+          "smart-factory",
+          "audio",
+          "maintenance-note",
+          "transcribe"
+        ]
+      },
+      {
+        "id": "smart_factory.audio.emergency_call.detect",
+        "name": "Emergency Call Detect",
+        "description": "检测工厂音频中的 emergency call相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "audio",
+          "emergency-call",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.audio.sound_trend.analyze",
+        "name": "Sound Trend Analyze",
+        "description": "分析工厂音频中的 sound trend相关数据，提取关键指标、趋势和异常信息。",
+        "tags": [
+          "smart-factory",
+          "audio",
+          "sound-trend",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_factory.audio.summary.generate",
+        "name": "Summary Generate",
+        "description": "生成工厂音频中的 summary相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "audio",
+          "summary"
+        ]
+      },
+      {
+        "id": "smart_factory.audio.qa.answer",
+        "name": "QA Answer",
+        "description": "回答用户关于Audio Understanding Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。",
+        "tags": [
+          "smart-factory",
+          "audio"
+        ]
+      },
+      {
+        "id": "smart_factory.audio.fault_risk.assess",
+        "name": "Factory Audio Fault Risk Assessment",
+        "description": "基于异常噪声、轴承噪声、电机噪声、气漏声、碰撞声等音频检测结果，给出基础声学故障风险等级、依据和建议后续检查项。",
+        "tags": [
+          "smart-factory",
+          "audio",
+          "fault-risk",
+          "assessment"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-004",
+    "name": "IoT Device Management Agent",
+    "description": "该智能体面向 IoT 设备状态查询、设备控制和遥测采集任务，融合智慧家居、智慧工厂及楼宇/会议室常见设备管理能力，能够查询智能门锁、灯光、空调、空气净化器、会议设备、机器、网关、PLC、边缘节点和通用 IoT 设备的在线状态、运行状态、连接状态、设备参数、告警状态和历史遥测；支持控制执行、指令下发、设备清单生成和基础设备故障检测；不负责视频/音频感知、跨模态风险融合或正式报告生成。",
+    "url": "http://[fd10::1:2]:8054",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_home.iot.device.status.query",
+        "name": "Home IoT Device Status Query",
+        "description": "查询家庭智能设备的在线状态、运行状态、电量、连接状态和基础设备信息。",
+        "tags": [
+          "smart-home",
+          "iot",
+          "device-status"
+        ]
+      },
+      {
+        "id": "smart_home.iot.device.control",
+        "name": "Home IoT Device Control",
+        "description": "对家庭智能设备执行开启、关闭、调节、重启或模式切换等控制操作。",
+        "tags": [
+          "smart-home",
+          "iot",
+          "device-control"
+        ]
+      },
+      {
+        "id": "smart_home.iot.light.control",
+        "name": "Smart Light Control",
+        "description": "查询或控制家庭灯光设备的开关、亮度、色温、颜色、照明模式和夜间状态。",
+        "tags": [
+          "smart-home",
+          "iot",
+          "light-control"
+        ]
+      },
+      {
+        "id": "smart_home.iot.air_conditioner.control",
+        "name": "Air Conditioner Control",
+        "description": "控制空调的开关、温度、风速、运行模式和定时设置。",
+        "tags": [
+          "smart-home",
+          "iot",
+          "air-conditioner"
+        ]
+      },
+      {
+        "id": "smart_home.iot.curtain.control",
+        "name": "Smart Curtain Control",
+        "description": "控制智能窗帘的开启、关闭、暂停和开合比例。",
+        "tags": [
+          "smart-home",
+          "iot",
+          "curtain-control"
+        ]
+      },
+      {
+        "id": "smart_home.iot.door_lock.control",
+        "name": "Smart Door Lock Control",
+        "description": "查询或控制智能门锁的上锁、解锁、开关状态、电量、异常告警和安全联动状态。",
+        "tags": [
+          "smart-home",
+          "iot",
+          "door-lock"
+        ]
+      },
+      {
+        "id": "smart_home.iot.camera.control",
+        "name": "Smart Camera Control",
+        "description": "控制家庭摄像头的开启、关闭、转向、录制和隐私模式。",
+        "tags": [
+          "smart-home",
+          "iot",
+          "camera-control"
+        ]
+      },
+      {
+        "id": "smart_home.iot.appliance.control",
+        "name": "Home Appliance Control",
+        "description": "控制家庭通用家电设备的运行状态、模式和定时任务。",
+        "tags": [
+          "smart-home",
+          "iot",
+          "appliance-control"
+        ]
+      },
+      {
+        "id": "smart_home.iot.tv.control",
+        "name": "Smart TV Control",
+        "description": "控制电视的开关、音量、频道、输入源和播放状态。",
+        "tags": [
+          "smart-home",
+          "iot",
+          "tv-control"
+        ]
+      },
+      {
+        "id": "smart_home.iot.speaker.control",
+        "name": "Smart Speaker Control",
+        "description": "控制智能音箱的播放、暂停、音量、语音助手和多房间播放状态。",
+        "tags": [
+          "smart-home",
+          "iot",
+          "speaker-control"
+        ]
+      },
+      {
+        "id": "smart_home.iot.robot_vacuum.control",
+        "name": "Robot Vacuum Control",
+        "description": "控制扫地机器人执行清扫、暂停、回充、区域清扫和定时清扫任务。",
+        "tags": [
+          "smart-home",
+          "iot",
+          "robot-vacuum"
+        ]
+      },
+      {
+        "id": "smart_home.iot.air_purifier.control",
+        "name": "Air Purifier Control",
+        "description": "控制空气净化器的开关、风速、净化模式和自动运行策略。",
+        "tags": [
+          "smart-home",
+          "iot",
+          "air-purifier"
+        ]
+      },
+      {
+        "id": "smart_home.iot.water_heater.control",
+        "name": "Water Heater Control",
+        "description": "控制热水器的开关、温度、加热模式和定时加热策略。",
+        "tags": [
+          "smart-home",
+          "iot",
+          "water-heater"
+        ]
+      },
+      {
+        "id": "smart_home.iot.scene_mode.activate",
+        "name": "Home Scene Mode Activation",
+        "description": "激活回家、离家、睡眠、观影、节能等家庭场景模式。",
+        "tags": [
+          "smart-home",
+          "iot",
+          "scene-mode"
+        ]
+      },
+      {
+        "id": "smart_home.iot.automation_rule.create",
+        "name": "IoT Automation Rule Creation",
+        "description": "基于设备状态和用户需求创建基础 IoT 自动化规则。",
+        "tags": [
+          "smart-home",
+          "iot",
+          "automation-rule"
+        ]
+      },
+      {
+        "id": "smart_home.iot.device_fault.detect",
+        "name": "IoT Device Fault Detection",
+        "description": "检测家庭 IoT 设备的离线、异常响应、运行故障或状态异常。",
+        "tags": [
+          "smart-home",
+          "iot",
+          "fault-detection"
+        ]
+      },
+      {
+        "id": "smart_home.iot.device_energy.analyze",
+        "name": "IoT Device Energy Analysis",
+        "description": "分析智能设备的能耗状态和运行效率，用于节能优化。",
+        "tags": [
+          "smart-home",
+          "iot",
+          "energy-analysis"
+        ]
+      },
+      {
+        "id": "smart_home.iot.device_group.control",
+        "name": "IoT Device Group Control",
+        "description": "对一组家庭智能设备进行批量控制，例如全屋关灯或统一切换离家模式。",
+        "tags": [
+          "smart-home",
+          "iot",
+          "group-control"
+        ]
+      },
+      {
+        "id": "smart_home.iot.device_inventory.generate",
+        "name": "IoT Device Inventory Generation",
+        "description": "生成家庭智能设备清单，包括设备类型、位置、状态和能力信息。",
+        "tags": [
+          "smart-home",
+          "iot",
+          "device-inventory"
+        ]
+      },
+      {
+        "id": "smart_home.iot.qa.answer",
+        "name": "Home IoT Question Answering",
+        "description": "回答用户关于家庭智能设备状态、控制方式、故障和自动化能力的问题。",
+        "tags": [
+          "smart-home",
+          "iot",
+          "question-answering"
+        ]
+      },
+      {
+        "id": "smart_factory.iot.device.status.query",
+        "name": "Device Status Query",
+        "description": "查询工厂 IoT 设备中的 device status相关信息，并返回当前状态、历史记录或匹配结果。",
+        "tags": [
+          "smart-factory",
+          "iot",
+          "device",
+          "status"
+        ]
+      },
+      {
+        "id": "smart_factory.iot.machine.control",
+        "name": "Machine Control",
+        "description": "控制工厂 IoT 设备中的 machine执行指定操作，并返回执行状态和结果。",
+        "tags": [
+          "smart-factory",
+          "iot",
+          "machine",
+          "control"
+        ]
+      },
+      {
+        "id": "smart_factory.iot.gateway.monitor",
+        "name": "Gateway Monitor",
+        "description": "监测工厂 IoT 设备中的 gateway状态，识别异常变化并输出结构化监测结果。",
+        "tags": [
+          "smart-factory",
+          "iot",
+          "gateway",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_factory.iot.telemetry.collect",
+        "name": "Telemetry Collect",
+        "description": "采集工厂 IoT 设备中的 telemetry数据，并整理为后续监测、分析或诊断所需的结构化输入。",
+        "tags": [
+          "smart-factory",
+          "iot",
+          "telemetry",
+          "collect"
+        ]
+      },
+      {
+        "id": "smart_factory.iot.device_fault.detect",
+        "name": "Device Fault Detect",
+        "description": "检测工厂 IoT 设备中的 device fault相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "iot",
+          "device-fault",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.iot.plc_signal.analyze",
+        "name": "PLC Signal Analyze",
+        "description": "分析工厂 IoT 设备中的 PLC signal相关数据，提取关键指标、趋势和异常信息。",
+        "tags": [
+          "smart-factory",
+          "iot",
+          "plc-signal",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_factory.iot.production_data.ingest",
+        "name": "Production Data Ingest",
+        "description": "接入工厂 IoT 设备中的 production data数据，并进行格式化、校验和预处理。",
+        "tags": [
+          "smart-factory",
+          "iot",
+          "production-data",
+          "ingest"
+        ]
+      },
+      {
+        "id": "smart_factory.iot.device_group.manage",
+        "name": "Device Group Manage",
+        "description": "管理工厂 IoT 设备中的 device group相关对象、任务或配置，支持状态维护和协同执行。",
+        "tags": [
+          "smart-factory",
+          "iot",
+          "device-group",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_factory.iot.maintenance_alert.generate",
+        "name": "Maintenance Alert Generate",
+        "description": "生成工厂 IoT 设备中的 maintenance alert相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "iot",
+          "maintenance-alert"
+        ]
+      },
+      {
+        "id": "smart_factory.iot.command.dispatch",
+        "name": "Command Dispatch",
+        "description": "下发工厂 IoT 设备中的 command任务或指令，并跟踪执行状态。",
+        "tags": [
+          "smart-factory",
+          "iot",
+          "command",
+          "dispatch"
+        ]
+      },
+      {
+        "id": "smart_factory.iot.edge_node.status.monitor",
+        "name": "Edge Node Status Monitor",
+        "description": "监测工厂 IoT 设备中的 edge node status状态，识别异常变化并输出结构化监测结果。",
+        "tags": [
+          "smart-factory",
+          "iot",
+          "edge-node",
+          "status"
+        ]
+      },
+      {
+        "id": "smart_factory.iot.sensor_network.monitor",
+        "name": "Sensor Network Monitor",
+        "description": "监测工厂 IoT 设备中的 sensor network状态，识别异常变化并输出结构化监测结果。",
+        "tags": [
+          "smart-factory",
+          "iot",
+          "sensor-network",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_factory.iot.device_config.update",
+        "name": "Device Config Update",
+        "description": "更新工厂 IoT 设备中的 device config配置、参数或状态信息。",
+        "tags": [
+          "smart-factory",
+          "iot",
+          "device-config",
+          "update"
+        ]
+      },
+      {
+        "id": "smart_factory.iot.device_firmware.check",
+        "name": "Device Firmware Check",
+        "description": "检查工厂 IoT 设备中的 device firmware状态、条件或合规性，并返回检查结果。",
+        "tags": [
+          "smart-factory",
+          "iot",
+          "device-firmware",
+          "check"
+        ]
+      },
+      {
+        "id": "smart_factory.iot.device_inventory.generate",
+        "name": "Device Inventory Generate",
+        "description": "生成工厂 IoT 设备中的 device inventory相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "iot",
+          "device-inventory"
+        ]
+      },
+      {
+        "id": "smart_factory.iot.machine_mode.switch",
+        "name": "Machine Mode Switch",
+        "description": "切换工厂 IoT 设备中的 machine mode运行模式，并确认切换结果。",
+        "tags": [
+          "smart-factory",
+          "iot",
+          "machine-mode",
+          "switch"
+        ]
+      },
+      {
+        "id": "smart_factory.iot.remote_shutdown.execute",
+        "name": "Remote Shutdown Execute",
+        "description": "执行工厂 IoT 设备中的 remote shutdown相关操作，并返回执行状态、影响范围和结果。",
+        "tags": [
+          "smart-factory",
+          "iot",
+          "remote-shutdown",
+          "execute"
+        ]
+      },
+      {
+        "id": "smart_factory.iot.device_health.assess",
+        "name": "Device Health Assess",
+        "description": "评估工厂 IoT 设备中的 device health风险、状态或性能，并输出评分、等级和解释。",
+        "tags": [
+          "smart-factory",
+          "iot",
+          "device-health",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_factory.iot.connectivity.check",
+        "name": "Connectivity Check",
+        "description": "检查工厂 IoT 设备中的 connectivity状态、条件或合规性，并返回检查结果。",
+        "tags": [
+          "smart-factory",
+          "iot",
+          "connectivity",
+          "check"
+        ]
+      },
+      {
+        "id": "smart_factory.iot.qa.answer",
+        "name": "QA Answer",
+        "description": "回答用户关于IoT Device Management Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。",
+        "tags": [
+          "smart-factory",
+          "iot"
+        ]
+      },
+      {
+        "id": "smart_home.iot.door_lock.status.query",
+        "name": "Smart Door Lock Status Query",
+        "description": "查询智能门锁的锁定状态、在线状态、电量、异常告警、最后操作时间和安全联动状态。",
+        "tags": [
+          "smart-home",
+          "iot",
+          "door-lock",
+          "status-query"
+        ]
+      },
+      {
+        "id": "smart_home.iot.light.status.query",
+        "name": "Smart Light Status Query",
+        "description": "查询家庭灯光设备的开关状态、亮度、色温、照明模式、夜间状态和异常状态。",
+        "tags": [
+          "smart-home",
+          "iot",
+          "light",
+          "status-query"
+        ]
+      },
+      {
+        "id": "smart_building.facility.device_status.query",
+        "name": "Building Facility Device Status Query",
+        "description": "查询楼宇会议设备、空调、照明、门禁、投影、显示屏等设施设备的在线状态、运行状态、故障状态和基础参数。",
+        "tags": [
+          "smart-building",
+          "iot",
+          "facility",
+          "status-query"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-005",
+    "name": "Sensor Monitoring Agent",
+    "description": "该智能体面向传感器监测、传感器异常检测和传感器多源融合任务，融合智慧家居、智慧工厂、楼宇、园区和医疗/养老场景的温湿度、门窗、烟雾、燃气、水浸、空气质量、CO₂、PM2.5、光照、噪声、占用、人流、振动、压力、电流、流量、速度、扭矩和设备状态传感器数据；支持阈值比较、趋势分析、异常值检测、人员密度/占用状态计算、环境舒适度评估和结构化传感器结果输出；不负责长文本报告和复杂跨业务策略生成。",
+    "url": "http://[fd10::1:2]:8055",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_home.sensor.temperature.monitor",
+        "name": "Temperature Sensor Monitoring",
+        "description": "监测家庭各房间温度变化，识别过热、过冷或异常温度状态。",
+        "tags": [
+          "smart-home",
+          "sensor",
+          "temperature"
+        ]
+      },
+      {
+        "id": "smart_home.sensor.humidity.monitor",
+        "name": "Humidity Sensor Monitoring",
+        "description": "监测家庭湿度状态，识别过湿、过干或霉菌风险相关条件。",
+        "tags": [
+          "smart-home",
+          "sensor",
+          "humidity"
+        ]
+      },
+      {
+        "id": "smart_home.sensor.motion.detect",
+        "name": "Motion Sensor Detection",
+        "description": "基于人体活动传感器检测家庭空间中的活动、移动和区域触发事件。",
+        "tags": [
+          "smart-home",
+          "sensor",
+          "motion"
+        ]
+      },
+      {
+        "id": "smart_home.sensor.door_window.detect",
+        "name": "Door and Window Sensor Detection",
+        "description": "检测门窗开启、关闭或异常触发状态，用于安防和自动化联动。",
+        "tags": [
+          "smart-home",
+          "sensor",
+          "door-window"
+        ]
+      },
+      {
+        "id": "smart_home.sensor.smoke.detect",
+        "name": "Smoke Sensor Detection",
+        "description": "监测烟雾传感器状态，用于识别火灾风险和烟雾异常。",
+        "tags": [
+          "smart-home",
+          "sensor",
+          "smoke"
+        ]
+      },
+      {
+        "id": "smart_home.sensor.gas_leak.detect",
+        "name": "Gas Leak Sensor Detection",
+        "description": "监测燃气泄漏传感器数据，识别燃气浓度异常和泄漏风险。",
+        "tags": [
+          "smart-home",
+          "sensor",
+          "gas-leak"
+        ]
+      },
+      {
+        "id": "smart_home.sensor.water_leak.detect",
+        "name": "Water Leak Sensor Detection",
+        "description": "监测水浸传感器状态，识别地面积水、漏水或水浸风险。",
+        "tags": [
+          "smart-home",
+          "sensor",
+          "water-leak"
+        ]
+      },
+      {
+        "id": "smart_home.sensor.air_quality.monitor",
+        "name": "Air Quality Sensor Monitoring",
+        "description": "监测室内空气质量指标，并识别污染、通风不足或空气异常状态。",
+        "tags": [
+          "smart-home",
+          "sensor",
+          "air-quality"
+        ]
+      },
+      {
+        "id": "smart_home.sensor.co2.monitor",
+        "name": "CO2 Sensor Monitoring",
+        "description": "监测室内二氧化碳浓度，并识别通风不足或人员密集状态。",
+        "tags": [
+          "smart-home",
+          "sensor",
+          "co2"
+        ]
+      },
+      {
+        "id": "smart_home.sensor.pm25.monitor",
+        "name": "PM2.5 Sensor Monitoring",
+        "description": "监测室内 PM2.5 水平，用于空气质量评估和净化设备联动。",
+        "tags": [
+          "smart-home",
+          "sensor",
+          "pm25"
+        ]
+      },
+      {
+        "id": "smart_home.sensor.light_level.monitor",
+        "name": "Light Level Sensor Monitoring",
+        "description": "监测房间光照强度，用于照明控制和场景模式优化。",
+        "tags": [
+          "smart-home",
+          "sensor",
+          "light-level"
+        ]
+      },
+      {
+        "id": "smart_home.sensor.noise_level.monitor",
+        "name": "Noise Level Sensor Monitoring",
+        "description": "监测家庭环境噪声水平，用于舒适度分析和睡眠环境优化。",
+        "tags": [
+          "smart-home",
+          "sensor",
+          "noise-level"
+        ]
+      },
+      {
+        "id": "smart_home.sensor.occupancy.detect",
+        "name": "Occupancy Sensor Detection",
+        "description": "基于传感器判断房间是否有人及占用状态变化。",
+        "tags": [
+          "smart-home",
+          "sensor",
+          "occupancy"
+        ]
+      },
+      {
+        "id": "smart_home.sensor.sleep_environment.analyze",
+        "name": "Sleep Environment Sensor Analysis",
+        "description": "分析睡眠环境中的温度、湿度、噪声、光照和空气质量状态。",
+        "tags": [
+          "smart-home",
+          "sensor",
+          "sleep-environment"
+        ]
+      },
+      {
+        "id": "smart_home.sensor.energy_meter.read",
+        "name": "Energy Meter Reading",
+        "description": "读取家庭电表或设备能耗传感器数据，用于能耗监测和分析。",
+        "tags": [
+          "smart-home",
+          "sensor",
+          "energy-meter"
+        ]
+      },
+      {
+        "id": "smart_home.sensor.device_status.monitor",
+        "name": "Device Status Sensor Monitoring",
+        "description": "监测设备运行状态传感器数据，识别设备工作状态和异常状态。",
+        "tags": [
+          "smart-home",
+          "sensor",
+          "device-status"
+        ]
+      },
+      {
+        "id": "smart_home.sensor.abnormal_value.detect",
+        "name": "Abnormal Sensor Value Detection",
+        "description": "识别家庭传感器数据中的异常值、突变、持续超阈值或数据漂移。",
+        "tags": [
+          "smart-home",
+          "sensor",
+          "anomaly-detection"
+        ]
+      },
+      {
+        "id": "smart_home.sensor.trend.analyze",
+        "name": "Home Sensor Trend Analysis",
+        "description": "分析家庭传感器数据随时间变化的趋势，用于风险预测和环境优化。",
+        "tags": [
+          "smart-home",
+          "sensor",
+          "trend-analysis"
+        ]
+      },
+      {
+        "id": "smart_home.sensor.multi_source.fuse",
+        "name": "Home Sensor Multi-Source Fusion",
+        "description": "融合多个家庭传感器数据，形成统一的环境、安全或活动状态判断。",
+        "tags": [
+          "smart-home",
+          "sensor",
+          "multi-source-fusion"
+        ]
+      },
+      {
+        "id": "smart_home.sensor.qa.answer",
+        "name": "Home Sensor Question Answering",
+        "description": "回答用户关于家庭传感器状态、数值变化、异常和趋势的问题。",
+        "tags": [
+          "smart-home",
+          "sensor",
+          "question-answering"
+        ]
+      },
+      {
+        "id": "smart_factory.sensor.vibration.monitor",
+        "name": "Vibration Monitor",
+        "description": "监测工厂传感器中的 vibration状态，识别异常变化并输出结构化监测结果。",
+        "tags": [
+          "smart-factory",
+          "sensor",
+          "vibration",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_factory.sensor.temperature.monitor",
+        "name": "Temperature Monitor",
+        "description": "监测工厂传感器中的 temperature状态，识别异常变化并输出结构化监测结果。",
+        "tags": [
+          "smart-factory",
+          "sensor",
+          "temperature",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_factory.sensor.pressure.monitor",
+        "name": "Pressure Monitor",
+        "description": "监测工厂传感器中的 pressure状态，识别异常变化并输出结构化监测结果。",
+        "tags": [
+          "smart-factory",
+          "sensor",
+          "pressure",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_factory.sensor.current.monitor",
+        "name": "Current Monitor",
+        "description": "监测工厂传感器中的 current状态，识别异常变化并输出结构化监测结果。",
+        "tags": [
+          "smart-factory",
+          "sensor",
+          "current",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_factory.sensor.noise.monitor",
+        "name": "Noise Monitor",
+        "description": "监测工厂传感器中的 noise状态，识别异常变化并输出结构化监测结果。",
+        "tags": [
+          "smart-factory",
+          "sensor",
+          "noise",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_factory.sensor.flow_rate.monitor",
+        "name": "Flow Rate Monitor",
+        "description": "监测工厂传感器中的 flow rate状态，识别异常变化并输出结构化监测结果。",
+        "tags": [
+          "smart-factory",
+          "sensor",
+          "flow-rate",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_factory.sensor.anomaly.detect",
+        "name": "Anomaly Detect",
+        "description": "检测工厂传感器中的 anomaly相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "sensor",
+          "anomaly",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.sensor.trend.analyze",
+        "name": "Trend Analyze",
+        "description": "分析工厂传感器中的 trend相关数据，提取关键指标、趋势和异常信息。",
+        "tags": [
+          "smart-factory",
+          "sensor",
+          "trend",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_factory.sensor.failure_warning.generate",
+        "name": "Failure Warning Generate",
+        "description": "生成工厂传感器中的 failure warning相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "sensor",
+          "failure-warning"
+        ]
+      },
+      {
+        "id": "smart_factory.sensor.data_quality.assess",
+        "name": "Data Quality Assess",
+        "description": "评估工厂传感器中的 data quality风险、状态或性能，并输出评分、等级和解释。",
+        "tags": [
+          "smart-factory",
+          "sensor",
+          "data-quality",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_factory.sensor.humidity.monitor",
+        "name": "Humidity Monitor",
+        "description": "监测工厂传感器中的 humidity状态，识别异常变化并输出结构化监测结果。",
+        "tags": [
+          "smart-factory",
+          "sensor",
+          "humidity",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_factory.sensor.gas_concentration.monitor",
+        "name": "Gas Concentration Monitor",
+        "description": "监测工厂传感器中的 gas concentration状态，识别异常变化并输出结构化监测结果。",
+        "tags": [
+          "smart-factory",
+          "sensor",
+          "gas-concentration",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_factory.sensor.energy_meter.read",
+        "name": "Energy Meter Read",
+        "description": "读取工厂传感器中的 energy meter中的数值、文字或状态信息，并转换为可用的结构化结果。",
+        "tags": [
+          "smart-factory",
+          "sensor",
+          "energy-meter",
+          "read"
+        ]
+      },
+      {
+        "id": "smart_factory.sensor.speed.monitor",
+        "name": "Speed Monitor",
+        "description": "监测工厂传感器中的 speed状态，识别异常变化并输出结构化监测结果。",
+        "tags": [
+          "smart-factory",
+          "sensor",
+          "speed",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_factory.sensor.torque.monitor",
+        "name": "Torque Monitor",
+        "description": "监测工厂传感器中的 torque状态，识别异常变化并输出结构化监测结果。",
+        "tags": [
+          "smart-factory",
+          "sensor",
+          "torque",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_factory.sensor.load.monitor",
+        "name": "Load Monitor",
+        "description": "监测工厂传感器中的 load状态，识别异常变化并输出结构化监测结果。",
+        "tags": [
+          "smart-factory",
+          "sensor",
+          "load",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_factory.sensor.displacement.monitor",
+        "name": "Displacement Monitor",
+        "description": "监测工厂传感器中的 displacement状态，识别异常变化并输出结构化监测结果。",
+        "tags": [
+          "smart-factory",
+          "sensor",
+          "displacement",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_factory.sensor.multi_source.fuse",
+        "name": "Multi Source Fuse",
+        "description": "融合工厂传感器中的 multi source多源证据，形成统一判断、风险评分或事件结论。",
+        "tags": [
+          "smart-factory",
+          "sensor",
+          "multi-source",
+          "fuse"
+        ]
+      },
+      {
+        "id": "smart_factory.sensor.threshold.check",
+        "name": "Threshold Check",
+        "description": "检查工厂传感器中的 threshold状态、条件或合规性，并返回检查结果。",
+        "tags": [
+          "smart-factory",
+          "sensor",
+          "threshold",
+          "check"
+        ]
+      },
+      {
+        "id": "smart_factory.sensor.qa.answer",
+        "name": "QA Answer",
+        "description": "回答用户关于Sensor Monitoring Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。",
+        "tags": [
+          "smart-factory",
+          "sensor"
+        ]
+      },
+      {
+        "id": "smart_building.sensor.people_density.monitor",
+        "name": "Building People Density Sensor Monitoring",
+        "description": "基于楼层人流、人体活动、闸机或占用传感器数据计算楼层、消防通道、会议室或公共区域的人流密度和占用状态。",
+        "tags": [
+          "smart-building",
+          "sensor",
+          "people-density"
+        ]
+      },
+      {
+        "id": "smart_campus.sensor.environment_status.query",
+        "name": "Campus Environment Sensor Status Query",
+        "description": "查询园区空气质量、噪声、光照、温湿度、人流等环境传感器状态，并输出结构化环境监测结果。",
+        "tags": [
+          "smart-campus",
+          "sensor",
+          "environment"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-006",
+    "name": "Smart Home Security Agent",
+    "description": "该智能体面向智慧家居安防决策任务，能够检测和评估入侵、陌生人、门口停留、包裹盗取、门锁异常、窗户异常、周界风险、可疑活动、摄像头遮挡、误报过滤和报警事件；支持融合视频/IoT/传感器/安防日志结果进行安全风险评分、风险等级计算、事件核验、告警触发、紧急联系人通知和安防事件报告生成；不负责原始视频模型推理和非家居场景楼宇/园区安防融合。",
+    "url": "http://[fd10::1:2]:8056",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_home.security.intrusion.detect",
+        "name": "Home Security Intrusion Detection",
+        "description": "综合家庭安防数据检测疑似入侵事件，并输出风险等级和证据摘要。",
+        "tags": [
+          "smart-home",
+          "security",
+          "intrusion-detection"
+        ]
+      },
+      {
+        "id": "smart_home.security.door_lock_status.check",
+        "name": "Door Lock Status Check",
+        "description": "检查家庭智能门锁状态，识别未上锁、异常解锁或门锁故障。",
+        "tags": [
+          "smart-home",
+          "security",
+          "door-lock"
+        ]
+      },
+      {
+        "id": "smart_home.security.window_status.check",
+        "name": "Window Status Check",
+        "description": "检查窗户开启、关闭、破损或异常状态，用于家庭安防监测。",
+        "tags": [
+          "smart-home",
+          "security",
+          "window-status"
+        ]
+      },
+      {
+        "id": "smart_home.security.perimeter.monitor",
+        "name": "Home Perimeter Monitoring",
+        "description": "监测家庭入口、阳台、窗户和门口等周界区域的异常活动。",
+        "tags": [
+          "smart-home",
+          "security",
+          "perimeter-monitoring"
+        ]
+      },
+      {
+        "id": "smart_home.security.visitor.identify",
+        "name": "Visitor Identification",
+        "description": "识别访客身份或访客类型，用于门口接待、安全判断和通知。",
+        "tags": [
+          "smart-home",
+          "security",
+          "visitor-identification"
+        ]
+      },
+      {
+        "id": "smart_home.security.stranger.detect",
+        "name": "Stranger Detection",
+        "description": "识别家庭场景中的陌生人员，并判断其可能带来的安防风险。",
+        "tags": [
+          "smart-home",
+          "security",
+          "stranger-detection"
+        ]
+      },
+      {
+        "id": "smart_home.security.package_theft.detect",
+        "name": "Package Theft Detection",
+        "description": "检测门口包裹被异常移动、取走或疑似盗取的事件。",
+        "tags": [
+          "smart-home",
+          "security",
+          "package-theft"
+        ]
+      },
+      {
+        "id": "smart_home.security.suspicious_activity.detect",
+        "name": "Suspicious Activity Detection",
+        "description": "检测家庭门口、周界或室内的异常徘徊、窥探、破坏等可疑活动。",
+        "tags": [
+          "smart-home",
+          "security",
+          "suspicious-activity"
+        ]
+      },
+      {
+        "id": "smart_home.security.camera_tamper.detect",
+        "name": "Camera Tamper Detection",
+        "description": "检测家庭摄像头被遮挡、移动、断开、失焦或画面异常情况。",
+        "tags": [
+          "smart-home",
+          "security",
+          "camera-tamper"
+        ]
+      },
+      {
+        "id": "smart_home.security.alarm.trigger",
+        "name": "Home Security Alarm Trigger",
+        "description": "根据安全事件、风险等级和用户配置触发家庭安防告警。",
+        "tags": [
+          "smart-home",
+          "security",
+          "alarm-trigger"
+        ]
+      },
+      {
+        "id": "smart_home.security.false_alarm.filter",
+        "name": "False Alarm Filtering",
+        "description": "识别由家人、宠物、天气、设备误触发等导致的安防误报。",
+        "tags": [
+          "smart-home",
+          "security",
+          "false-alarm-filtering"
+        ]
+      },
+      {
+        "id": "smart_home.security.event.verify",
+        "name": "Security Event Verification",
+        "description": "结合多源证据验证安防事件是否真实发生，并输出确认结果。",
+        "tags": [
+          "smart-home",
+          "security",
+          "event-verification"
+        ]
+      },
+      {
+        "id": "smart_home.security.risk_score.calculate",
+        "name": "Home Security Risk Score Calculation",
+        "description": "根据事件类型、证据强度、设备状态和时间上下文计算家庭安全风险评分。",
+        "tags": [
+          "smart-home",
+          "security",
+          "risk-score"
+        ]
+      },
+      {
+        "id": "smart_home.security.access_log.analyze",
+        "name": "Home Access Log Analysis",
+        "description": "分析门锁、门磁、摄像头和访客记录中的出入行为和异常访问模式。",
+        "tags": [
+          "smart-home",
+          "security",
+          "access-log"
+        ]
+      },
+      {
+        "id": "smart_home.security.night_mode.monitor",
+        "name": "Night Security Mode Monitoring",
+        "description": "在夜间安防模式下监测门窗、周界、室内活动和异常声音。",
+        "tags": [
+          "smart-home",
+          "security",
+          "night-mode"
+        ]
+      },
+      {
+        "id": "smart_home.security.child_safety.monitor",
+        "name": "Child Safety Monitoring",
+        "description": "监测儿童接近危险区域、门窗、厨房或其他潜在风险场景。",
+        "tags": [
+          "smart-home",
+          "security",
+          "child-safety"
+        ]
+      },
+      {
+        "id": "smart_home.security.pet_safety.monitor",
+        "name": "Pet Safety Monitoring",
+        "description": "监测宠物接近危险区域、异常活动或可能造成安全隐患的行为。",
+        "tags": [
+          "smart-home",
+          "security",
+          "pet-safety"
+        ]
+      },
+      {
+        "id": "smart_home.security.emergency_contact.notify",
+        "name": "Emergency Contact Notification",
+        "description": "在家庭安全事件发生后通知预设紧急联系人，并附带事件摘要和风险等级。",
+        "tags": [
+          "smart-home",
+          "security",
+          "emergency-notification"
+        ]
+      },
+      {
+        "id": "smart_home.security.event_report.generate",
+        "name": "Security Event Report Generation",
+        "description": "根据安防事件检测结果、时间线和证据链生成结构化事件报告。",
+        "tags": [
+          "smart-home",
+          "security",
+          "report-generation"
+        ]
+      },
+      {
+        "id": "smart_home.security.qa.answer",
+        "name": "Home Security Question Answering",
+        "description": "回答用户关于家庭安防状态、事件记录、风险原因和处理建议的问题。",
+        "tags": [
+          "smart-home",
+          "security",
+          "question-answering"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-007",
+    "name": "Smart Home Healthcare Agent",
+    "description": "该智能体面向智慧家居健康照护任务，能够监测老人、儿童和家庭成员的活动、睡眠、跌倒风险、长时间静止、异常生活规律、用药提醒、生命体征和照护需求，并生成家庭健康照护报告。",
+    "url": "http://[fd10::1:2]:8057",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_home.healthcare.elderly_activity.monitor",
+        "name": "Elderly Activity Monitoring",
+        "description": "监测老人日常活动频率、活动区域和活动规律，用于居家照护评估。",
+        "tags": [
+          "smart-home",
+          "healthcare",
+          "elderly-activity"
+        ]
+      },
+      {
+        "id": "smart_home.healthcare.fall_risk.assess",
+        "name": "Fall Risk Assessment",
+        "description": "结合活动模式、历史事件和环境状态评估老人或家庭成员的跌倒风险。",
+        "tags": [
+          "smart-home",
+          "healthcare",
+          "fall-risk"
+        ]
+      },
+      {
+        "id": "smart_home.healthcare.fall_event.verify",
+        "name": "Fall Event Verification",
+        "description": "根据视频、声音、传感器和活动状态确认是否发生真实跌倒事件。",
+        "tags": [
+          "smart-home",
+          "healthcare",
+          "fall-verification"
+        ]
+      },
+      {
+        "id": "smart_home.healthcare.sleep_quality.analyze",
+        "name": "Sleep Quality Analysis",
+        "description": "分析家庭成员睡眠时长、睡眠环境、异常声音和活动状态，评估睡眠质量。",
+        "tags": [
+          "smart-home",
+          "healthcare",
+          "sleep-quality"
+        ]
+      },
+      {
+        "id": "smart_home.healthcare.daily_activity.analyze",
+        "name": "Daily Activity Analysis",
+        "description": "分析家庭成员每日活动量、活动区域和生活规律变化。",
+        "tags": [
+          "smart-home",
+          "healthcare",
+          "daily-activity"
+        ]
+      },
+      {
+        "id": "smart_home.healthcare.long_inactivity.detect",
+        "name": "Long Inactivity Detection",
+        "description": "检测家庭成员长时间无活动状态，并判断是否需要照护提醒或紧急通知。",
+        "tags": [
+          "smart-home",
+          "healthcare",
+          "inactivity-detection"
+        ]
+      },
+      {
+        "id": "smart_home.healthcare.abnormal_routine.detect",
+        "name": "Abnormal Routine Detection",
+        "description": "识别家庭成员生活规律中的异常变化，例如异常晚起、长时间未活动或作息偏离。",
+        "tags": [
+          "smart-home",
+          "healthcare",
+          "routine-anomaly"
+        ]
+      },
+      {
+        "id": "smart_home.healthcare.medication_reminder.generate",
+        "name": "Medication Reminder Generation",
+        "description": "根据用药计划和用户习惯生成家庭用药提醒。",
+        "tags": [
+          "smart-home",
+          "healthcare",
+          "medication-reminder"
+        ]
+      },
+      {
+        "id": "smart_home.healthcare.medication_intake.check",
+        "name": "Medication Intake Check",
+        "description": "结合提醒记录、图像或用户反馈判断是否完成用药。",
+        "tags": [
+          "smart-home",
+          "healthcare",
+          "medication-check"
+        ]
+      },
+      {
+        "id": "smart_home.healthcare.vital_sign.monitor",
+        "name": "Vital Sign Monitoring",
+        "description": "监测家庭成员生命体征数据，例如心率、血压、血氧或体温。",
+        "tags": [
+          "smart-home",
+          "healthcare",
+          "vital-sign"
+        ]
+      },
+      {
+        "id": "smart_home.healthcare.emergency_call.prepare",
+        "name": "Healthcare Emergency Call Preparation",
+        "description": "在跌倒、呼救或健康异常时准备紧急联系信息和事件摘要。",
+        "tags": [
+          "smart-home",
+          "healthcare",
+          "emergency-call"
+        ]
+      },
+      {
+        "id": "smart_home.healthcare.care_need.assess",
+        "name": "Care Need Assessment",
+        "description": "综合活动、健康、环境和异常事件评估家庭成员的照护需求。",
+        "tags": [
+          "smart-home",
+          "healthcare",
+          "care-need"
+        ]
+      },
+      {
+        "id": "smart_home.healthcare.elderly_risk.score",
+        "name": "Elderly Care Risk Scoring",
+        "description": "计算老人居家照护风险评分，综合跌倒风险、活动水平和异常规律。",
+        "tags": [
+          "smart-home",
+          "healthcare",
+          "elderly-risk"
+        ]
+      },
+      {
+        "id": "smart_home.healthcare.child_care.monitor",
+        "name": "Child Care Monitoring",
+        "description": "监测儿童居家活动、安全状态和异常行为，用于儿童看护。",
+        "tags": [
+          "smart-home",
+          "healthcare",
+          "child-care"
+        ]
+      },
+      {
+        "id": "smart_home.healthcare.baby_cry.analyze",
+        "name": "Baby Cry Analysis",
+        "description": "分析婴儿哭声的持续时间、强度和可能原因，用于婴幼儿照护辅助。",
+        "tags": [
+          "smart-home",
+          "healthcare",
+          "baby-cry"
+        ]
+      },
+      {
+        "id": "smart_home.healthcare.sleep_environment.recommend",
+        "name": "Sleep Environment Recommendation",
+        "description": "根据睡眠质量和环境状态生成卧室温度、光照、噪声和空气质量调节建议。",
+        "tags": [
+          "smart-home",
+          "healthcare",
+          "sleep-environment"
+        ]
+      },
+      {
+        "id": "smart_home.healthcare.health_summary.generate",
+        "name": "Home Health Summary Generation",
+        "description": "生成家庭成员健康状态、活动情况、睡眠质量和异常事件摘要。",
+        "tags": [
+          "smart-home",
+          "healthcare",
+          "health-summary"
+        ]
+      },
+      {
+        "id": "smart_home.healthcare.daily_care_report.generate",
+        "name": "Daily Care Report Generation",
+        "description": "生成每日居家照护报告，包括活动、睡眠、风险和提醒情况。",
+        "tags": [
+          "smart-home",
+          "healthcare",
+          "care-report"
+        ]
+      },
+      {
+        "id": "smart_home.healthcare.family_notification.generate",
+        "name": "Family Care Notification Generation",
+        "description": "根据照护事件或风险状态生成面向家庭成员的通知内容。",
+        "tags": [
+          "smart-home",
+          "healthcare",
+          "family-notification"
+        ]
+      },
+      {
+        "id": "smart_home.healthcare.qa.answer",
+        "name": "Home Healthcare Question Answering",
+        "description": "回答用户关于居家照护、活动状态、睡眠质量、风险评分和健康提醒的问题。",
+        "tags": [
+          "smart-home",
+          "healthcare",
+          "question-answering"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-008",
+    "name": "Smart Home Energy Management Agent",
+    "description": "该智能体面向智慧家居能耗管理任务，能够监测家庭能耗、分析家电用电、识别异常耗电、生成节能建议、优化设备调度、评估碳排放，并生成家庭能耗报告。",
+    "url": "http://[fd10::1:2]:8058",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_home.energy.consumption.monitor",
+        "name": "Home Energy Consumption Monitoring",
+        "description": "监测家庭整体能耗和分时用电变化，用于掌握家庭能源使用状态。",
+        "tags": [
+          "smart-home",
+          "energy",
+          "consumption-monitoring"
+        ]
+      },
+      {
+        "id": "smart_home.energy.appliance_usage.analyze",
+        "name": "Appliance Energy Usage Analysis",
+        "description": "分析不同家电的能耗占比、使用时长和运行模式。",
+        "tags": [
+          "smart-home",
+          "energy",
+          "appliance-analysis"
+        ]
+      },
+      {
+        "id": "smart_home.energy.abnormal_consumption.detect",
+        "name": "Abnormal Energy Consumption Detection",
+        "description": "识别异常耗电、待机耗电、突增用电或设备异常用电情况。",
+        "tags": [
+          "smart-home",
+          "energy",
+          "anomaly-detection"
+        ]
+      },
+      {
+        "id": "smart_home.energy.saving.recommend",
+        "name": "Energy Saving Recommendation",
+        "description": "根据家庭用能习惯、设备状态和环境需求生成节能建议。",
+        "tags": [
+          "smart-home",
+          "energy",
+          "saving-recommendation"
+        ]
+      },
+      {
+        "id": "smart_home.energy.schedule.optimize",
+        "name": "Energy Schedule Optimization",
+        "description": "根据用电峰谷、设备需求和用户偏好优化家电运行时间。",
+        "tags": [
+          "smart-home",
+          "energy",
+          "schedule-optimization"
+        ]
+      },
+      {
+        "id": "smart_home.energy.peak_usage.detect",
+        "name": "Peak Energy Usage Detection",
+        "description": "识别家庭用电高峰时段和峰值用能设备。",
+        "tags": [
+          "smart-home",
+          "energy",
+          "peak-usage"
+        ]
+      },
+      {
+        "id": "smart_home.energy.room_energy.analyze",
+        "name": "Room-Level Energy Analysis",
+        "description": "分析不同房间的能耗情况，用于定位高耗能区域。",
+        "tags": [
+          "smart-home",
+          "energy",
+          "room-energy"
+        ]
+      },
+      {
+        "id": "smart_home.energy.device_energy.rank",
+        "name": "Device Energy Ranking",
+        "description": "对家庭设备能耗进行排序，识别主要耗能设备。",
+        "tags": [
+          "smart-home",
+          "energy",
+          "device-ranking"
+        ]
+      },
+      {
+        "id": "smart_home.energy.standby_power.detect",
+        "name": "Standby Power Detection",
+        "description": "检测设备待机耗电情况，并识别可关闭或优化的待机设备。",
+        "tags": [
+          "smart-home",
+          "energy",
+          "standby-power"
+        ]
+      },
+      {
+        "id": "smart_home.energy.solar_generation.analyze",
+        "name": "Home Solar Generation Analysis",
+        "description": "分析家庭光伏发电量、发电趋势和自用比例。",
+        "tags": [
+          "smart-home",
+          "energy",
+          "solar-generation"
+        ]
+      },
+      {
+        "id": "smart_home.energy.battery_status.monitor",
+        "name": "Home Battery Status Monitoring",
+        "description": "监测家庭储能设备的电量、充放电状态和健康状态。",
+        "tags": [
+          "smart-home",
+          "energy",
+          "battery-status"
+        ]
+      },
+      {
+        "id": "smart_home.energy.ev_charging.optimize",
+        "name": "EV Charging Optimization",
+        "description": "优化家庭电动汽车充电时间、充电功率和电价成本。",
+        "tags": [
+          "smart-home",
+          "energy",
+          "ev-charging"
+        ]
+      },
+      {
+        "id": "smart_home.energy.tariff_aware.schedule",
+        "name": "Tariff-Aware Energy Scheduling",
+        "description": "根据分时电价安排设备运行和充电计划，降低用电成本。",
+        "tags": [
+          "smart-home",
+          "energy",
+          "tariff-aware"
+        ]
+      },
+      {
+        "id": "smart_home.energy.carbon_emission.estimate",
+        "name": "Home Carbon Emission Estimation",
+        "description": "根据家庭用电量和能源结构估算碳排放。",
+        "tags": [
+          "smart-home",
+          "energy",
+          "carbon-emission"
+        ]
+      },
+      {
+        "id": "smart_home.energy.monthly_report.generate",
+        "name": "Monthly Energy Report Generation",
+        "description": "生成家庭月度能耗报告，包括趋势、费用、异常和节能建议。",
+        "tags": [
+          "smart-home",
+          "energy",
+          "monthly-report"
+        ]
+      },
+      {
+        "id": "smart_home.energy.cost_forecast.generate",
+        "name": "Energy Cost Forecast Generation",
+        "description": "根据历史用电和电价预测未来家庭用电费用。",
+        "tags": [
+          "smart-home",
+          "energy",
+          "cost-forecast"
+        ]
+      },
+      {
+        "id": "smart_home.energy.automation_rule.recommend",
+        "name": "Energy Automation Rule Recommendation",
+        "description": "推荐节能型自动化规则，例如峰谷电价调度、无人关闭设备和空调优化。",
+        "tags": [
+          "smart-home",
+          "energy",
+          "automation-rule"
+        ]
+      },
+      {
+        "id": "smart_home.energy.comfort_tradeoff.analyze",
+        "name": "Energy Comfort Tradeoff Analysis",
+        "description": "分析节能目标与家庭舒适度之间的权衡关系。",
+        "tags": [
+          "smart-home",
+          "energy",
+          "comfort-tradeoff"
+        ]
+      },
+      {
+        "id": "smart_home.energy.multi_device.optimize",
+        "name": "Multi-Device Energy Optimization",
+        "description": "综合多个设备运行状态，优化家庭整体能耗和舒适度。",
+        "tags": [
+          "smart-home",
+          "energy",
+          "multi-device-optimization"
+        ]
+      },
+      {
+        "id": "smart_home.energy.qa.answer",
+        "name": "Home Energy Question Answering",
+        "description": "回答用户关于家庭能耗、用电费用、节能建议和设备耗电的问题。",
+        "tags": [
+          "smart-home",
+          "energy",
+          "question-answering"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-009",
+    "name": "Smart Home Environment Optimization Agent",
+    "description": "该智能体面向智慧家居环境优化任务，能够调节温湿度、评估空气质量、推荐通风、调整光照、分析噪声、计算舒适度，并为睡眠、儿童、老人和宠物场景生成环境优化建议。",
+    "url": "http://[fd10::1:2]:8059",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_home.environment.temperature.adjust",
+        "name": "Home Temperature Adjustment",
+        "description": "根据房间状态、用户偏好和环境条件生成温度调节建议或控制策略。",
+        "tags": [
+          "smart-home",
+          "environment",
+          "temperature"
+        ]
+      },
+      {
+        "id": "smart_home.environment.humidity.adjust",
+        "name": "Home Humidity Adjustment",
+        "description": "根据湿度状态和舒适度目标生成加湿、除湿或通风建议。",
+        "tags": [
+          "smart-home",
+          "environment",
+          "humidity"
+        ]
+      },
+      {
+        "id": "smart_home.environment.air_quality.assess",
+        "name": "Home Air Quality Assessment",
+        "description": "评估室内空气质量状态，并识别污染、通风不足或空气异常。",
+        "tags": [
+          "smart-home",
+          "environment",
+          "air-quality"
+        ]
+      },
+      {
+        "id": "smart_home.environment.air_quality.optimize",
+        "name": "Home Air Quality Optimization",
+        "description": "根据空气质量状态推荐通风、空气净化器或空调联动策略。",
+        "tags": [
+          "smart-home",
+          "environment",
+          "air-quality-optimization"
+        ]
+      },
+      {
+        "id": "smart_home.environment.ventilation.recommend",
+        "name": "Ventilation Recommendation",
+        "description": "根据空气质量、湿度、CO2 和天气条件生成通风建议。",
+        "tags": [
+          "smart-home",
+          "environment",
+          "ventilation"
+        ]
+      },
+      {
+        "id": "smart_home.environment.lighting.adjust",
+        "name": "Home Lighting Adjustment",
+        "description": "根据房间占用、时间、活动场景和自然光状态调节照明。",
+        "tags": [
+          "smart-home",
+          "environment",
+          "lighting"
+        ]
+      },
+      {
+        "id": "smart_home.environment.noise.assess",
+        "name": "Home Noise Assessment",
+        "description": "评估家庭噪声水平及其对休息、学习、睡眠和舒适度的影响。",
+        "tags": [
+          "smart-home",
+          "environment",
+          "noise"
+        ]
+      },
+      {
+        "id": "smart_home.environment.comfort_index.calculate",
+        "name": "Home Comfort Index Calculation",
+        "description": "综合温度、湿度、光照、噪声和空气质量计算家庭舒适度指数。",
+        "tags": [
+          "smart-home",
+          "environment",
+          "comfort-index"
+        ]
+      },
+      {
+        "id": "smart_home.environment.sleep_environment.optimize",
+        "name": "Sleep Environment Optimization",
+        "description": "根据卧室温湿度、光照、噪声和空气质量优化睡眠环境。",
+        "tags": [
+          "smart-home",
+          "environment",
+          "sleep-optimization"
+        ]
+      },
+      {
+        "id": "smart_home.environment.child_room.assess",
+        "name": "Child Room Environment Assessment",
+        "description": "评估儿童房的温湿度、空气质量、光照和噪声状态，并生成优化建议。",
+        "tags": [
+          "smart-home",
+          "environment",
+          "child-room"
+        ]
+      },
+      {
+        "id": "smart_home.environment.elderly_room.assess",
+        "name": "Elderly Room Environment Assessment",
+        "description": "评估老人房间的舒适度、安全性和健康相关环境条件。",
+        "tags": [
+          "smart-home",
+          "environment",
+          "elderly-room"
+        ]
+      },
+      {
+        "id": "smart_home.environment.pet_environment.assess",
+        "name": "Pet Environment Assessment",
+        "description": "评估宠物活动区域的温度、湿度、空气质量和安全环境。",
+        "tags": [
+          "smart-home",
+          "environment",
+          "pet-environment"
+        ]
+      },
+      {
+        "id": "smart_home.environment.mold_risk.detect",
+        "name": "Mold Risk Detection",
+        "description": "根据湿度、温度和通风状态识别霉菌滋生风险。",
+        "tags": [
+          "smart-home",
+          "environment",
+          "mold-risk"
+        ]
+      },
+      {
+        "id": "smart_home.environment.dust_risk.assess",
+        "name": "Dust Risk Assessment",
+        "description": "评估室内灰尘、颗粒物和清洁相关风险。",
+        "tags": [
+          "smart-home",
+          "environment",
+          "dust-risk"
+        ]
+      },
+      {
+        "id": "smart_home.environment.smell_abnormal.detect",
+        "name": "Abnormal Smell Detection",
+        "description": "识别家庭环境中可能与燃气、烟雾、霉菌或腐败相关的异常气味风险。",
+        "tags": [
+          "smart-home",
+          "environment",
+          "smell-abnormal"
+        ]
+      },
+      {
+        "id": "smart_home.environment.weather_adaptive.adjust",
+        "name": "Weather-Adaptive Environment Adjustment",
+        "description": "根据室外天气变化自适应调整室内温度、通风、窗帘和空气净化策略。",
+        "tags": [
+          "smart-home",
+          "environment",
+          "weather-adaptive"
+        ]
+      },
+      {
+        "id": "smart_home.environment.room_context.infer",
+        "name": "Room Context Inference",
+        "description": "根据传感器、设备状态和活动信息推断当前房间使用场景。",
+        "tags": [
+          "smart-home",
+          "environment",
+          "room-context"
+        ]
+      },
+      {
+        "id": "smart_home.environment.home_status.summarize",
+        "name": "Home Environment Status Summarization",
+        "description": "总结家庭整体环境状态，包括舒适度、空气质量、光照、噪声和调节建议。",
+        "tags": [
+          "smart-home",
+          "environment",
+          "home-status"
+        ]
+      },
+      {
+        "id": "smart_home.environment.recommendation.generate",
+        "name": "Environment Recommendation Generation",
+        "description": "根据家庭环境状态和用户需求生成调节、通风、净化或照明建议。",
+        "tags": [
+          "smart-home",
+          "environment",
+          "recommendation"
+        ]
+      },
+      {
+        "id": "smart_home.environment.qa.answer",
+        "name": "Home Environment Question Answering",
+        "description": "回答用户关于家庭环境、舒适度、空气质量、噪声和调节建议的问题。",
+        "tags": [
+          "smart-home",
+          "environment",
+          "question-answering"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-010",
+    "name": "Smart Home Automation Agent",
+    "description": "该智能体面向智慧家居自动化任务，能够创建和执行场景模式、生成自动化规则、检测触发条件、评估执行条件、学习家庭日常规律、识别规则冲突，并管理回家、离家、睡眠和安防等自动化模式。",
+    "url": "http://[fd10::1:2]:8060",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_home.automation.scene.create",
+        "name": "Home Automation Scene Creation",
+        "description": "创建家庭自动化场景，例如回家、离家、睡眠、观影和节能模式。",
+        "tags": [
+          "smart-home",
+          "automation",
+          "scene-creation"
+        ]
+      },
+      {
+        "id": "smart_home.automation.scene.activate",
+        "name": "Home Automation Scene Activation",
+        "description": "激活指定家庭场景，并触发相关设备和规则联动。",
+        "tags": [
+          "smart-home",
+          "automation",
+          "scene-activation"
+        ]
+      },
+      {
+        "id": "smart_home.automation.rule.create",
+        "name": "Automation Rule Creation",
+        "description": "根据用户需求创建 if-this-then-that 类型的家庭自动化规则。",
+        "tags": [
+          "smart-home",
+          "automation",
+          "rule-creation"
+        ]
+      },
+      {
+        "id": "smart_home.automation.rule.update",
+        "name": "Automation Rule Update",
+        "description": "修改已有自动化规则的触发条件、执行动作、优先级或生效范围。",
+        "tags": [
+          "smart-home",
+          "automation",
+          "rule-update"
+        ]
+      },
+      {
+        "id": "smart_home.automation.rule.validate",
+        "name": "Automation Rule Validation",
+        "description": "检查自动化规则的条件、动作、目标设备和执行逻辑是否有效。",
+        "tags": [
+          "smart-home",
+          "automation",
+          "rule-validation"
+        ]
+      },
+      {
+        "id": "smart_home.automation.trigger.detect",
+        "name": "Automation Trigger Detection",
+        "description": "检测时间、传感器、设备状态或场景变化是否满足自动化触发条件。",
+        "tags": [
+          "smart-home",
+          "automation",
+          "trigger-detection"
+        ]
+      },
+      {
+        "id": "smart_home.automation.condition.evaluate",
+        "name": "Automation Condition Evaluation",
+        "description": "评估自动化规则中的条件是否满足，例如是否有人、是否夜间或是否空气质量异常。",
+        "tags": [
+          "smart-home",
+          "automation",
+          "condition-evaluation"
+        ]
+      },
+      {
+        "id": "smart_home.automation.action.execute",
+        "name": "Automation Action Execution",
+        "description": "执行自动化规则中定义的设备控制、通知、场景切换或记录动作。",
+        "tags": [
+          "smart-home",
+          "automation",
+          "action-execution"
+        ]
+      },
+      {
+        "id": "smart_home.automation.schedule.create",
+        "name": "Automation Schedule Creation",
+        "description": "创建定时自动化任务，例如定时开关灯、空调预启动或定时清扫。",
+        "tags": [
+          "smart-home",
+          "automation",
+          "schedule"
+        ]
+      },
+      {
+        "id": "smart_home.automation.routine.learn",
+        "name": "Home Routine Learning",
+        "description": "学习家庭成员的日常行为规律，用于推荐自动化规则和场景模式。",
+        "tags": [
+          "smart-home",
+          "automation",
+          "routine-learning"
+        ]
+      },
+      {
+        "id": "smart_home.automation.routine.recommend",
+        "name": "Home Routine Recommendation",
+        "description": "基于家庭生活规律推荐新的自动化规则或优化已有规则。",
+        "tags": [
+          "smart-home",
+          "automation",
+          "routine-recommendation"
+        ]
+      },
+      {
+        "id": "smart_home.automation.conflict.detect",
+        "name": "Automation Rule Conflict Detection",
+        "description": "检测不同自动化规则之间的冲突，例如同一设备被同时要求开启和关闭。",
+        "tags": [
+          "smart-home",
+          "automation",
+          "conflict-detection"
+        ]
+      },
+      {
+        "id": "smart_home.automation.priority.resolve",
+        "name": "Automation Priority Resolution",
+        "description": "在多个自动化规则同时触发时，根据优先级和上下文决定执行顺序。",
+        "tags": [
+          "smart-home",
+          "automation",
+          "priority-resolution"
+        ]
+      },
+      {
+        "id": "smart_home.automation.energy_saving.optimize",
+        "name": "Energy-Saving Automation Optimization",
+        "description": "优化自动化规则以降低能耗，同时尽量保持家庭舒适度。",
+        "tags": [
+          "smart-home",
+          "automation",
+          "energy-saving"
+        ]
+      },
+      {
+        "id": "smart_home.automation.security_mode.activate",
+        "name": "Security Mode Activation",
+        "description": "激活家庭安防模式，并联动门锁、摄像头、传感器和告警规则。",
+        "tags": [
+          "smart-home",
+          "automation",
+          "security-mode"
+        ]
+      },
+      {
+        "id": "smart_home.automation.sleep_mode.activate",
+        "name": "Sleep Mode Activation",
+        "description": "激活睡眠模式，并联动灯光、空调、窗帘、安防和噪声控制。",
+        "tags": [
+          "smart-home",
+          "automation",
+          "sleep-mode"
+        ]
+      },
+      {
+        "id": "smart_home.automation.away_mode.activate",
+        "name": "Away Mode Activation",
+        "description": "激活离家模式，并关闭非必要设备、开启安防监控和节能策略。",
+        "tags": [
+          "smart-home",
+          "automation",
+          "away-mode"
+        ]
+      },
+      {
+        "id": "smart_home.automation.home_mode.activate",
+        "name": "Home Mode Activation",
+        "description": "激活回家模式，并根据用户偏好调整灯光、空调、窗帘和设备状态。",
+        "tags": [
+          "smart-home",
+          "automation",
+          "home-mode"
+        ]
+      },
+      {
+        "id": "smart_home.automation.execution_log.summarize",
+        "name": "Automation Execution Log Summary",
+        "description": "总结家庭自动化规则的执行记录、异常情况和优化建议。",
+        "tags": [
+          "smart-home",
+          "automation",
+          "execution-log"
+        ]
+      },
+      {
+        "id": "smart_home.automation.qa.answer",
+        "name": "Home Automation Question Answering",
+        "description": "回答用户关于家庭自动化规则、场景模式、触发条件和执行记录的问题。",
+        "tags": [
+          "smart-home",
+          "automation",
+          "question-answering"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-011",
+    "name": "Smart Home Multimodal Context Agent",
+    "description": "该智能体面向智慧家居多模态上下文融合与风险评估任务，能够融合视频、音频、传感器和 IoT 设备状态，验证跌倒、入侵、火灾、漏水、老人照护、儿童安全、宠物异常、睡眠环境和家庭例行活动等事件；支持多源证据链生成、事件时间线、风险评分、影响程度判断、上下文推荐和结构化融合结论输出；不负责楼宇、园区、工厂等非家居场景的专业融合。",
+    "url": "http://[fd10::1:2]:8061",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_home.multimodal.fall_event.verify",
+        "name": "Multimodal Fall Event Verification",
+        "description": "融合视频、音频、人体传感器和活动状态信息，验证是否发生真实跌倒事件。",
+        "tags": [
+          "smart-home",
+          "multimodal",
+          "fall-verification"
+        ]
+      },
+      {
+        "id": "smart_home.multimodal.intrusion_event.verify",
+        "name": "Multimodal Intrusion Event Verification",
+        "description": "融合门窗传感器、摄像头、音频和门锁状态，验证是否发生真实入侵事件。",
+        "tags": [
+          "smart-home",
+          "multimodal",
+          "intrusion-verification"
+        ]
+      },
+      {
+        "id": "smart_home.multimodal.fire_risk.fuse",
+        "name": "Multimodal Fire Risk Fusion",
+        "description": "融合烟雾传感器、温度传感器、视频烟火识别和设备状态，评估家庭火灾风险。",
+        "tags": [
+          "smart-home",
+          "multimodal",
+          "fire-risk"
+        ]
+      },
+      {
+        "id": "smart_home.multimodal.water_leak_event.verify",
+        "name": "Multimodal Water Leak Event Verification",
+        "description": "融合水浸传感器、流水声、视频证据和用水数据，验证是否发生漏水事件。",
+        "tags": [
+          "smart-home",
+          "multimodal",
+          "water-leak"
+        ]
+      },
+      {
+        "id": "smart_home.multimodal.elderly_care.assess",
+        "name": "Multimodal Elderly Care Assessment",
+        "description": "融合老人活动、睡眠、声音、传感器和环境数据，综合评估居家照护状态。",
+        "tags": [
+          "smart-home",
+          "multimodal",
+          "elderly-care"
+        ]
+      },
+      {
+        "id": "smart_home.multimodal.child_safety.assess",
+        "name": "Multimodal Child Safety Assessment",
+        "description": "融合视频、音频、传感器和环境信息，评估儿童居家安全状态。",
+        "tags": [
+          "smart-home",
+          "multimodal",
+          "child-safety"
+        ]
+      },
+      {
+        "id": "smart_home.multimodal.pet_activity.assess",
+        "name": "Multimodal Pet Activity Assessment",
+        "description": "融合视频、声音和传感器信息，评估宠物活动状态和异常行为。",
+        "tags": [
+          "smart-home",
+          "multimodal",
+          "pet-activity"
+        ]
+      },
+      {
+        "id": "smart_home.multimodal.energy_context.analyze",
+        "name": "Multimodal Energy Context Analysis",
+        "description": "融合人员活动、设备状态、环境数据和能耗数据，分析家庭能耗上下文。",
+        "tags": [
+          "smart-home",
+          "multimodal",
+          "energy-context"
+        ]
+      },
+      {
+        "id": "smart_home.multimodal.room_context.infer",
+        "name": "Room Context Inference",
+        "description": "融合视频、音频、设备状态和传感器信息，推断当前房间活动场景和上下文。",
+        "tags": [
+          "smart-home",
+          "multimodal",
+          "room-context"
+        ]
+      },
+      {
+        "id": "smart_home.multimodal.voice_video_command.fuse",
+        "name": "Voice-Video Command Fusion",
+        "description": "融合语音指令和视觉上下文，识别用户指向的设备或场景化控制目标。",
+        "tags": [
+          "smart-home",
+          "multimodal",
+          "command-fusion"
+        ]
+      },
+      {
+        "id": "smart_home.multimodal.sensor_video_event.fuse",
+        "name": "Sensor-Video Event Fusion",
+        "description": "融合传感器触发事件和视频证据，判断事件真实性和风险等级。",
+        "tags": [
+          "smart-home",
+          "multimodal",
+          "sensor-video-fusion"
+        ]
+      },
+      {
+        "id": "smart_home.multimodal.audio_video_event.fuse",
+        "name": "Audio-Video Event Fusion",
+        "description": "融合音频事件和视频内容，识别撞击、入侵、呼救或异常行为。",
+        "tags": [
+          "smart-home",
+          "multimodal",
+          "audio-video-fusion"
+        ]
+      },
+      {
+        "id": "smart_home.multimodal.security_event.score",
+        "name": "Multimodal Security Event Scoring",
+        "description": "根据多源证据计算家庭安防事件的风险评分和置信度。",
+        "tags": [
+          "smart-home",
+          "multimodal",
+          "security-score"
+        ]
+      },
+      {
+        "id": "smart_home.multimodal.home_status.summarize",
+        "name": "Home Status Summarization",
+        "description": "综合家庭安全、环境、能耗、设备和照护状态，生成当前家庭状态总结。",
+        "tags": [
+          "smart-home",
+          "multimodal",
+          "home-status"
+        ]
+      },
+      {
+        "id": "smart_home.multimodal.routine_pattern.learn",
+        "name": "Multimodal Routine Pattern Learning",
+        "description": "融合多源家庭数据学习家庭成员日常生活规律和场景模式。",
+        "tags": [
+          "smart-home",
+          "multimodal",
+          "routine-learning"
+        ]
+      },
+      {
+        "id": "smart_home.multimodal.abnormal_routine.detect",
+        "name": "Multimodal Abnormal Routine Detection",
+        "description": "识别家庭成员生活规律中的异常偏离，例如异常作息、活动减少或长期静止。",
+        "tags": [
+          "smart-home",
+          "multimodal",
+          "routine-anomaly"
+        ]
+      },
+      {
+        "id": "smart_home.multimodal.evidence_chain.generate",
+        "name": "Multimodal Evidence Chain Generation",
+        "description": "将视频、音频、传感器和设备日志按时间顺序组织为事件证据链。",
+        "tags": [
+          "smart-home",
+          "multimodal",
+          "evidence-chain"
+        ]
+      },
+      {
+        "id": "smart_home.multimodal.context_aware_recommendation.generate",
+        "name": "Context-Aware Recommendation Generation",
+        "description": "基于家庭上下文生成设备控制、安全提醒、节能和照护建议。",
+        "tags": [
+          "smart-home",
+          "multimodal",
+          "recommendation"
+        ]
+      },
+      {
+        "id": "smart_home.multimodal.event_timeline.generate",
+        "name": "Multimodal Event Timeline Generation",
+        "description": "根据多源事件证据生成家庭事件时间线，用于解释和报告生成。",
+        "tags": [
+          "smart-home",
+          "multimodal",
+          "event-timeline"
+        ]
+      },
+      {
+        "id": "smart_home.multimodal.qa.answer",
+        "name": "Multimodal Home Question Answering",
+        "description": "基于视频、音频、传感器和设备状态回答家庭场景相关问题。",
+        "tags": [
+          "smart-home",
+          "multimodal",
+          "question-answering"
+        ]
+      },
+      {
+        "id": "smart_home.multimodal.sleep_environment.assess",
+        "name": "Home Sleep Environment Multimodal Assessment",
+        "description": "融合卧室视频、音频睡眠噪声、灯光、温湿度、空气质量和 IoT 状态，评估夜间睡眠环境质量、风险等级和影响因素。",
+        "tags": [
+          "smart-home",
+          "multimodal",
+          "sleep",
+          "assessment"
+        ]
+      },
+      {
+        "id": "smart_home.multimodal.sleep_environment.optimize",
+        "name": "Home Sleep Environment Optimization",
+        "description": "基于多源睡眠环境评估结果生成温度、湿度、噪声、光照、通风和空气质量方面的优化建议。",
+        "tags": [
+          "smart-home",
+          "multimodal",
+          "sleep",
+          "recommendation"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-012",
+    "name": "Smart Home Report Generation Agent",
+    "description": "该智能体面向智慧家居报告、告警说明、结构化结果整理和优化建议生成任务，能够将上游视频、音频、图像、传感器、IoT 和多模态融合结果整理为 JSON、摘要、日报、周报、月报、告警说明、处置建议、睡眠环境优化建议、节能建议和家庭通知；不负责原始多模态感知模型推理。",
+    "url": "http://[fd10::1:2]:8062",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_home.report.home_status.generate",
+        "name": "Home Status Report Generation",
+        "description": "生成家庭整体状态报告，涵盖安全、环境、设备、能耗和照护状态。",
+        "tags": [
+          "smart-home",
+          "report",
+          "home-status"
+        ]
+      },
+      {
+        "id": "smart_home.report.security_event.generate",
+        "name": "Security Event Report Generation",
+        "description": "生成家庭安全事件报告，包括入侵、门窗异常、陌生人访问和证据链。",
+        "tags": [
+          "smart-home",
+          "report",
+          "security-event"
+        ]
+      },
+      {
+        "id": "smart_home.report.energy_usage.generate",
+        "name": "Energy Usage Report Generation",
+        "description": "生成家庭能耗报告，包括用电趋势、设备能耗排名、异常耗电和节能建议。",
+        "tags": [
+          "smart-home",
+          "report",
+          "energy-usage"
+        ]
+      },
+      {
+        "id": "smart_home.report.elderly_care.generate",
+        "name": "Elderly Care Report Generation",
+        "description": "生成老人居家照护报告，包括活动状态、睡眠情况、异常事件和照护建议。",
+        "tags": [
+          "smart-home",
+          "report",
+          "elderly-care"
+        ]
+      },
+      {
+        "id": "smart_home.report.child_care.generate",
+        "name": "Child Care Report Generation",
+        "description": "生成儿童居家看护报告，包括活动状态、安全风险和异常事件。",
+        "tags": [
+          "smart-home",
+          "report",
+          "child-care"
+        ]
+      },
+      {
+        "id": "smart_home.report.device_status.generate",
+        "name": "Device Status Report Generation",
+        "description": "生成家庭智能设备状态报告，包括在线状态、故障状态和运行记录。",
+        "tags": [
+          "smart-home",
+          "report",
+          "device-status"
+        ]
+      },
+      {
+        "id": "smart_home.report.environment_status.generate",
+        "name": "Environment Status Report Generation",
+        "description": "根据环境传感器、睡眠噪声、灯光、空气质量和融合评估结果生成环境状态报告、睡眠环境优化建议或结构化 JSON 输出。",
+        "tags": [
+          "smart-home",
+          "report",
+          "environment-status"
+        ]
+      },
+      {
+        "id": "smart_home.report.abnormal_event.generate",
+        "name": "Abnormal Event Report Generation",
+        "description": "生成家庭异常事件报告，包括事件类型、时间线、证据和处理建议。",
+        "tags": [
+          "smart-home",
+          "report",
+          "abnormal-event"
+        ]
+      },
+      {
+        "id": "smart_home.report.daily_digest.generate",
+        "name": "Daily Home Digest Generation",
+        "description": "生成家庭每日摘要，概括当日安全、能耗、环境、设备和照护状态。",
+        "tags": [
+          "smart-home",
+          "report",
+          "daily-digest"
+        ]
+      },
+      {
+        "id": "smart_home.report.weekly_digest.generate",
+        "name": "Weekly Home Digest Generation",
+        "description": "生成家庭每周摘要，汇总一周内的状态趋势、异常事件和优化建议。",
+        "tags": [
+          "smart-home",
+          "report",
+          "weekly-digest"
+        ]
+      },
+      {
+        "id": "smart_home.report.monthly_digest.generate",
+        "name": "Monthly Home Digest Generation",
+        "description": "生成家庭月度摘要，汇总安全、能耗、环境、设备和照护相关趋势。",
+        "tags": [
+          "smart-home",
+          "report",
+          "monthly-digest"
+        ]
+      },
+      {
+        "id": "smart_home.report.energy_saving.generate",
+        "name": "Energy Saving Report Generation",
+        "description": "生成家庭节能报告，包括节能潜力、优化策略和预期节省成本。",
+        "tags": [
+          "smart-home",
+          "report",
+          "energy-saving"
+        ]
+      },
+      {
+        "id": "smart_home.report.healthcare_summary.generate",
+        "name": "Healthcare Summary Report Generation",
+        "description": "生成家庭健康照护摘要，概括活动、睡眠、风险和提醒情况。",
+        "tags": [
+          "smart-home",
+          "report",
+          "healthcare-summary"
+        ]
+      },
+      {
+        "id": "smart_home.report.security_log.generate",
+        "name": "Security Log Report Generation",
+        "description": "生成家庭安防日志报告，汇总门锁、门窗、摄像头和安全事件记录。",
+        "tags": [
+          "smart-home",
+          "report",
+          "security-log"
+        ]
+      },
+      {
+        "id": "smart_home.report.automation_log.generate",
+        "name": "Automation Log Report Generation",
+        "description": "生成家庭自动化执行日志报告，包括规则触发、执行结果和异常情况。",
+        "tags": [
+          "smart-home",
+          "report",
+          "automation-log"
+        ]
+      },
+      {
+        "id": "smart_home.report.maintenance_reminder.generate",
+        "name": "Maintenance Reminder Report Generation",
+        "description": "生成家庭设备维护提醒报告，包括滤芯更换、设备保养和故障检查建议。",
+        "tags": [
+          "smart-home",
+          "report",
+          "maintenance-reminder"
+        ]
+      },
+      {
+        "id": "smart_home.report.family_notification.generate",
+        "name": "Family Notification Generation",
+        "description": "根据家庭状态或异常事件生成面向家庭成员的通知内容。",
+        "tags": [
+          "smart-home",
+          "report",
+          "family-notification"
+        ]
+      },
+      {
+        "id": "smart_home.report.multimodal_evidence.generate",
+        "name": "Multimodal Evidence Report Generation",
+        "description": "基于视频、音频、传感器和设备日志生成多模态证据报告。",
+        "tags": [
+          "smart-home",
+          "report",
+          "multimodal-evidence"
+        ]
+      },
+      {
+        "id": "smart_home.report.batch.generate",
+        "name": "Batch Home Report Generation",
+        "description": "批量生成多个家庭状态、事件、设备或照护相关报告。",
+        "tags": [
+          "smart-home",
+          "report",
+          "batch-generation"
+        ]
+      },
+      {
+        "id": "smart_home.report.qa.answer",
+        "name": "Home Report Question Answering",
+        "description": "回答用户关于家庭报告内容、事件摘要、趋势变化和建议依据的问题。",
+        "tags": [
+          "smart-home",
+          "report",
+          "question-answering"
+        ]
+      },
+      {
+        "id": "smart_home.report.sleep_optimization.generate",
+        "name": "Sleep Environment Optimization Report",
+        "description": "根据睡眠行为、睡眠噪声、灯光、温湿度、空气质量和多模态评估结果生成睡眠环境优化报告或结构化建议。",
+        "tags": [
+          "smart-home",
+          "report",
+          "sleep",
+          "optimization"
+        ]
+      },
+      {
+        "id": "global.report.json.generate",
+        "name": "General Structured JSON Report Generation",
+        "description": "将上游 agent 的结构化识别、检测、评估和融合结果整理为标准 JSON、摘要或简短报告，适用于跨任务后处理。",
+        "tags": [
+          "global",
+          "report",
+          "json"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-013",
+    "name": "Smart Factory Quality Control Agent",
+    "description": "该智能体面向智慧工厂质量控制任务，能够进行缺陷分类、根因分析、SPC 分析、合格率计算、质量门验证、返工风险评估和纠正措施推荐，为工业质量管理、质量追溯和持续改进提供支撑。",
+    "url": "http://[fd10::1:2]:8063",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_factory.quality.defect.classify",
+        "name": "Defect Classify",
+        "description": "对质量控制中的 defect进行分类，输出类别标签、置信度和依据说明。",
+        "tags": [
+          "smart-factory",
+          "quality",
+          "defect",
+          "classify"
+        ]
+      },
+      {
+        "id": "smart_factory.quality.defect_root_cause.analyze",
+        "name": "Defect Root Cause Analyze",
+        "description": "分析质量控制中的 defect root cause相关数据，提取关键指标、趋势和异常信息。",
+        "tags": [
+          "smart-factory",
+          "quality",
+          "defect-root-cause",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_factory.quality.spc.analyze",
+        "name": "SPC Analyze",
+        "description": "分析质量控制中的 spc相关数据，提取关键指标、趋势和异常信息。",
+        "tags": [
+          "smart-factory",
+          "quality",
+          "spc",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_factory.quality.pass_rate.calculate",
+        "name": "Pass Rate Calculate",
+        "description": "计算质量控制中的 pass rate相关指标，并输出数值、趋势和解释。",
+        "tags": [
+          "smart-factory",
+          "quality",
+          "pass-rate",
+          "calculate"
+        ]
+      },
+      {
+        "id": "smart_factory.quality.batch_compare",
+        "name": "Batch Compare",
+        "description": "处理质量控制中的相关任务，并输出结构化结果。",
+        "tags": [
+          "smart-factory",
+          "quality",
+          "batch-compare"
+        ]
+      },
+      {
+        "id": "smart_factory.quality.inspection_report.generate",
+        "name": "Inspection Report Generate",
+        "description": "生成质量控制中的 inspection report相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "quality",
+          "inspection-report"
+        ]
+      },
+      {
+        "id": "smart_factory.quality.sampling_plan.recommend",
+        "name": "Sampling Plan Recommend",
+        "description": "推荐质量控制中的 sampling plan相关措施、计划或优化策略。",
+        "tags": [
+          "smart-factory",
+          "quality",
+          "sampling-plan",
+          "recommend"
+        ]
+      },
+      {
+        "id": "smart_factory.quality.rework_risk.assess",
+        "name": "Rework Risk Assess",
+        "description": "评估质量控制中的 rework risk风险、状态或性能，并输出评分、等级和解释。",
+        "tags": [
+          "smart-factory",
+          "quality",
+          "rework-risk",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_factory.quality.process_capability.analyze",
+        "name": "Process Capability Analyze",
+        "description": "分析质量控制中的 process capability相关数据，提取关键指标、趋势和异常信息。",
+        "tags": [
+          "smart-factory",
+          "quality",
+          "process-capability",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_factory.quality.tolerance_check.perform",
+        "name": "Tolerance Check Perform",
+        "description": "执行质量控制中的 tolerance check检查、分析或验证流程，并返回结构化结果。",
+        "tags": [
+          "smart-factory",
+          "quality",
+          "tolerance-check",
+          "perform"
+        ]
+      },
+      {
+        "id": "smart_factory.quality.nonconformance.detect",
+        "name": "Nonconformance Detect",
+        "description": "检测质量控制中的 nonconformance相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "quality",
+          "nonconformance",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.quality.defect_trend.analyze",
+        "name": "Defect Trend Analyze",
+        "description": "分析质量控制中的 defect trend相关数据，提取关键指标、趋势和异常信息。",
+        "tags": [
+          "smart-factory",
+          "quality",
+          "defect-trend",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_factory.quality.defect_location.map",
+        "name": "Defect Location Map",
+        "description": "处理质量控制中的 defect location 相关任务，并输出结构化结果。",
+        "tags": [
+          "smart-factory",
+          "quality",
+          "defect-location",
+          "map"
+        ]
+      },
+      {
+        "id": "smart_factory.quality.supplier_quality.compare",
+        "name": "Supplier Quality Compare",
+        "description": "比较质量控制中的 supplier quality差异、趋势或性能，用于评估和优化。",
+        "tags": [
+          "smart-factory",
+          "quality",
+          "supplier-quality",
+          "compare"
+        ]
+      },
+      {
+        "id": "smart_factory.quality.product_traceability.query",
+        "name": "Product Traceability Query",
+        "description": "查询质量控制中的 product traceability相关信息，并返回当前状态、历史记录或匹配结果。",
+        "tags": [
+          "smart-factory",
+          "quality",
+          "product-traceability",
+          "query"
+        ]
+      },
+      {
+        "id": "smart_factory.quality.quality_gate.verify",
+        "name": "Quality Gate Verify",
+        "description": "验证质量控制中的 quality gate是否满足预期要求或是否真实发生，并给出证据和判断结果。",
+        "tags": [
+          "smart-factory",
+          "quality",
+          "quality-gate",
+          "verify"
+        ]
+      },
+      {
+        "id": "smart_factory.quality.inspection_priority.rank",
+        "name": "Inspection Priority Rank",
+        "description": "对质量控制中的 inspection priority进行优先级排序，并说明排序依据。",
+        "tags": [
+          "smart-factory",
+          "quality",
+          "inspection-priority",
+          "rank"
+        ]
+      },
+      {
+        "id": "smart_factory.quality.corrective_action.recommend",
+        "name": "Corrective Action Recommend",
+        "description": "推荐质量控制中的 corrective action相关措施、计划或优化策略。",
+        "tags": [
+          "smart-factory",
+          "quality",
+          "corrective-action",
+          "recommend"
+        ]
+      },
+      {
+        "id": "smart_factory.quality.audit_record.generate",
+        "name": "Audit Record Generate",
+        "description": "生成质量控制中的 audit record相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "quality",
+          "audit-record"
+        ]
+      },
+      {
+        "id": "smart_factory.quality.qa.answer",
+        "name": "QA Answer",
+        "description": "回答用户关于Smart Factory Quality Control Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。",
+        "tags": [
+          "smart-factory",
+          "quality"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-014",
+    "name": "Smart Factory Production Management Agent",
+    "description": "该智能体面向智慧工厂生产管理任务，能够优化生产排程、检测瓶颈、预测产出、跟踪订单进度、评估产能、计算 OEE、分析节拍和监控在制品状态，为产线运行优化和生产决策提供支持。",
+    "url": "http://[fd10::1:2]:8064",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_factory.production.schedule.optimize",
+        "name": "Schedule Optimize",
+        "description": "优化生产管理中的 schedule方案、调度或资源配置，并输出推荐结果。",
+        "tags": [
+          "smart-factory",
+          "production",
+          "schedule",
+          "optimize"
+        ]
+      },
+      {
+        "id": "smart_factory.production.bottleneck.detect",
+        "name": "Bottleneck Detect",
+        "description": "检测生产管理中的 bottleneck相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "production",
+          "bottleneck",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.production.output.forecast",
+        "name": "Output Forecast",
+        "description": "处理生产管理中的 output 相关任务，并输出结构化结果。",
+        "tags": [
+          "smart-factory",
+          "production",
+          "output",
+          "forecast"
+        ]
+      },
+      {
+        "id": "smart_factory.production.order_progress.track",
+        "name": "Order Progress Track",
+        "description": "跟踪生产管理中的 order progress状态或流转过程，输出轨迹、进度和时间序列信息。",
+        "tags": [
+          "smart-factory",
+          "production",
+          "order-progress",
+          "track"
+        ]
+      },
+      {
+        "id": "smart_factory.production.line_balance.analyze",
+        "name": "Line Balance Analyze",
+        "description": "分析生产管理中的 line balance相关数据，提取关键指标、趋势和异常信息。",
+        "tags": [
+          "smart-factory",
+          "production",
+          "line-balance",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_factory.production.capacity.assess",
+        "name": "Capacity Assess",
+        "description": "评估生产管理中的 capacity风险、状态或性能，并输出评分、等级和解释。",
+        "tags": [
+          "smart-factory",
+          "production",
+          "capacity",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_factory.production.material_shortage.detect",
+        "name": "Material Shortage Detect",
+        "description": "检测生产管理中的 material shortage相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "production",
+          "material-shortage",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.production.process_deviation.detect",
+        "name": "Process Deviation Detect",
+        "description": "检测生产管理中的 process deviation相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "production",
+          "process-deviation",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.production.kpi.calculate",
+        "name": "Kpi Calculate",
+        "description": "计算生产管理中的 kpi相关指标，并输出数值、趋势和解释。",
+        "tags": [
+          "smart-factory",
+          "production",
+          "kpi",
+          "calculate"
+        ]
+      },
+      {
+        "id": "smart_factory.production.daily_report.generate",
+        "name": "Daily Report Generate",
+        "description": "生成生产管理中的 daily report相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "production",
+          "daily-report"
+        ]
+      },
+      {
+        "id": "smart_factory.production.work_order.dispatch",
+        "name": "Work Order Dispatch",
+        "description": "下发生产管理中的 work order任务或指令，并跟踪执行状态。",
+        "tags": [
+          "smart-factory",
+          "production",
+          "work-order",
+          "dispatch"
+        ]
+      },
+      {
+        "id": "smart_factory.production.cycle_time.analyze",
+        "name": "Cycle Time Analyze",
+        "description": "分析生产管理中的 cycle time相关数据，提取关键指标、趋势和异常信息。",
+        "tags": [
+          "smart-factory",
+          "production",
+          "cycle-time",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_factory.production.throughput.monitor",
+        "name": "Throughput Monitor",
+        "description": "监测生产管理中的 throughput状态，识别异常变化并输出结构化监测结果。",
+        "tags": [
+          "smart-factory",
+          "production",
+          "throughput",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_factory.production.downtime.detect",
+        "name": "Downtime Detect",
+        "description": "检测生产管理中的 downtime相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "production",
+          "downtime",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.production.oee.calculate",
+        "name": "OEE Calculate",
+        "description": "计算生产管理中的 OEE相关指标，并输出数值、趋势和解释。",
+        "tags": [
+          "smart-factory",
+          "production",
+          "oee",
+          "calculate"
+        ]
+      },
+      {
+        "id": "smart_factory.production.changeover.optimize",
+        "name": "Changeover Optimize",
+        "description": "优化生产管理中的 changeover方案、调度或资源配置，并输出推荐结果。",
+        "tags": [
+          "smart-factory",
+          "production",
+          "changeover",
+          "optimize"
+        ]
+      },
+      {
+        "id": "smart_factory.production.shift_performance.compare",
+        "name": "Shift Performance Compare",
+        "description": "比较生产管理中的 shift performance差异、趋势或性能，用于评估和优化。",
+        "tags": [
+          "smart-factory",
+          "production",
+          "shift-performance",
+          "compare"
+        ]
+      },
+      {
+        "id": "smart_factory.production.process_parameter.recommend",
+        "name": "Process Parameter Recommend",
+        "description": "推荐生产管理中的 process parameter相关措施、计划或优化策略。",
+        "tags": [
+          "smart-factory",
+          "production",
+          "process-parameter",
+          "recommend"
+        ]
+      },
+      {
+        "id": "smart_factory.production.wip_status.track",
+        "name": "Wip Status Track",
+        "description": "跟踪生产管理中的 wip status状态或流转过程，输出轨迹、进度和时间序列信息。",
+        "tags": [
+          "smart-factory",
+          "production",
+          "wip-status",
+          "track"
+        ]
+      },
+      {
+        "id": "smart_factory.production.qa.answer",
+        "name": "QA Answer",
+        "description": "回答用户关于Smart Factory Production Management Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。",
+        "tags": [
+          "smart-factory",
+          "production"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-015",
+    "name": "Smart Factory Maintenance Agent",
+    "description": "该智能体面向智慧工厂设备维护、维护记录检索和预测性维护任务，能够结合设备状态、历史维修记录、巡检记录、故障代码、工单、传感器趋势、音频异常和设备健康指标进行故障预测、剩余寿命估计、预防性维护建议、维修优先级排序、维护计划生成和维护报告输出。",
+    "url": "http://[fd10::1:2]:8065",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_factory.maintenance.predict_failure",
+        "name": "Predict Failure",
+        "description": "处理设备维护中的相关任务，并输出结构化结果。",
+        "tags": [
+          "smart-factory",
+          "maintenance",
+          "predict-failure"
+        ]
+      },
+      {
+        "id": "smart_factory.maintenance.remaining_life.estimate",
+        "name": "Remaining Life Estimate",
+        "description": "估计设备维护中的 remaining life数值、风险、时间或剩余寿命，并给出依据。",
+        "tags": [
+          "smart-factory",
+          "maintenance",
+          "remaining-life",
+          "estimate"
+        ]
+      },
+      {
+        "id": "smart_factory.maintenance.schedule.optimize",
+        "name": "Schedule Optimize",
+        "description": "优化设备维护中的 schedule方案、调度或资源配置，并输出推荐结果。",
+        "tags": [
+          "smart-factory",
+          "maintenance",
+          "schedule",
+          "optimize"
+        ]
+      },
+      {
+        "id": "smart_factory.maintenance.work_order.generate",
+        "name": "Work Order Generate",
+        "description": "生成设备维护中的 work order相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "maintenance",
+          "work-order"
+        ]
+      },
+      {
+        "id": "smart_factory.maintenance.root_cause.analyze",
+        "name": "Root Cause Analyze",
+        "description": "分析设备维护中的 root cause相关数据，提取关键指标、趋势和异常信息。",
+        "tags": [
+          "smart-factory",
+          "maintenance",
+          "root-cause",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_factory.maintenance.parts_need.assess",
+        "name": "Parts Need Assess",
+        "description": "评估设备维护中的 parts need风险、状态或性能，并输出评分、等级和解释。",
+        "tags": [
+          "smart-factory",
+          "maintenance",
+          "parts-need",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_factory.maintenance.downtime_risk.estimate",
+        "name": "Downtime Risk Estimate",
+        "description": "估计设备维护中的 downtime risk数值、风险、时间或剩余寿命，并给出依据。",
+        "tags": [
+          "smart-factory",
+          "maintenance",
+          "downtime-risk",
+          "estimate"
+        ]
+      },
+      {
+        "id": "smart_factory.maintenance.history.retrieve",
+        "name": "History Retrieve",
+        "description": "检索设备维护中的 history相关历史记录、知识或案例，用于分析和决策。",
+        "tags": [
+          "smart-factory",
+          "maintenance",
+          "history",
+          "retrieve"
+        ]
+      },
+      {
+        "id": "smart_factory.maintenance.report.generate",
+        "name": "Report Generate",
+        "description": "生成设备维护中的 report相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "maintenance",
+          "report"
+        ]
+      },
+      {
+        "id": "smart_factory.maintenance.priority.rank",
+        "name": "Priority Rank",
+        "description": "对设备维护中的 priority进行优先级排序，并说明排序依据。",
+        "tags": [
+          "smart-factory",
+          "maintenance",
+          "priority",
+          "rank"
+        ]
+      },
+      {
+        "id": "smart_factory.maintenance.fault_code.interpret",
+        "name": "Fault Code Interpret",
+        "description": "解释设备维护中的 fault code含义，并给出可能原因和处理建议。",
+        "tags": [
+          "smart-factory",
+          "maintenance",
+          "fault-code",
+          "interpret"
+        ]
+      },
+      {
+        "id": "smart_factory.maintenance.inspection_plan.generate",
+        "name": "Inspection Plan Generate",
+        "description": "生成设备维护中的 inspection plan相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "maintenance",
+          "inspection-plan"
+        ]
+      },
+      {
+        "id": "smart_factory.maintenance.condition_based.trigger",
+        "name": "Condition Based Trigger",
+        "description": "处理设备维护中的 condition based 相关任务，并输出结构化结果。",
+        "tags": [
+          "smart-factory",
+          "maintenance",
+          "condition-based",
+          "trigger"
+        ]
+      },
+      {
+        "id": "smart_factory.maintenance.preventive_task.recommend",
+        "name": "Preventive Task Recommend",
+        "description": "推荐设备维护中的 preventive task相关措施、计划或优化策略。",
+        "tags": [
+          "smart-factory",
+          "maintenance",
+          "preventive-task",
+          "recommend"
+        ]
+      },
+      {
+        "id": "smart_factory.maintenance.spare_part.inventory.check",
+        "name": "Spare Part Inventory Check",
+        "description": "检查设备维护中的 spare part inventory状态、条件或合规性，并返回检查结果。",
+        "tags": [
+          "smart-factory",
+          "maintenance",
+          "spare-part",
+          "inventory"
+        ]
+      },
+      {
+        "id": "smart_factory.maintenance.technician.assign",
+        "name": "Technician Assign",
+        "description": "分配设备维护中的 technician任务、人员或资源，并返回分配结果。",
+        "tags": [
+          "smart-factory",
+          "maintenance",
+          "technician",
+          "assign"
+        ]
+      },
+      {
+        "id": "smart_factory.maintenance.repair_time.estimate",
+        "name": "Repair Time Estimate",
+        "description": "估计设备维护中的 repair time数值、风险、时间或剩余寿命，并给出依据。",
+        "tags": [
+          "smart-factory",
+          "maintenance",
+          "repair-time",
+          "estimate"
+        ]
+      },
+      {
+        "id": "smart_factory.maintenance.maintenance_log.summarize",
+        "name": "Maintenance Log Summarize",
+        "description": "总结设备维护中的 maintenance log内容，提取关键事件、结论和异常信息。",
+        "tags": [
+          "smart-factory",
+          "maintenance",
+          "maintenance-log",
+          "summarize"
+        ]
+      },
+      {
+        "id": "smart_factory.maintenance.risk_score.calculate",
+        "name": "Risk Score Calculate",
+        "description": "计算设备维护中的 risk score相关指标，并输出数值、趋势和解释。",
+        "tags": [
+          "smart-factory",
+          "maintenance",
+          "risk-score",
+          "calculate"
+        ]
+      },
+      {
+        "id": "smart_factory.maintenance.qa.answer",
+        "name": "QA Answer",
+        "description": "回答用户关于Smart Factory Maintenance Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。",
+        "tags": [
+          "smart-factory",
+          "maintenance"
+        ]
+      },
+      {
+        "id": "smart_factory.iot.maintenance_history.retrieve",
+        "name": "Factory IoT Maintenance History Retrieval",
+        "description": "检索工厂设备维护历史、巡检记录、维修工单、保养记录和故障处理记录，并输出结构化维护上下文。",
+        "tags": [
+          "smart-factory",
+          "iot",
+          "maintenance-history",
+          "retrieve"
+        ]
+      },
+      {
+        "id": "smart_factory.maintenance.preventive_decision.assess",
+        "name": "Preventive Maintenance Decision Assessment",
+        "description": "结合维护历史、设备健康、传感器趋势、声学异常和工单信息判断是否需要预防性维护，并给出优先级和依据。",
+        "tags": [
+          "smart-factory",
+          "maintenance",
+          "preventive",
+          "decision"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-016",
+    "name": "Smart Factory Safety Monitoring Agent",
+    "description": "该智能体面向智慧工厂安全监管任务，能够检测 PPE 合规、危险区域、火灾风险、燃气泄漏、工人跌倒、不安全行为、设备防护、应急出口和近失事件，为工厂安全生产和风险预警提供支撑。",
+    "url": "http://[fd10::1:2]:8066",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_factory.safety.ppe.detect",
+        "name": "PPE Detect",
+        "description": "检测安全监管中的 PPE相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "safety",
+          "ppe",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.safety.danger_zone.detect",
+        "name": "Danger Zone Detect",
+        "description": "检测安全监管中的 danger zone相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "safety",
+          "danger-zone",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.safety.fire_risk.detect",
+        "name": "Fire Risk Detect",
+        "description": "检测安全监管中的 fire risk相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "safety",
+          "fire-risk",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.safety.gas_leak.detect",
+        "name": "Gas Leak Detect",
+        "description": "检测安全监管中的 gas leak相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "safety",
+          "gas-leak",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.safety.worker_fall.detect",
+        "name": "Worker Fall Detect",
+        "description": "检测安全监管中的 worker fall相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "safety",
+          "worker-fall",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.safety.unsafe_behavior.detect",
+        "name": "Unsafe Behavior Detect",
+        "description": "检测安全监管中的 unsafe behavior相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "safety",
+          "unsafe-behavior",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.safety.equipment_guard.check",
+        "name": "Equipment Guard Check",
+        "description": "检查安全监管中的 equipment guard状态、条件或合规性，并返回检查结果。",
+        "tags": [
+          "smart-factory",
+          "safety",
+          "equipment-guard",
+          "check"
+        ]
+      },
+      {
+        "id": "smart_factory.safety.emergency_exit.check",
+        "name": "Emergency Exit Check",
+        "description": "检查安全监管中的 emergency exit状态、条件或合规性，并返回检查结果。",
+        "tags": [
+          "smart-factory",
+          "safety",
+          "emergency-exit",
+          "check"
+        ]
+      },
+      {
+        "id": "smart_factory.safety.violation_report.generate",
+        "name": "Violation Report Generate",
+        "description": "生成安全监管中的 violation report相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "safety",
+          "violation-report"
+        ]
+      },
+      {
+        "id": "smart_factory.safety.risk_score.calculate",
+        "name": "Risk Score Calculate",
+        "description": "计算安全监管中的 risk score相关指标，并输出数值、趋势和解释。",
+        "tags": [
+          "smart-factory",
+          "safety",
+          "risk-score",
+          "calculate"
+        ]
+      },
+      {
+        "id": "smart_factory.safety.lockout_tagout.check",
+        "name": "Lockout Tagout Check",
+        "description": "检查安全监管中的 lockout tagout状态、条件或合规性，并返回检查结果。",
+        "tags": [
+          "smart-factory",
+          "safety",
+          "lockout-tagout",
+          "check"
+        ]
+      },
+      {
+        "id": "smart_factory.safety.forklift_collision_risk.assess",
+        "name": "Forklift Collision Risk Assess",
+        "description": "评估安全监管中的 forklift collision risk风险、状态或性能，并输出评分、等级和解释。",
+        "tags": [
+          "smart-factory",
+          "safety",
+          "forklift-collision-risk",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_factory.safety.confined_space.monitor",
+        "name": "Confined Space Monitor",
+        "description": "监测安全监管中的 confined space状态，识别异常变化并输出结构化监测结果。",
+        "tags": [
+          "smart-factory",
+          "safety",
+          "confined-space",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_factory.safety.high_temperature_risk.assess",
+        "name": "High Temperature Risk Assess",
+        "description": "评估安全监管中的 high temperature risk风险、状态或性能，并输出评分、等级和解释。",
+        "tags": [
+          "smart-factory",
+          "safety",
+          "high-temperature-risk",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_factory.safety.noise_exposure.assess",
+        "name": "Noise Exposure Assess",
+        "description": "评估安全监管中的 noise exposure风险、状态或性能，并输出评分、等级和解释。",
+        "tags": [
+          "smart-factory",
+          "safety",
+          "noise-exposure",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_factory.safety.chemical_handling.monitor",
+        "name": "Chemical Handling Monitor",
+        "description": "监测安全监管中的 chemical handling状态，识别异常变化并输出结构化监测结果。",
+        "tags": [
+          "smart-factory",
+          "safety",
+          "chemical-handling",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_factory.safety.safety_training_record.check",
+        "name": "Safety Training Record Check",
+        "description": "检查安全监管中的 safety training record状态、条件或合规性，并返回检查结果。",
+        "tags": [
+          "smart-factory",
+          "safety",
+          "safety-training-record",
+          "check"
+        ]
+      },
+      {
+        "id": "smart_factory.safety.near_miss.detect",
+        "name": "Near Miss Detect",
+        "description": "检测安全监管中的 near miss相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "safety",
+          "near-miss",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.safety.emergency_response.recommend",
+        "name": "Emergency Response Recommend",
+        "description": "推荐安全监管中的 emergency response相关措施、计划或优化策略。",
+        "tags": [
+          "smart-factory",
+          "safety",
+          "emergency-response",
+          "recommend"
+        ]
+      },
+      {
+        "id": "smart_factory.safety.qa.answer",
+        "name": "QA Answer",
+        "description": "回答用户关于Smart Factory Safety Monitoring Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。",
+        "tags": [
+          "smart-factory",
+          "safety"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-017",
+    "name": "Smart Factory Robotics Coordination Agent",
+    "description": "该智能体面向智慧工厂机器人协同任务，能够监测机器人状态、分配机器人任务、规划路径、评估碰撞风险、处理视觉引导、多机器人协同和机器人维护建议，为自动化产线和柔性制造提供支撑。",
+    "url": "http://[fd10::1:2]:8067",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_factory.robotics.robot.status.monitor",
+        "name": "Robot Status Monitor",
+        "description": "监测工业机器人中的 robot status状态，识别异常变化并输出结构化监测结果。",
+        "tags": [
+          "smart-factory",
+          "robotics",
+          "robot",
+          "status"
+        ]
+      },
+      {
+        "id": "smart_factory.robotics.robot.task.assign",
+        "name": "Robot Task Assign",
+        "description": "分配工业机器人中的 robot task任务、人员或资源，并返回分配结果。",
+        "tags": [
+          "smart-factory",
+          "robotics",
+          "robot",
+          "task"
+        ]
+      },
+      {
+        "id": "smart_factory.robotics.robot.path.plan",
+        "name": "Robot Path Plan",
+        "description": "规划工业机器人中的 robot path路径、任务或执行步骤，并输出可执行方案。",
+        "tags": [
+          "smart-factory",
+          "robotics",
+          "robot",
+          "path"
+        ]
+      },
+      {
+        "id": "smart_factory.robotics.robot.collision_risk.assess",
+        "name": "Robot Collision Risk Assess",
+        "description": "评估工业机器人中的 robot collision risk风险、状态或性能，并输出评分、等级和解释。",
+        "tags": [
+          "smart-factory",
+          "robotics",
+          "robot",
+          "collision-risk"
+        ]
+      },
+      {
+        "id": "smart_factory.robotics.robot.operation_log.summarize",
+        "name": "Robot Operation Log Summarize",
+        "description": "总结工业机器人中的 robot operation log内容，提取关键事件、结论和异常信息。",
+        "tags": [
+          "smart-factory",
+          "robotics",
+          "robot",
+          "operation-log"
+        ]
+      },
+      {
+        "id": "smart_factory.robotics.robot.grasp_quality.assess",
+        "name": "Robot Grasp Quality Assess",
+        "description": "评估工业机器人中的 robot grasp quality风险、状态或性能，并输出评分、等级和解释。",
+        "tags": [
+          "smart-factory",
+          "robotics",
+          "robot",
+          "grasp-quality"
+        ]
+      },
+      {
+        "id": "smart_factory.robotics.robot.vision_guidance.process",
+        "name": "Robot Vision Guidance Process",
+        "description": "处理工业机器人中的 robot vision guidance数据或视觉输入，生成后续控制或诊断所需结果。",
+        "tags": [
+          "smart-factory",
+          "robotics",
+          "robot",
+          "vision-guidance"
+        ]
+      },
+      {
+        "id": "smart_factory.robotics.multi_robot.coordinate",
+        "name": "Multi Robot Coordinate",
+        "description": "处理工业机器人中的 multi robot 相关任务，并输出结构化结果。",
+        "tags": [
+          "smart-factory",
+          "robotics",
+          "multi-robot",
+          "coordinate"
+        ]
+      },
+      {
+        "id": "smart_factory.robotics.robot_fault.detect",
+        "name": "Robot Fault Detect",
+        "description": "检测工业机器人中的 robot fault相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "robotics",
+          "robot-fault",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.robotics.robot_program.verify",
+        "name": "Robot Program Verify",
+        "description": "验证工业机器人中的 robot program是否满足预期要求或是否真实发生，并给出证据和判断结果。",
+        "tags": [
+          "smart-factory",
+          "robotics",
+          "robot-program",
+          "verify"
+        ]
+      },
+      {
+        "id": "smart_factory.robotics.robot_speed.optimize",
+        "name": "Robot Speed Optimize",
+        "description": "优化工业机器人中的 robot speed方案、调度或资源配置，并输出推荐结果。",
+        "tags": [
+          "smart-factory",
+          "robotics",
+          "robot-speed",
+          "optimize"
+        ]
+      },
+      {
+        "id": "smart_factory.robotics.robot_cell.safety_check",
+        "name": "Robot Cell Safety Check",
+        "description": "处理工业机器人中的 robot cell 相关任务，并输出结构化结果。",
+        "tags": [
+          "smart-factory",
+          "robotics",
+          "robot-cell",
+          "safety-check"
+        ]
+      },
+      {
+        "id": "smart_factory.robotics.human_robot_interaction.monitor",
+        "name": "Human Robot Interaction Monitor",
+        "description": "监测工业机器人中的 human robot interaction状态，识别异常变化并输出结构化监测结果。",
+        "tags": [
+          "smart-factory",
+          "robotics",
+          "human-robot-interaction",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_factory.robotics.robot_tool_change.manage",
+        "name": "Robot Tool Change Manage",
+        "description": "管理工业机器人中的 robot tool change相关对象、任务或配置，支持状态维护和协同执行。",
+        "tags": [
+          "smart-factory",
+          "robotics",
+          "robot-tool-change",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_factory.robotics.robot_calibration.check",
+        "name": "Robot Calibration Check",
+        "description": "检查工业机器人中的 robot calibration状态、条件或合规性，并返回检查结果。",
+        "tags": [
+          "smart-factory",
+          "robotics",
+          "robot-calibration",
+          "check"
+        ]
+      },
+      {
+        "id": "smart_factory.robotics.robot_payload.assess",
+        "name": "Robot Payload Assess",
+        "description": "评估工业机器人中的 robot payload风险、状态或性能，并输出评分、等级和解释。",
+        "tags": [
+          "smart-factory",
+          "robotics",
+          "robot-payload",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_factory.robotics.robot_workflow.optimize",
+        "name": "Robot Workflow Optimize",
+        "description": "优化工业机器人中的 robot workflow方案、调度或资源配置，并输出推荐结果。",
+        "tags": [
+          "smart-factory",
+          "robotics",
+          "robot-workflow",
+          "optimize"
+        ]
+      },
+      {
+        "id": "smart_factory.robotics.robot_energy.analyze",
+        "name": "Robot Energy Analyze",
+        "description": "分析工业机器人中的 robot energy相关数据，提取关键指标、趋势和异常信息。",
+        "tags": [
+          "smart-factory",
+          "robotics",
+          "robot-energy",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_factory.robotics.robot_maintenance.recommend",
+        "name": "Robot Maintenance Recommend",
+        "description": "推荐工业机器人中的 robot maintenance相关措施、计划或优化策略。",
+        "tags": [
+          "smart-factory",
+          "robotics",
+          "robot-maintenance",
+          "recommend"
+        ]
+      },
+      {
+        "id": "smart_factory.robotics.qa.answer",
+        "name": "QA Answer",
+        "description": "回答用户关于Smart Factory Robotics Coordination Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。",
+        "tags": [
+          "smart-factory",
+          "robotics"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-018",
+    "name": "Smart Factory Energy Management Agent",
+    "description": "该智能体面向智慧工厂能源管理任务，能够监测工厂能耗、分析机器能耗、识别异常耗能、检测峰值负载、估算碳排放、优化工艺能耗和生成能源报告，为绿色制造和能效优化提供支撑。",
+    "url": "http://[fd10::1:2]:8068",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_factory.energy.consumption.monitor",
+        "name": "Consumption Monitor",
+        "description": "监测工厂能源中的 consumption状态，识别异常变化并输出结构化监测结果。",
+        "tags": [
+          "smart-factory",
+          "energy",
+          "consumption",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_factory.energy.machine_energy.analyze",
+        "name": "Machine Energy Analyze",
+        "description": "分析工厂能源中的 machine energy相关数据，提取关键指标、趋势和异常信息。",
+        "tags": [
+          "smart-factory",
+          "energy",
+          "machine-energy",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_factory.energy.abnormal_consumption.detect",
+        "name": "Abnormal Consumption Detect",
+        "description": "检测工厂能源中的 abnormal consumption相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "energy",
+          "abnormal-consumption",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.energy.peak_load.detect",
+        "name": "Peak Load Detect",
+        "description": "检测工厂能源中的 peak load相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "energy",
+          "peak-load",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.energy.energy_cost.forecast",
+        "name": "Energy Cost Forecast",
+        "description": "处理工厂能源中的 energy cost 相关任务，并输出结构化结果。",
+        "tags": [
+          "smart-factory",
+          "energy",
+          "energy-cost",
+          "forecast"
+        ]
+      },
+      {
+        "id": "smart_factory.energy.carbon_emission.estimate",
+        "name": "Carbon Emission Estimate",
+        "description": "估计工厂能源中的 carbon emission数值、风险、时间或剩余寿命，并给出依据。",
+        "tags": [
+          "smart-factory",
+          "energy",
+          "carbon-emission",
+          "estimate"
+        ]
+      },
+      {
+        "id": "smart_factory.energy.energy_efficiency.score",
+        "name": "Energy Efficiency Score",
+        "description": "计算工厂能源中的 energy efficiency评分，并给出等级和解释。",
+        "tags": [
+          "smart-factory",
+          "energy",
+          "energy-efficiency",
+          "score"
+        ]
+      },
+      {
+        "id": "smart_factory.energy.line_energy.compare",
+        "name": "Line Energy Compare",
+        "description": "比较工厂能源中的 line energy差异、趋势或性能，用于评估和优化。",
+        "tags": [
+          "smart-factory",
+          "energy",
+          "line-energy",
+          "compare"
+        ]
+      },
+      {
+        "id": "smart_factory.energy.standby_power.detect",
+        "name": "Standby Power Detect",
+        "description": "检测工厂能源中的 standby power相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "energy",
+          "standby-power",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.energy.compressed_air_loss.detect",
+        "name": "Compressed Air Loss Detect",
+        "description": "检测工厂能源中的 compressed air loss相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "energy",
+          "compressed-air-loss",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.energy.hvac_energy.optimize",
+        "name": "HVAC Energy Optimize",
+        "description": "优化工厂能源中的 HVAC energy方案、调度或资源配置，并输出推荐结果。",
+        "tags": [
+          "smart-factory",
+          "energy",
+          "hvac-energy",
+          "optimize"
+        ]
+      },
+      {
+        "id": "smart_factory.energy.process_energy.optimize",
+        "name": "Process Energy Optimize",
+        "description": "优化工厂能源中的 process energy方案、调度或资源配置，并输出推荐结果。",
+        "tags": [
+          "smart-factory",
+          "energy",
+          "process-energy",
+          "optimize"
+        ]
+      },
+      {
+        "id": "smart_factory.energy.energy_saving.recommend",
+        "name": "Energy Saving Recommend",
+        "description": "推荐工厂能源中的 energy saving相关措施、计划或优化策略。",
+        "tags": [
+          "smart-factory",
+          "energy",
+          "energy-saving",
+          "recommend"
+        ]
+      },
+      {
+        "id": "smart_factory.energy.tariff_aware.schedule",
+        "name": "Tariff Aware Schedule",
+        "description": "处理工厂能源中的 tariff aware 相关任务，并输出结构化结果。",
+        "tags": [
+          "smart-factory",
+          "energy",
+          "tariff-aware",
+          "schedule"
+        ]
+      },
+      {
+        "id": "smart_factory.energy.renewable_generation.analyze",
+        "name": "Renewable Generation Analyze",
+        "description": "分析工厂能源中的 renewable generation相关数据，提取关键指标、趋势和异常信息。",
+        "tags": [
+          "smart-factory",
+          "energy",
+          "renewable-generation",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_factory.energy.battery_storage.optimize",
+        "name": "Battery Storage Optimize",
+        "description": "优化工厂能源中的 battery storage方案、调度或资源配置，并输出推荐结果。",
+        "tags": [
+          "smart-factory",
+          "energy",
+          "battery-storage",
+          "optimize"
+        ]
+      },
+      {
+        "id": "smart_factory.energy.energy_kpi.calculate",
+        "name": "Energy Kpi Calculate",
+        "description": "计算工厂能源中的 energy kpi相关指标，并输出数值、趋势和解释。",
+        "tags": [
+          "smart-factory",
+          "energy",
+          "energy-kpi",
+          "calculate"
+        ]
+      },
+      {
+        "id": "smart_factory.energy.monthly_report.generate",
+        "name": "Monthly Report Generate",
+        "description": "生成工厂能源中的 monthly report相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "energy",
+          "monthly-report"
+        ]
+      },
+      {
+        "id": "smart_factory.energy.multi_equipment.optimize",
+        "name": "Multi Equipment Optimize",
+        "description": "优化工厂能源中的 multi equipment方案、调度或资源配置，并输出推荐结果。",
+        "tags": [
+          "smart-factory",
+          "energy",
+          "multi-equipment",
+          "optimize"
+        ]
+      },
+      {
+        "id": "smart_factory.energy.qa.answer",
+        "name": "QA Answer",
+        "description": "回答用户关于Smart Factory Energy Management Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。",
+        "tags": [
+          "smart-factory",
+          "energy"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-019",
+    "name": "Smart Factory Logistics Agent",
+    "description": "该智能体面向智慧工厂厂内物流任务，能够查询物料库存、检测缺料、规划 AGV 路线、跟踪入厂物料和出厂产品、优化线边补料、分析库存周转和生成物流报告，为生产物流协同提供支撑。",
+    "url": "http://[fd10::1:2]:8069",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_factory.logistics.material_inventory.query",
+        "name": "Material Inventory Query",
+        "description": "查询厂内物流中的 material inventory相关信息，并返回当前状态、历史记录或匹配结果。",
+        "tags": [
+          "smart-factory",
+          "logistics",
+          "material-inventory",
+          "query"
+        ]
+      },
+      {
+        "id": "smart_factory.logistics.material_shortage.detect",
+        "name": "Material Shortage Detect",
+        "description": "检测厂内物流中的 material shortage相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "logistics",
+          "material-shortage",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.logistics.warehouse_location.search",
+        "name": "Warehouse Location Search",
+        "description": "处理厂内物流中的 warehouse location 相关任务，并输出结构化结果。",
+        "tags": [
+          "smart-factory",
+          "logistics",
+          "warehouse-location",
+          "search"
+        ]
+      },
+      {
+        "id": "smart_factory.logistics.agv_task.assign",
+        "name": "AGV Task Assign",
+        "description": "分配厂内物流中的 AGV task任务、人员或资源，并返回分配结果。",
+        "tags": [
+          "smart-factory",
+          "logistics",
+          "agv-task",
+          "assign"
+        ]
+      },
+      {
+        "id": "smart_factory.logistics.agv_route.plan",
+        "name": "AGV Route Plan",
+        "description": "规划厂内物流中的 AGV route路径、任务或执行步骤，并输出可执行方案。",
+        "tags": [
+          "smart-factory",
+          "logistics",
+          "agv-route",
+          "plan"
+        ]
+      },
+      {
+        "id": "smart_factory.logistics.inbound_material.track",
+        "name": "Inbound Material Track",
+        "description": "跟踪厂内物流中的 inbound material状态或流转过程，输出轨迹、进度和时间序列信息。",
+        "tags": [
+          "smart-factory",
+          "logistics",
+          "inbound-material",
+          "track"
+        ]
+      },
+      {
+        "id": "smart_factory.logistics.outbound_product.track",
+        "name": "Outbound Product Track",
+        "description": "跟踪厂内物流中的 outbound product状态或流转过程，输出轨迹、进度和时间序列信息。",
+        "tags": [
+          "smart-factory",
+          "logistics",
+          "outbound-product",
+          "track"
+        ]
+      },
+      {
+        "id": "smart_factory.logistics.line_feeding.optimize",
+        "name": "Line Feeding Optimize",
+        "description": "优化厂内物流中的 line feeding方案、调度或资源配置，并输出推荐结果。",
+        "tags": [
+          "smart-factory",
+          "logistics",
+          "line-feeding",
+          "optimize"
+        ]
+      },
+      {
+        "id": "smart_factory.logistics.buffer_stock.calculate",
+        "name": "Buffer Stock Calculate",
+        "description": "计算厂内物流中的 buffer stock相关指标，并输出数值、趋势和解释。",
+        "tags": [
+          "smart-factory",
+          "logistics",
+          "buffer-stock",
+          "calculate"
+        ]
+      },
+      {
+        "id": "smart_factory.logistics.inventory_turnover.analyze",
+        "name": "Inventory Turnover Analyze",
+        "description": "分析厂内物流中的 inventory turnover相关数据，提取关键指标、趋势和异常信息。",
+        "tags": [
+          "smart-factory",
+          "logistics",
+          "inventory-turnover",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_factory.logistics.pick_pack_plan.generate",
+        "name": "Pick Pack Plan Generate",
+        "description": "生成厂内物流中的 pick pack plan相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "logistics",
+          "pick-pack-plan"
+        ]
+      },
+      {
+        "id": "smart_factory.logistics.shipping_schedule.optimize",
+        "name": "Shipping Schedule Optimize",
+        "description": "优化厂内物流中的 shipping schedule方案、调度或资源配置，并输出推荐结果。",
+        "tags": [
+          "smart-factory",
+          "logistics",
+          "shipping-schedule",
+          "optimize"
+        ]
+      },
+      {
+        "id": "smart_factory.logistics.supply_delay.predict",
+        "name": "Supply Delay Predict",
+        "description": "处理厂内物流中的 supply delay 相关任务，并输出结构化结果。",
+        "tags": [
+          "smart-factory",
+          "logistics",
+          "supply-delay",
+          "predict"
+        ]
+      },
+      {
+        "id": "smart_factory.logistics.material_flow.visualize",
+        "name": "Material Flow Visualize",
+        "description": "可视化厂内物流中的 material flow状态、流向或分布，用于监控和决策。",
+        "tags": [
+          "smart-factory",
+          "logistics",
+          "material-flow",
+          "visualize"
+        ]
+      },
+      {
+        "id": "smart_factory.logistics.rfid_trace.query",
+        "name": "RFID Trace Query",
+        "description": "查询厂内物流中的 RFID trace相关信息，并返回当前状态、历史记录或匹配结果。",
+        "tags": [
+          "smart-factory",
+          "logistics",
+          "rfid-trace",
+          "query"
+        ]
+      },
+      {
+        "id": "smart_factory.logistics.pallet_status.track",
+        "name": "Pallet Status Track",
+        "description": "跟踪厂内物流中的 pallet status状态或流转过程，输出轨迹、进度和时间序列信息。",
+        "tags": [
+          "smart-factory",
+          "logistics",
+          "pallet-status",
+          "track"
+        ]
+      },
+      {
+        "id": "smart_factory.logistics.warehouse_congestion.detect",
+        "name": "Warehouse Congestion Detect",
+        "description": "检测厂内物流中的 warehouse congestion相关事件或异常，并返回事件类型、位置、时间和置信度。",
+        "tags": [
+          "smart-factory",
+          "logistics",
+          "warehouse-congestion",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_factory.logistics.delivery_priority.rank",
+        "name": "Delivery Priority Rank",
+        "description": "对厂内物流中的 delivery priority进行优先级排序，并说明排序依据。",
+        "tags": [
+          "smart-factory",
+          "logistics",
+          "delivery-priority",
+          "rank"
+        ]
+      },
+      {
+        "id": "smart_factory.logistics.logistics_report.generate",
+        "name": "Logistics Report Generate",
+        "description": "生成厂内物流中的 logistics report相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "logistics",
+          "logistics-report"
+        ]
+      },
+      {
+        "id": "smart_factory.logistics.qa.answer",
+        "name": "QA Answer",
+        "description": "回答用户关于Smart Factory Logistics Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。",
+        "tags": [
+          "smart-factory",
+          "logistics"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-020",
+    "name": "Smart Factory Multimodal Diagnosis Agent",
+    "description": "该智能体面向智慧工厂多模态诊断、故障融合和维护决策任务，能够融合视频、图像、音频、传感器、IoT、机器人、生产日志和工单数据，对设备故障、质量异常、安全事件、生产异常和维护风险进行证据融合、风险评分、根因分析、事件时间线生成和决策建议输出。",
+    "url": "http://[fd10::1:2]:8070",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_factory.multimodal.defect_evidence.fuse",
+        "name": "Defect Evidence Fuse",
+        "description": "融合多模态诊断中的 defect evidence多源证据，形成统一判断、风险评分或事件结论。",
+        "tags": [
+          "smart-factory",
+          "multimodal",
+          "defect-evidence",
+          "fuse"
+        ]
+      },
+      {
+        "id": "smart_factory.multimodal.machine_fault.diagnose",
+        "name": "Machine Fault Diagnose",
+        "description": "处理多模态诊断中的 machine fault 相关任务，并输出结构化结果。",
+        "tags": [
+          "smart-factory",
+          "multimodal",
+          "machine-fault",
+          "diagnose"
+        ]
+      },
+      {
+        "id": "smart_factory.multimodal.safety_event.verify",
+        "name": "Safety Event Verify",
+        "description": "验证多模态诊断中的 safety event是否满足预期要求或是否真实发生，并给出证据和判断结果。",
+        "tags": [
+          "smart-factory",
+          "multimodal",
+          "safety-event",
+          "verify"
+        ]
+      },
+      {
+        "id": "smart_factory.multimodal.production_context.infer",
+        "name": "Production Context Infer",
+        "description": "处理多模态诊断中的 production context 相关任务，并输出结构化结果。",
+        "tags": [
+          "smart-factory",
+          "multimodal",
+          "production-context",
+          "infer"
+        ]
+      },
+      {
+        "id": "smart_factory.multimodal.maintenance_decision.support",
+        "name": "Maintenance Decision Support",
+        "description": "处理多模态诊断中的 maintenance decision 相关任务，并输出结构化结果。",
+        "tags": [
+          "smart-factory",
+          "multimodal",
+          "maintenance-decision",
+          "support"
+        ]
+      },
+      {
+        "id": "smart_factory.multimodal.quality_trace.analyze",
+        "name": "Quality Trace Analyze",
+        "description": "分析多模态诊断中的 quality trace相关数据，提取关键指标、趋势和异常信息。",
+        "tags": [
+          "smart-factory",
+          "multimodal",
+          "quality-trace",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_factory.multimodal.energy_efficiency.assess",
+        "name": "Energy Efficiency Assess",
+        "description": "评估多模态诊断中的 energy efficiency风险、状态或性能，并输出评分、等级和解释。",
+        "tags": [
+          "smart-factory",
+          "multimodal",
+          "energy-efficiency",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_factory.multimodal.factory_status.summarize",
+        "name": "Factory Status Summarize",
+        "description": "总结多模态诊断中的 factory status内容，提取关键事件、结论和异常信息。",
+        "tags": [
+          "smart-factory",
+          "multimodal",
+          "factory-status",
+          "summarize"
+        ]
+      },
+      {
+        "id": "smart_factory.multimodal.video_sensor_event.fuse",
+        "name": "Video Sensor Event Fuse",
+        "description": "融合多模态诊断中的 video sensor event多源证据，形成统一判断、风险评分或事件结论。",
+        "tags": [
+          "smart-factory",
+          "multimodal",
+          "video-sensor-event",
+          "fuse"
+        ]
+      },
+      {
+        "id": "smart_factory.multimodal.audio_sensor_fault.fuse",
+        "name": "Audio Sensor Fault Fuse",
+        "description": "融合多模态诊断中的 audio sensor fault多源证据，形成统一判断、风险评分或事件结论。",
+        "tags": [
+          "smart-factory",
+          "multimodal",
+          "audio-sensor-fault",
+          "fuse"
+        ]
+      },
+      {
+        "id": "smart_factory.multimodal.image_process_parameter.align",
+        "name": "Image Process Parameter Align",
+        "description": "处理多模态诊断中的 image process parameter 相关任务，并输出结构化结果。",
+        "tags": [
+          "smart-factory",
+          "multimodal",
+          "image-process-parameter",
+          "align"
+        ]
+      },
+      {
+        "id": "smart_factory.multimodal.robot_quality_feedback.fuse",
+        "name": "Robot Quality Feedback Fuse",
+        "description": "融合多模态诊断中的 robot quality feedback多源证据，形成统一判断、风险评分或事件结论。",
+        "tags": [
+          "smart-factory",
+          "multimodal",
+          "robot-quality-feedback",
+          "fuse"
+        ]
+      },
+      {
+        "id": "smart_factory.multimodal.work_order_context.build",
+        "name": "Work Order Context Build",
+        "description": "处理多模态诊断中的 work order context 相关任务，并输出结构化结果。",
+        "tags": [
+          "smart-factory",
+          "multimodal",
+          "work-order-context",
+          "build"
+        ]
+      },
+      {
+        "id": "smart_factory.multimodal.event_timeline.generate",
+        "name": "Event Timeline Generate",
+        "description": "生成多模态诊断中的 event timeline相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "multimodal",
+          "event-timeline"
+        ]
+      },
+      {
+        "id": "smart_factory.multimodal.root_cause.evidence_chain",
+        "name": "Root Cause Evidence Chain",
+        "description": "处理多模态诊断中的 root cause 相关任务，并输出结构化结果。",
+        "tags": [
+          "smart-factory",
+          "multimodal",
+          "root-cause",
+          "evidence-chain"
+        ]
+      },
+      {
+        "id": "smart_factory.multimodal.risk_score.aggregate",
+        "name": "Risk Score Aggregate",
+        "description": "处理多模态诊断中的 risk score 相关任务，并输出结构化结果。",
+        "tags": [
+          "smart-factory",
+          "multimodal",
+          "risk-score",
+          "aggregate"
+        ]
+      },
+      {
+        "id": "smart_factory.multimodal.cross_line_comparison.analyze",
+        "name": "Cross Line Comparison Analyze",
+        "description": "分析多模态诊断中的 cross line comparison相关数据，提取关键指标、趋势和异常信息。",
+        "tags": [
+          "smart-factory",
+          "multimodal",
+          "cross-line-comparison",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_factory.multimodal.anomaly_corroborate",
+        "name": "Anomaly Corroborate",
+        "description": "处理多模态诊断中的相关任务，并输出结构化结果。",
+        "tags": [
+          "smart-factory",
+          "multimodal",
+          "anomaly-corroborate"
+        ]
+      },
+      {
+        "id": "smart_factory.multimodal.decision_recommendation.generate",
+        "name": "Decision Recommendation Generate",
+        "description": "生成多模态诊断中的 decision recommendation相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "multimodal",
+          "decision-recommendation"
+        ]
+      },
+      {
+        "id": "smart_factory.multimodal.qa.answer",
+        "name": "QA Answer",
+        "description": "回答用户关于Smart Factory Multimodal Diagnosis Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。",
+        "tags": [
+          "smart-factory",
+          "multimodal"
+        ]
+      },
+      {
+        "id": "smart_factory.multimodal.preventive_maintenance.assess",
+        "name": "Factory Multimodal Preventive Maintenance Assessment",
+        "description": "融合机器噪声、轴承/电机声音、设备健康、维护记录、传感器趋势和历史异常，判断是否需要预防性维护并输出风险等级。",
+        "tags": [
+          "smart-factory",
+          "multimodal",
+          "maintenance",
+          "risk"
+        ]
+      },
+      {
+        "id": "smart_factory.multimodal.fault_risk.assess",
+        "name": "Factory Multimodal Fault Risk Assessment",
+        "description": "融合音频、传感器、IoT、视频和维护数据，对设备故障可能性进行风险评分、证据链生成和处置建议输出。",
+        "tags": [
+          "smart-factory",
+          "multimodal",
+          "fault-risk"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-021",
+    "name": "Smart Factory Report Generation Agent",
+    "description": "该智能体面向智慧工厂报告生成、结构化摘要和整改建议任务，能够将质量、安全、维护、生产、能耗、班次、OEE、库存、机器人、传感器异常和多模态诊断结果整理为 JSON、日报、周报、报告、告警说明、纠正措施建议和管理层摘要；不负责原始感知和设备控制。",
+    "url": "http://[fd10::1:2]:8071",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_factory.report.quality_report.generate",
+        "name": "Quality Report Generate",
+        "description": "生成工厂报告中的 quality report相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "report",
+          "quality-report"
+        ]
+      },
+      {
+        "id": "smart_factory.report.safety_report.generate",
+        "name": "Safety Report Generate",
+        "description": "生成工厂报告中的 safety report相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "report",
+          "safety-report"
+        ]
+      },
+      {
+        "id": "smart_factory.report.maintenance_report.generate",
+        "name": "Maintenance Report Generate",
+        "description": "生成工厂报告中的 maintenance report相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "report",
+          "maintenance-report"
+        ]
+      },
+      {
+        "id": "smart_factory.report.production_report.generate",
+        "name": "Production Report Generate",
+        "description": "生成工厂报告中的 production report相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "report",
+          "production-report"
+        ]
+      },
+      {
+        "id": "smart_factory.report.energy_report.generate",
+        "name": "Energy Report Generate",
+        "description": "生成工厂报告中的 energy report相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "report",
+          "energy-report"
+        ]
+      },
+      {
+        "id": "smart_factory.report.daily_digest.generate",
+        "name": "Daily Digest Generate",
+        "description": "生成工厂报告中的 daily digest相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "report",
+          "daily-digest"
+        ]
+      },
+      {
+        "id": "smart_factory.report.weekly_digest.generate",
+        "name": "Weekly Digest Generate",
+        "description": "生成工厂报告中的 weekly digest相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "report",
+          "weekly-digest"
+        ]
+      },
+      {
+        "id": "smart_factory.report.shift_report.generate",
+        "name": "Shift Report Generate",
+        "description": "生成工厂报告中的 shift report相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "report",
+          "shift-report"
+        ]
+      },
+      {
+        "id": "smart_factory.report.defect_analysis.generate",
+        "name": "Defect Analysis Generate",
+        "description": "生成工厂报告中的 defect analysis相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "report",
+          "defect-analysis"
+        ]
+      },
+      {
+        "id": "smart_factory.report.downtime_analysis.generate",
+        "name": "Downtime Analysis Generate",
+        "description": "生成工厂报告中的 downtime analysis相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "report",
+          "downtime-analysis"
+        ]
+      },
+      {
+        "id": "smart_factory.report.oee_report.generate",
+        "name": "OEE Report Generate",
+        "description": "生成工厂报告中的 OEE report相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "report",
+          "oee-report"
+        ]
+      },
+      {
+        "id": "smart_factory.report.inventory_report.generate",
+        "name": "Inventory Report Generate",
+        "description": "生成工厂报告中的 inventory report相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "report",
+          "inventory-report"
+        ]
+      },
+      {
+        "id": "smart_factory.report.robot_operation_report.generate",
+        "name": "Robot Operation Report Generate",
+        "description": "生成工厂报告中的 robot operation report相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "report",
+          "robot-operation-report"
+        ]
+      },
+      {
+        "id": "smart_factory.report.sensor_anomaly_report.generate",
+        "name": "Sensor Anomaly Report Generate",
+        "description": "生成工厂报告中的 sensor anomaly report相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "report",
+          "sensor-anomaly-report"
+        ]
+      },
+      {
+        "id": "smart_factory.report.multimodal_evidence.generate",
+        "name": "Multimodal Evidence Generate",
+        "description": "生成工厂报告中的 multimodal evidence相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "report",
+          "multimodal-evidence"
+        ]
+      },
+      {
+        "id": "smart_factory.report.audit_report.generate",
+        "name": "Audit Report Generate",
+        "description": "生成工厂报告中的 audit report相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "report",
+          "audit-report"
+        ]
+      },
+      {
+        "id": "smart_factory.report.corrective_action_report.generate",
+        "name": "Corrective Action Report Generate",
+        "description": "生成工厂报告中的 corrective action report相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "report",
+          "corrective-action-report"
+        ]
+      },
+      {
+        "id": "smart_factory.report.executive_summary.generate",
+        "name": "Executive Summary Generate",
+        "description": "生成工厂报告中的 executive summary相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "report",
+          "executive-summary"
+        ]
+      },
+      {
+        "id": "smart_factory.report.batch.generate",
+        "name": "Batch Generate",
+        "description": "生成工厂报告中的 batch相关报告、摘要、时间线或结构化输出。",
+        "tags": [
+          "smart-factory",
+          "report",
+          "batch"
+        ]
+      },
+      {
+        "id": "smart_factory.report.qa.answer",
+        "name": "QA Answer",
+        "description": "回答用户关于Smart Factory Report Generation Agent相关数据、状态、异常、趋势和处置建议的问题，并基于已接入的结构化结果提供解释。",
+        "tags": [
+          "smart-factory",
+          "report"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-022",
+    "name": "Smart Building Security & Access Agent",
+    "description": "该智能体面向智慧楼宇安防、门禁、人员通行和安全风险融合任务，能够处理访客识别、门禁权限、门禁日志、人员通行、尾随、未授权进入、楼层人流、人员聚集、电梯异常、消防联动和安防告警；支持多源证据融合、风险评分、异常通行判定、人员聚集风险判断、事件时间线生成和楼宇安防日报。",
+    "url": "http://[fd10::1:2]:8072",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_building.security.visitor.register",
+        "name": "Visitor Register",
+        "description": "登记楼宇访客信息，包括姓名、证件、预约时段、被访人员和通行权限，并生成结构化访客记录。",
+        "tags": [
+          "smart-building",
+          "security",
+          "visitor",
+          "register"
+        ]
+      },
+      {
+        "id": "smart_building.security.visitor.verify",
+        "name": "Visitor Identity Verify",
+        "description": "核验访客身份信息与预约记录是否匹配，判断是否允许通行，并返回验证结果和置信度。",
+        "tags": [
+          "smart-building",
+          "security",
+          "visitor",
+          "verify"
+        ]
+      },
+      {
+        "id": "smart_building.security.face_access.authenticate",
+        "name": "Face Access Authenticate",
+        "description": "基于人脸识别对楼宇门禁进行身份认证，支持员工、访客和黑名单人员的实时识别与放行控制。",
+        "tags": [
+          "smart-building",
+          "security",
+          "face-access",
+          "authenticate"
+        ]
+      },
+      {
+        "id": "smart_building.security.access_permission.manage",
+        "name": "Access Permission Manage",
+        "description": "管理楼宇各区域的门禁权限，支持按人员角色、时段、楼层和区域配置通行规则并输出权限变更记录。",
+        "tags": [
+          "smart-building",
+          "security",
+          "access-permission",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_building.security.tailgating.detect",
+        "name": "Tailgating Detect",
+        "description": "检测门禁区域的尾随闯入行为，识别未经授权跟随授权人员进入的事件并返回告警信息。",
+        "tags": [
+          "smart-building",
+          "security",
+          "tailgating",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_building.security.unauthorized_area.detect",
+        "name": "Unauthorized Area Intrusion Detect",
+        "description": "检测人员进入楼宇限制区域（如机房、档案室、配电间）的未授权入侵事件，并返回事件位置和时间。",
+        "tags": [
+          "smart-building",
+          "security",
+          "unauthorized-area",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_building.security.loitering.detect",
+        "name": "Building Loitering Detect",
+        "description": "识别楼宇大堂、走廊、停车场等区域的人员异常停留行为，用于安全风险预判和主动干预。",
+        "tags": [
+          "smart-building",
+          "security",
+          "loitering",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_building.security.crowd_flow.monitor",
+        "name": "Crowd Flow Monitor",
+        "description": "监测楼宇各出入口、电梯厅和公共区域的人员流量变化，识别拥堵、疏散异常等情况。",
+        "tags": [
+          "smart-building",
+          "security",
+          "crowd-flow",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_building.security.fire_evacuation.monitor",
+        "name": "Fire Evacuation Monitor",
+        "description": "在消防报警触发后，监测楼宇各疏散通道的人员疏散进度，识别堵塞、遗留人员和危险区域滞留情况。",
+        "tags": [
+          "smart-building",
+          "security",
+          "fire-evacuation",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_building.security.fire_exit.check",
+        "name": "Fire Exit Compliance Check",
+        "description": "检查消防通道是否被物品堵塞、防火门是否正常关闭，输出合规状态和违规位置。",
+        "tags": [
+          "smart-building",
+          "security",
+          "fire-exit",
+          "check"
+        ]
+      },
+      {
+        "id": "smart_building.security.elevator_abnormal.detect",
+        "name": "Elevator Abnormal Detect",
+        "description": "检测电梯轿厢内的异常事件，包括人员被困、超员、摔倒、暴力行为或长时间无响应等情况。",
+        "tags": [
+          "smart-building",
+          "security",
+          "elevator-abnormal",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_building.security.parking_illegal.detect",
+        "name": "Parking Illegal Detect",
+        "description": "识别楼宇停车场内的违规停车行为，包括占用消防通道、禁停区停放、超时占位等，并返回车牌和位置。",
+        "tags": [
+          "smart-building",
+          "security",
+          "parking-illegal",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_building.security.black_list.alert",
+        "name": "Blacklist Person Alert",
+        "description": "将人脸识别结果与黑名单库比对，当检测到黑名单人员进入楼宇时触发告警并推送通知。",
+        "tags": [
+          "smart-building",
+          "security",
+          "black-list",
+          "alert"
+        ]
+      },
+      {
+        "id": "smart_building.security.object_left.detect",
+        "name": "Suspicious Object Left Detect",
+        "description": "检测楼宇公共区域遗留的可疑物品，返回物品位置、遗留时长和疑似类型。",
+        "tags": [
+          "smart-building",
+          "security",
+          "object-left",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_building.security.vip_escort.track",
+        "name": "VIP Escort Track",
+        "description": "跟踪VIP人员或特殊访客在楼宇内的移动轨迹，协助礼宾和安保人员提供全程陪同引导支持。",
+        "tags": [
+          "smart-building",
+          "security",
+          "vip-escort",
+          "track"
+        ]
+      },
+      {
+        "id": "smart_building.security.alarm_event.classify",
+        "name": "Alarm Event Classify",
+        "description": "对楼宇安防系统触发的告警事件进行分类，区分真实威胁、误报、设备故障和环境干扰，降低误报率。",
+        "tags": [
+          "smart-building",
+          "security",
+          "alarm-event",
+          "classify"
+        ]
+      },
+      {
+        "id": "smart_building.security.patrol.verify",
+        "name": "Security Patrol Verify",
+        "description": "核验安保人员的巡逻轨迹是否按计划执行，识别漏检点位、巡逻时间偏差和巡逻行为异常。",
+        "tags": [
+          "smart-building",
+          "security",
+          "patrol",
+          "verify"
+        ]
+      },
+      {
+        "id": "smart_building.security.event_timeline.generate",
+        "name": "Security Event Timeline Generate",
+        "description": "融合门禁、视频、电梯、人流、告警和巡检结果，生成楼宇安防事件时间线、证据链和风险说明。",
+        "tags": [
+          "smart-building",
+          "security",
+          "event-timeline",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_building.security.daily_report.generate",
+        "name": "Building Security Daily Report Generate",
+        "description": "生成楼宇安防日报，涵盖访客流量、门禁异常、告警统计、消防合规和安保巡逻情况。",
+        "tags": [
+          "smart-building",
+          "security",
+          "daily-report",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_building.security.qa.answer",
+        "name": "Building Security QA Answer",
+        "description": "回答用户关于楼宇安防状态、通行记录、告警事件和安保合规情况的问题，并基于相关数据提供解释。",
+        "tags": [
+          "smart-building",
+          "security"
+        ]
+      },
+      {
+        "id": "smart_building.security.access_log.analyze",
+        "name": "Building Access Log Analysis",
+        "description": "解析门禁记录、刷卡/人脸通行日志、访客记录和异常开门记录，提取人员、时间、区域、权限和异常通行事件。",
+        "tags": [
+          "smart-building",
+          "security",
+          "access-log"
+        ]
+      },
+      {
+        "id": "smart_building.security.risk_score.calculate",
+        "name": "Building Security Risk Score Calculation",
+        "description": "融合入口视频、门禁记录、电梯状态、楼层人流和安防告警，计算异常通行或人员聚集风险等级并输出依据。",
+        "tags": [
+          "smart-building",
+          "security",
+          "risk-score"
+        ]
+      },
+      {
+        "id": "smart_building.security.multisource_risk.assess",
+        "name": "Building Multi-Source Security Risk Assessment",
+        "description": "对楼宇视频、门禁、电梯、人流、消防联动和安防告警进行多源证据融合，判断异常通行、人员聚集和安全事件风险。",
+        "tags": [
+          "smart-building",
+          "security",
+          "multisource",
+          "fusion"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-023",
+    "name": "Smart Building Facility & Energy Agent",
+    "description": "该智能体面向智慧楼宇设施、会议室、空间利用率和能源管理任务，能够处理空调、照明、电梯、给排水、会议室、停车场、楼宇能耗、室内环境、空间占用和碳排放数据；支持多源设施状态融合、能源浪费判断、空间利用率分析、会议室可用性评估、节能优化建议、楼宇运行日报和绿色建筑评估。",
+    "url": "http://[fd10::1:2]:8073",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_building.facility.hvac.optimize",
+        "name": "HVAC System Optimize",
+        "description": "基于楼宇各区域的人员密度、室内温湿度和室外气候数据，动态优化中央空调的运行参数和分区调节策略。",
+        "tags": [
+          "smart-building",
+          "facility",
+          "hvac",
+          "optimize"
+        ]
+      },
+      {
+        "id": "smart_building.facility.lighting.control",
+        "name": "Smart Lighting Control",
+        "description": "根据楼宇各区域的人员占用状态和自然光照强度，自动调节照明开关和亮度，实现按需照明和节能管理。",
+        "tags": [
+          "smart-building",
+          "facility",
+          "lighting",
+          "control"
+        ]
+      },
+      {
+        "id": "smart_building.facility.elevator.dispatch",
+        "name": "Elevator Dispatch Optimize",
+        "description": "基于楼宇人员流量预测和实时呼梯数据，优化电梯调度策略，减少等候时间并降低电梯能耗。",
+        "tags": [
+          "smart-building",
+          "facility",
+          "elevator",
+          "dispatch"
+        ]
+      },
+      {
+        "id": "smart_building.facility.meeting_room.manage",
+        "name": "Meeting Room Manage",
+        "description": "管理楼宇会议室的预约、占用检测、无人自动释放和设备联动控制，提升会议室资源利用率。",
+        "tags": [
+          "smart-building",
+          "facility",
+          "meeting-room",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_building.facility.meeting_room_occupancy.detect",
+        "name": "Meeting Room Occupancy Detect",
+        "description": "实时检测会议室是否有人使用，识别僵尸预约（已预约但无人出现）并自动释放资源。",
+        "tags": [
+          "smart-building",
+          "facility",
+          "meeting-room-occupancy",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_building.facility.energy_consumption.monitor",
+        "name": "Building Energy Consumption Monitor",
+        "description": "监测楼宇各系统（空调、照明、电梯、插座）的实时能耗数据，识别异常用电和高耗能设备。",
+        "tags": [
+          "smart-building",
+          "facility",
+          "energy-consumption",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_building.facility.energy_anomaly.detect",
+        "name": "Energy Anomaly Detect",
+        "description": "检测楼宇能耗数据中的异常波动，识别设备空转、漏电、计量错误或非工作时段异常用电情况。",
+        "tags": [
+          "smart-building",
+          "facility",
+          "energy-anomaly",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_building.facility.carbon_emission.calculate",
+        "name": "Carbon Emission Calculate",
+        "description": "基于楼宇各能源品类的消耗数据，计算碳排放量，支持碳中和目标跟踪和绿色建筑认证数据生成。",
+        "tags": [
+          "smart-building",
+          "facility",
+          "carbon-emission",
+          "calculate"
+        ]
+      },
+      {
+        "id": "smart_building.facility.water_consumption.monitor",
+        "name": "Water Consumption Monitor",
+        "description": "监测楼宇给排水系统的用水量变化，识别管道漏水、异常用水和高峰期水压不足等情况。",
+        "tags": [
+          "smart-building",
+          "facility",
+          "water-consumption",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_building.facility.equipment_fault.detect",
+        "name": "Facility Equipment Fault Detect",
+        "description": "检测楼宇机电设备（空调、水泵、配电柜）的运行故障和性能劣化，返回故障类型、位置和严重程度。",
+        "tags": [
+          "smart-building",
+          "facility",
+          "equipment-fault",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_building.facility.maintenance_schedule.plan",
+        "name": "Maintenance Schedule Plan",
+        "description": "根据设备运行状态和历史维护记录，制定楼宇设施的预防性维护计划，输出维护任务优先级和工单。",
+        "tags": [
+          "smart-building",
+          "facility",
+          "maintenance-schedule",
+          "plan"
+        ]
+      },
+      {
+        "id": "smart_building.facility.space_utilization.analyze",
+        "name": "Space Utilization Analyze",
+        "description": "分析会议室、办公区、楼层和公共空间的预约率、占用率、热力图、使用效率和异常空置/拥挤情况。",
+        "tags": [
+          "smart-building",
+          "facility",
+          "space-utilization",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_building.facility.indoor_air_quality.monitor",
+        "name": "Indoor Air Quality Monitor",
+        "description": "监测楼宇室内CO₂、PM2.5、TVOC和温湿度等空气质量指标，识别超标区域并触发新风系统联动。",
+        "tags": [
+          "smart-building",
+          "facility",
+          "indoor-air-quality",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_building.facility.noise.monitor",
+        "name": "Noise Level Monitor",
+        "description": "监测楼宇公共区域和办公区域的噪声分贝水平，识别超标噪声来源并支持安静区域保障管理。",
+        "tags": [
+          "smart-building",
+          "facility",
+          "noise",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_building.facility.cleaning_task.manage",
+        "name": "Cleaning Task Manage",
+        "description": "根据各区域人流密度和污染程度，动态调度清洁任务，输出清洁优先级排序和工单分配建议。",
+        "tags": [
+          "smart-building",
+          "facility",
+          "cleaning-task",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_building.facility.work_order.track",
+        "name": "Facility Work Order Track",
+        "description": "跟踪楼宇设施维修工单的创建、分配、进度和完成状态，识别超期未处理工单并发送催办提醒。",
+        "tags": [
+          "smart-building",
+          "facility",
+          "work-order",
+          "track"
+        ]
+      },
+      {
+        "id": "smart_building.facility.cost_analysis.generate",
+        "name": "Facility Cost Analysis Generate",
+        "description": "生成楼宇运营成本分析报告，涵盖能耗费用、设备维护费用、清洁保安费用的分摊和趋势分析。",
+        "tags": [
+          "smart-building",
+          "facility",
+          "cost-analysis",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_building.facility.green_building.assess",
+        "name": "Green Building Compliance Assess",
+        "description": "评估楼宇在能耗、碳排、空气质量、水耗等维度的绿色建筑合规情况，输出评分和改进建议。",
+        "tags": [
+          "smart-building",
+          "facility",
+          "green-building",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_building.facility.monthly_report.generate",
+        "name": "Facility Monthly Report Generate",
+        "description": "生成楼宇设施管理月报，涵盖能耗对比、设备健康度、空间利用率、维修工单和成本概览。",
+        "tags": [
+          "smart-building",
+          "facility",
+          "monthly-report",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_building.facility.qa.answer",
+        "name": "Building Facility QA Answer",
+        "description": "回答用户关于楼宇能耗、设备状态、空间利用、维修进度和绿色合规情况的问题，并基于相关数据提供解释。",
+        "tags": [
+          "smart-building",
+          "facility"
+        ]
+      },
+      {
+        "id": "smart_building.facility.energy_waste.assess",
+        "name": "Building Energy Waste Assessment",
+        "description": "融合楼宇能耗、空调运行状态、室内温度、占用率和环境传感器，判断能源浪费、空调低效或异常用能。",
+        "tags": [
+          "smart-building",
+          "facility",
+          "energy",
+          "assessment"
+        ]
+      },
+      {
+        "id": "smart_building.facility.multisource_efficiency.analyze",
+        "name": "Building Multi-Source Facility Efficiency Analysis",
+        "description": "融合空调、照明、能耗、空间占用和环境传感器数据，评估设施运行效率并生成节能优化建议。",
+        "tags": [
+          "smart-building",
+          "facility",
+          "multisource",
+          "energy"
+        ]
+      },
+      {
+        "id": "smart_building.facility.daily_status.summarize",
+        "name": "Building Daily Facility Status Summary",
+        "description": "汇总楼宇安防、消防、电梯、能源、空间占用和环境状态，生成楼宇运行状态摘要。",
+        "tags": [
+          "smart-building",
+          "facility",
+          "daily-summary"
+        ]
+      },
+      {
+        "id": "smart_building.meeting_room.availability.assess",
+        "name": "Meeting Room Availability Assessment",
+        "description": "融合会议预约、会议设备状态、人员到场和室内环境数据，判断会议室是否可正常使用。",
+        "tags": [
+          "smart-building",
+          "meeting-room",
+          "availability"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-024",
+    "name": "Smart Campus Vehicle & Traffic Agent",
+    "description": "该智能体面向智慧园区车辆、停车场和交通态势管理任务，能够处理车牌识别、车辆出入、停车位占用、异常停车、违停、逆行、超速、园区道路拥堵、交通事件、门禁记录、车辆轨迹和停车引导；支持交通视频分析、车位/门禁/事件日志融合、时空对齐、园区交通态势摘要、调度建议、紧急度排序和交通报告生成。",
+    "url": "http://[fd10::1:2]:8074",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_campus.vehicle.license_plate.recognize",
+        "name": "License Plate Recognize",
+        "description": "从园区摄像头图像或视频中识别车辆车牌号码，支持中英文、新能源及特种车牌，并返回识别结果和置信度。",
+        "tags": [
+          "smart-campus",
+          "vehicle",
+          "license-plate",
+          "recognize"
+        ]
+      },
+      {
+        "id": "smart_campus.vehicle.entry_exit.control",
+        "name": "Vehicle Entry Exit Control",
+        "description": "基于车牌识别和白名单规则，控制园区出入口闸机的开放与拒绝，记录每辆车的进出时间和权限依据。",
+        "tags": [
+          "smart-campus",
+          "vehicle",
+          "entry-exit",
+          "control"
+        ]
+      },
+      {
+        "id": "smart_campus.vehicle.whitelist.manage",
+        "name": "Vehicle Whitelist Manage",
+        "description": "管理园区车辆通行白名单，支持批量导入、有效期设置、权限分级和黑名单标记，输出权限变更日志。",
+        "tags": [
+          "smart-campus",
+          "vehicle",
+          "whitelist",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_campus.vehicle.parking_space.detect",
+        "name": "Parking Space Availability Detect",
+        "description": "实时检测园区停车位的占用状态，输出空余车位数量、位置和分布热力图，支持停车引导系统联动。",
+        "tags": [
+          "smart-campus",
+          "vehicle",
+          "parking-space",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_campus.vehicle.parking_guidance.generate",
+        "name": "Parking Guidance Generate",
+        "description": "根据车辆进场位置和当前空余车位分布，生成最优停车引导路径，支持不同车型和权限的差异化引导。",
+        "tags": [
+          "smart-campus",
+          "vehicle",
+          "parking-guidance",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_campus.vehicle.illegal_parking.detect",
+        "name": "Illegal Parking Detect",
+        "description": "检测园区或停车场视频/事件中的异常停车、违停、占道、堵塞通道等行为，输出位置、车辆信息、时间和置信度。",
+        "tags": [
+          "smart-campus",
+          "vehicle",
+          "illegal-parking",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_campus.vehicle.speeding.detect",
+        "name": "Vehicle Speeding Detect",
+        "description": "检测园区内车辆行驶速度是否超过限速规定，返回违规车牌、测速位置、实际速度和抓拍证据。",
+        "tags": [
+          "smart-campus",
+          "vehicle",
+          "speeding",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_campus.vehicle.wrong_way.detect",
+        "name": "Wrong Way Driving Detect",
+        "description": "检测园区内车辆逆向行驶行为，识别违规路段、车辆信息和发生时间，用于园区交通安全管理。",
+        "tags": [
+          "smart-campus",
+          "vehicle",
+          "wrong-way",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_campus.vehicle.agv_dispatch.optimize",
+        "name": "AGV Dispatch Optimize",
+        "description": "优化园区内AGV（自动导引车）的任务分配和行驶路径，避免路径冲突，提升物料搬运效率。",
+        "tags": [
+          "smart-campus",
+          "vehicle",
+          "agv-dispatch",
+          "optimize"
+        ]
+      },
+      {
+        "id": "smart_campus.vehicle.forklift_safety.monitor",
+        "name": "Forklift Safety Monitor",
+        "description": "监测园区叉车的行驶速度、作业区域和人车距离，识别叉车作业安全隐患并触发告警。",
+        "tags": [
+          "smart-campus",
+          "vehicle",
+          "forklift-safety",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_campus.vehicle.ev_charging.manage",
+        "name": "EV Charging Station Manage",
+        "description": "管理园区充电桩的使用状态、排队分配和充电计费，识别充电桩故障和超时占用行为。",
+        "tags": [
+          "smart-campus",
+          "vehicle",
+          "ev-charging",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_campus.vehicle.traffic_flow.analyze",
+        "name": "Campus Traffic Flow Analyze",
+        "description": "分析园区各路段的车流量变化规律，识别高峰期拥堵路段，为园区交通组织优化提供数据支撑。",
+        "tags": [
+          "smart-campus",
+          "vehicle",
+          "traffic-flow",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_campus.vehicle.congestion.detect",
+        "name": "Campus Congestion Detect",
+        "description": "检测园区道路或停车场周边交通拥堵，可基于交通视频、车流数据或事件日志输出拥堵等级、位置、时间和证据。",
+        "tags": [
+          "smart-campus",
+          "vehicle",
+          "congestion",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_campus.vehicle.accident.detect",
+        "name": "Traffic Accident Detect",
+        "description": "从园区摄像头视频中识别车辆碰撞、剐蹭、翻车等交通事故事件，并返回事故位置和发生时间。",
+        "tags": [
+          "smart-campus",
+          "vehicle",
+          "accident",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_campus.vehicle.pedestrian_conflict.detect",
+        "name": "Vehicle Pedestrian Conflict Detect",
+        "description": "检测园区内车辆与行人的危险交叉情况，识别人车冲突风险点并触发预警，保障行人安全。",
+        "tags": [
+          "smart-campus",
+          "vehicle",
+          "pedestrian-conflict",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_campus.vehicle.delivery.track",
+        "name": "Delivery Vehicle Track",
+        "description": "跟踪园区内货运和配送车辆的进出记录、停靠时间和卸货区使用情况，支持物流作业效率分析。",
+        "tags": [
+          "smart-campus",
+          "vehicle",
+          "delivery",
+          "track"
+        ]
+      },
+      {
+        "id": "smart_campus.vehicle.visitor_vehicle.manage",
+        "name": "Visitor Vehicle Manage",
+        "description": "管理园区访客车辆的临时通行权限、停车位预留和离场确认，输出访客车辆进出记录。",
+        "tags": [
+          "smart-campus",
+          "vehicle",
+          "visitor-vehicle",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_campus.vehicle.parking_fee.calculate",
+        "name": "Parking Fee Calculate",
+        "description": "根据车辆进出时间、车型和停车区域，自动计算停车费用并生成计费记录，支持月租和临停两种模式。",
+        "tags": [
+          "smart-campus",
+          "vehicle",
+          "parking-fee",
+          "calculate"
+        ]
+      },
+      {
+        "id": "smart_campus.vehicle.traffic_report.generate",
+        "name": "Campus Traffic Report Generate",
+        "description": "生成园区交通管理报告，涵盖车流量统计、违规记录、停车使用率、充电桩效率和事故情况。",
+        "tags": [
+          "smart-campus",
+          "vehicle",
+          "traffic-report",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_campus.vehicle.qa.answer",
+        "name": "Campus Vehicle QA Answer",
+        "description": "回答用户关于园区车辆通行、停车状态、违规记录、充电桩和交通拥堵情况的问题，并基于相关数据提供解释。",
+        "tags": [
+          "smart-campus",
+          "vehicle"
+        ]
+      },
+      {
+        "id": "smart_campus.vehicle.traffic_situation.fuse",
+        "name": "Campus Traffic Situation Fusion",
+        "description": "融合园区车辆视频、停车场状态、道路拥堵、门禁记录和交通事件，生成统一交通态势摘要。",
+        "tags": [
+          "smart-campus",
+          "vehicle",
+          "traffic",
+          "fusion"
+        ]
+      },
+      {
+        "id": "smart_campus.vehicle.dispatch_advice.generate",
+        "name": "Campus Traffic Dispatch Advice Generation",
+        "description": "根据园区交通态势、停车占用、拥堵、异常停车和出入口记录生成交通调度建议、优先级和处置动作。",
+        "tags": [
+          "smart-campus",
+          "vehicle",
+          "traffic",
+          "dispatch"
+        ]
+      },
+      {
+        "id": "smart_campus.vehicle.parking_anomaly.assess",
+        "name": "Campus Parking Management Anomaly Assessment",
+        "description": "融合停车场视频、车位占用、车辆进出记录、门禁信息和异常停车检测，判断停车管理是否存在异常。",
+        "tags": [
+          "smart-campus",
+          "vehicle",
+          "parking",
+          "anomaly-assessment"
+        ]
+      }
+    ]
+  }
+]

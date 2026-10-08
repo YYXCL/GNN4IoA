@@ -1,17 +1,14 @@
-# 模型包
+# 当前模型与基线
 
-当前入口是 `ma_tgn.v2.TaskConditionedHGTGRU`。V1 与 V2 已按版本隔离，二者不再共享实现模块。
+`tc_mdsm/` 是唯一保留的模型实现。`types.py` 中的方法集合包含 TC-MDSM 和论文列出的五个基线。
 
-| 目录/文件 | 作用 |
-| --- | --- |
-| `v2/model.py` | 节点/边 GRU 历史编码、一层邻居聚合、任务条件特征注意力与任务—智能体注意力 |
-| `v2/task_node_encoder.py` | 把 Skill ID、时延、准确率和 DAG 依赖编码为瞬时任务节点 |
-| `v2/normalization.py` | 仅用训练集拟合的分类型标准化 |
-| `v2/text_encoder.py` / `v2/layers.py` | Skill ID 哈希编码、MLP 与分段 softmax |
-| `v1/` | 旧双时间尺度、置信度和能力槽版本，仅用于历史复现 |
-| `config.py` | 只保留 V2 实际使用的配置；V1 使用 `v1/config.py` |
-| `state_schema.py` / `types.py` | 状态字段、事件、图、任务和训练样本契约 |
+| 方法 | 当前实现口径 |
+|---|---|
+| TC-MDSM | 历史状态、任务条件稀疏选择、异构图预测与 CP-SAT 调度 |
+| GMATANN | 条件时序 VAE、局部与全局注意力，接入统一预测与调度接口 |
+| HM-MATAS | 异构节点与边注意力，接入统一预测与调度接口 |
+| Rule-Latency | 以观测时延筛选候选，使用共享 CP-SAT 后端 |
+| Full-State | 与 TC-MDSM 相同的历史 GRU、任务查询、图预测、32候选预算与 CP-SAT，仅取消状态组门控及维度掩码 |
+| StaticGraph | 当前状态异构图，不使用历史 GRU 与任务条件稀疏门控 |
 
-V2 没有 Task Query 对象。DAG 中每个子任务在一次分配中作为瞬时任务节点，与全部候选智能体形成边；任务节点不会写入跨时间 GRU 记忆。
-
-智能体能力不使用能力槽。每个智能体保存精确 Skill ID 集合，Skill 匹配是硬约束；动态状态只保留上下文、环境、未完成任务和一条总体可靠性向量。模型也不使用人工置信度、显式趋势或快/慢状态更新尺度。
+GMATANN 与 HM-MATAS 是面向本任务的结构适配；图例使用论文给定的原名称，不加 adapted。旧 MA-TGN 的模型和独立基线目录已清理。

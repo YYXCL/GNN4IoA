@@ -1,0 +1,5335 @@
+[
+  {
+    "id": "agent-025",
+    "name": "Smart Campus Personnel & Access Agent",
+    "description": "该智能体面向智慧园区人员管理与通行管控任务，能够处理员工考勤、访客管理、人员轨迹追踪、区域人流统计、危险区域闯入检测和园区人员安全事件管理，为园区人员运营提供精细化感知与安全保障能力。",
+    "url": "http://[fd10::1:2]:8075",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_campus.personnel.attendance.record",
+        "name": "Attendance Record",
+        "description": "基于人脸识别或门禁刷卡记录，自动采集员工的上下班打卡数据，生成结构化考勤记录和异常统计。",
+        "tags": [
+          "smart-campus",
+          "personnel",
+          "attendance",
+          "record"
+        ]
+      },
+      {
+        "id": "smart_campus.personnel.attendance_anomaly.detect",
+        "name": "Attendance Anomaly Detect",
+        "description": "检测员工考勤异常，包括迟到、早退、代打卡、长时间离岗和异常进出记录，并返回告警明细。",
+        "tags": [
+          "smart-campus",
+          "personnel",
+          "attendance-anomaly",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_campus.personnel.trajectory.track",
+        "name": "Personnel Trajectory Track",
+        "description": "跟踪园区内人员的移动轨迹，整合多摄像头识别结果生成人员活动路径，支持安全事件溯源。",
+        "tags": [
+          "smart-campus",
+          "personnel",
+          "trajectory",
+          "track"
+        ]
+      },
+      {
+        "id": "smart_campus.personnel.zone_count.monitor",
+        "name": "Zone Personnel Count Monitor",
+        "description": "实时统计园区各功能区域的在场人员数量，识别超员情况并输出各区域人员分布热力图。",
+        "tags": [
+          "smart-campus",
+          "personnel",
+          "zone-count",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_campus.personnel.restricted_zone.detect",
+        "name": "Restricted Zone Intrusion Detect",
+        "description": "检测人员进入园区危险区域、保密区域或非授权区域的闯入事件，返回人员身份、位置和时间。",
+        "tags": [
+          "smart-campus",
+          "personnel",
+          "restricted-zone",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_campus.personnel.ppe_compliance.detect",
+        "name": "Campus PPE Compliance Detect",
+        "description": "检测进入特定作业区域的人员是否佩戴安全帽、反光背心、防护手套等必要防护装备，输出合规判定结果。",
+        "tags": [
+          "smart-campus",
+          "personnel",
+          "ppe-compliance",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_campus.personnel.visitor.guide",
+        "name": "Visitor Guide",
+        "description": "为园区访客提供参观路线规划和实时导引，结合访客权限控制访问区域，并记录全程轨迹。",
+        "tags": [
+          "smart-campus",
+          "personnel",
+          "visitor",
+          "guide"
+        ]
+      },
+      {
+        "id": "smart_campus.personnel.contractor.manage",
+        "name": "Contractor Personnel Manage",
+        "description": "管理园区外包施工人员的资质审核、通行权限、作业区域和在场时段，输出承包商人员管控记录。",
+        "tags": [
+          "smart-campus",
+          "personnel",
+          "contractor",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_campus.personnel.emergency_muster.check",
+        "name": "Emergency Muster Check",
+        "description": "在应急疏散场景下，核查各紧急集合点的到位人数与预期人数的差异，识别失联人员并输出清点报告。",
+        "tags": [
+          "smart-campus",
+          "personnel",
+          "emergency-muster",
+          "check"
+        ]
+      },
+      {
+        "id": "smart_campus.personnel.loitering.detect",
+        "name": "Campus Loitering Detect",
+        "description": "识别园区内人员的异常停留行为，区分正常休息与可疑徘徊，用于安全风险预警和主动干预。",
+        "tags": [
+          "smart-campus",
+          "personnel",
+          "loitering",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_campus.personnel.fall.detect",
+        "name": "Campus Personnel Fall Detect",
+        "description": "检测园区公共区域和作业区的人员跌倒事件，返回跌倒位置、时间和人员信息，触发急救响应。",
+        "tags": [
+          "smart-campus",
+          "personnel",
+          "fall",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_campus.personnel.fight.detect",
+        "name": "Fight Detect",
+        "description": "从园区视频中识别人员肢体冲突和打架斗殴行为，返回事件位置、参与人数和发生时间。",
+        "tags": [
+          "smart-campus",
+          "personnel",
+          "fight",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_campus.personnel.work_hour.analyze",
+        "name": "Work Hour Analyze",
+        "description": "分析员工的实际在岗时长、离岗频率和工时分布，为人力资源管理和工时合规审计提供数据依据。",
+        "tags": [
+          "smart-campus",
+          "personnel",
+          "work-hour",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_campus.personnel.department_flow.analyze",
+        "name": "Department Flow Analyze",
+        "description": "分析各部门人员在园区内的跨区域流动规律，识别高频协作区域，支持空间布局优化决策。",
+        "tags": [
+          "smart-campus",
+          "personnel",
+          "department-flow",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_campus.personnel.health_pass.verify",
+        "name": "Health Pass Verify",
+        "description": "核验进入园区人员的健康证明或准入资质，支持与外部系统对接，识别证件过期或无效人员。",
+        "tags": [
+          "smart-campus",
+          "personnel",
+          "health-pass",
+          "verify"
+        ]
+      },
+      {
+        "id": "smart_campus.personnel.lost_person.locate",
+        "name": "Lost Person Locate",
+        "description": "根据人员最后已知位置和摄像头覆盖网络，快速定位园区内失联人员的当前位置，辅助搜寻响应。",
+        "tags": [
+          "smart-campus",
+          "personnel",
+          "lost-person",
+          "locate"
+        ]
+      },
+      {
+        "id": "smart_campus.personnel.shift_handover.verify",
+        "name": "Shift Handover Verify",
+        "description": "核验园区岗位交接班是否按时完成，识别脱岗空窗期和未交接情况，输出交接班合规记录。",
+        "tags": [
+          "smart-campus",
+          "personnel",
+          "shift-handover",
+          "verify"
+        ]
+      },
+      {
+        "id": "smart_campus.personnel.mobile_phone.detect",
+        "name": "Mobile Phone Usage Detect",
+        "description": "检测特定作业区域内人员违规使用手机的行为，输出违规人员信息、位置和时间，用于安全合规管控。",
+        "tags": [
+          "smart-campus",
+          "personnel",
+          "mobile-phone",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_campus.personnel.attendance_report.generate",
+        "name": "Attendance Report Generate",
+        "description": "生成园区人员考勤报告，涵盖出勤率、迟到早退、工时统计、访客流量和区域人员分布情况。",
+        "tags": [
+          "smart-campus",
+          "personnel",
+          "attendance-report",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_campus.personnel.qa.answer",
+        "name": "Campus Personnel QA Answer",
+        "description": "回答用户关于园区人员考勤、通行记录、区域分布、安全事件和合规情况的问题，并基于相关数据提供解释。",
+        "tags": [
+          "smart-campus",
+          "personnel"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-026",
+    "name": "Smart Agriculture Crop Monitoring Agent",
+    "description": "该智能体面向智慧农业作物监测、农情诊断和田块管理建议任务，能够处理作物图像、无人机巡检结果、长势记录、病虫害、缺水/干旱风险、气象数据、土壤数据和历史长势趋势；支持天气预报结构化解析、多源农情融合、空间一致性判断、灌溉/施肥/植保建议、田块管理报告和作物风险评估。",
+    "url": "http://[fd10::1:2]:8076",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_agriculture.crop.growth_stage.identify",
+        "name": "Crop Growth Stage Identify",
+        "description": "从作物图像中识别当前生长阶段（萌发、出苗、分蘖、拔节、开花、结实、成熟），输出阶段判定和进度评估。",
+        "tags": [
+          "smart-agriculture",
+          "crop",
+          "growth-stage",
+          "identify"
+        ]
+      },
+      {
+        "id": "smart_agriculture.crop.health.assess",
+        "name": "Crop Health Assess",
+        "description": "综合图像特征和传感器数据，评估作物整体健康状况，识别营养缺乏、水分胁迫和生长异常情况。",
+        "tags": [
+          "smart-agriculture",
+          "crop",
+          "health",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_agriculture.crop.disease.detect",
+        "name": "Crop Disease Detect",
+        "description": "从作物叶片和茎干图像中识别真菌、细菌、病毒等病害，输出病害类型、感染面积和严重程度评级。",
+        "tags": [
+          "smart-agriculture",
+          "crop",
+          "disease",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_agriculture.crop.pest.detect",
+        "name": "Crop Pest Detect",
+        "description": "识别作物图像中的害虫种类和侵害痕迹，输出害虫类型、数量密度和危害区域，支持精准防治决策。",
+        "tags": [
+          "smart-agriculture",
+          "crop",
+          "pest",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_agriculture.crop.weed.detect",
+        "name": "Weed Detect",
+        "description": "从田间图像中识别杂草种类和分布密度，区分作物与杂草，支持精准除草作业路径规划。",
+        "tags": [
+          "smart-agriculture",
+          "crop",
+          "weed",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_agriculture.crop.nutrient_deficiency.diagnose",
+        "name": "Nutrient Deficiency Diagnose",
+        "description": "通过作物叶片颜色、形态和纹理特征，诊断氮、磷、钾、铁、锌等营养元素缺乏症状，输出缺素诊断结论。",
+        "tags": [
+          "smart-agriculture",
+          "crop",
+          "nutrient-deficiency",
+          "diagnose"
+        ]
+      },
+      {
+        "id": "smart_agriculture.crop.water_stress.detect",
+        "name": "Water Stress Detect",
+        "description": "识别作物因水分不足或过涝引起的胁迫特征，结合土壤湿度数据判断灌溉需求和涝害风险。",
+        "tags": [
+          "smart-agriculture",
+          "crop",
+          "water-stress",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_agriculture.crop.canopy_coverage.measure",
+        "name": "Canopy Coverage Measure",
+        "description": "基于图像或遥感数据，测量作物冠层覆盖度和叶面积指数，用于评估作物群体长势和光合效率。",
+        "tags": [
+          "smart-agriculture",
+          "crop",
+          "canopy-coverage",
+          "measure"
+        ]
+      },
+      {
+        "id": "smart_agriculture.crop.yield.predict",
+        "name": "Crop Yield Predict",
+        "description": "综合作物生长状态、气象数据和历史产量数据，预测当季产量及其置信区间，支持农业生产计划制定。",
+        "tags": [
+          "smart-agriculture",
+          "crop",
+          "yield",
+          "predict"
+        ]
+      },
+      {
+        "id": "smart_agriculture.crop.harvest_timing.recommend",
+        "name": "Harvest Timing Recommend",
+        "description": "基于作物成熟度评估和气象预报，推荐最优收获时间窗口，减少因时机不当导致的产量损失。",
+        "tags": [
+          "smart-agriculture",
+          "crop",
+          "harvest-timing",
+          "recommend"
+        ]
+      },
+      {
+        "id": "smart_agriculture.crop.soil_condition.monitor",
+        "name": "Soil Condition Monitor",
+        "description": "监测土壤温度、湿度、pH值、EC值和养分含量的实时变化，识别超标异常并输出改良建议。",
+        "tags": [
+          "smart-agriculture",
+          "crop",
+          "soil-condition",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_agriculture.crop.irrigation.optimize",
+        "name": "Irrigation Optimize",
+        "description": "结合土壤墒情、作物需水量和气象预报，动态优化灌溉时间、用水量和灌区分配，实现精准节水灌溉。",
+        "tags": [
+          "smart-agriculture",
+          "crop",
+          "irrigation",
+          "optimize"
+        ]
+      },
+      {
+        "id": "smart_agriculture.crop.fertilization.recommend",
+        "name": "Fertilization Recommend",
+        "description": "基于土壤养分检测和作物营养需求，生成分区施肥处方图，推荐施肥种类、用量和施用时间。",
+        "tags": [
+          "smart-agriculture",
+          "crop",
+          "fertilization",
+          "recommend"
+        ]
+      },
+      {
+        "id": "smart_agriculture.crop.pesticide.recommend",
+        "name": "Pesticide Application Recommend",
+        "description": "根据病虫害识别结果和防治阈值，推荐农药种类、用量和施药时机，支持绿色防控和抗性管理。",
+        "tags": [
+          "smart-agriculture",
+          "crop",
+          "pesticide",
+          "recommend"
+        ]
+      },
+      {
+        "id": "smart_agriculture.crop.field_map.generate",
+        "name": "Field Condition Map Generate",
+        "description": "生成农田各区域的作物健康度、病虫害分布、土壤养分或产量潜力的空间分布图，支持精准农业决策。",
+        "tags": [
+          "smart-agriculture",
+          "crop",
+          "field-map",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_agriculture.crop.frost_risk.alert",
+        "name": "Frost Risk Alert",
+        "description": "基于气象预报和田间温度传感器数据，提前预警霜冻风险，输出受影响区域和防护措施建议。",
+        "tags": [
+          "smart-agriculture",
+          "crop",
+          "frost-risk",
+          "alert"
+        ]
+      },
+      {
+        "id": "smart_agriculture.crop.drone_task.plan",
+        "name": "Agricultural Drone Task Plan",
+        "description": "根据农田作业需求（巡检、植保、播种），规划无人机飞行路径、作业参数和任务优先级，输出飞行任务单。",
+        "tags": [
+          "smart-agriculture",
+          "crop",
+          "drone-task",
+          "plan"
+        ]
+      },
+      {
+        "id": "smart_agriculture.crop.carbon_sequestration.estimate",
+        "name": "Carbon Sequestration Estimate",
+        "description": "基于作物种类、生物量和土壤有机碳变化，估算农田碳汇量，支持农业碳交易和绿色认证数据生成。",
+        "tags": [
+          "smart-agriculture",
+          "crop",
+          "carbon-sequestration",
+          "estimate"
+        ]
+      },
+      {
+        "id": "smart_agriculture.crop.season_report.generate",
+        "name": "Crop Season Report Generate",
+        "description": "生成作物季度生产报告，涵盖生长过程记录、病虫害发生情况、投入产出分析和最终产量评估。",
+        "tags": [
+          "smart-agriculture",
+          "crop",
+          "season-report",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_agriculture.crop.qa.answer",
+        "name": "Crop Management QA Answer",
+        "description": "回答用户关于作物生长状态、病虫害诊断、灌溉施肥建议和产量预测的问题，并基于相关数据提供解释。",
+        "tags": [
+          "smart-agriculture",
+          "crop"
+        ]
+      },
+      {
+        "id": "smart_agriculture.weather.forecast.parse",
+        "name": "Agricultural Weather Forecast Parsing",
+        "description": "解析农业天气预报、降雨概率、温度、湿度、风速、霜冻和干旱风险信息，并输出结构化农情气象输入。",
+        "tags": [
+          "smart-agriculture",
+          "weather",
+          "forecast",
+          "parse"
+        ]
+      },
+      {
+        "id": "smart_agriculture.crop.multisource_risk.assess",
+        "name": "Crop Multi-Source Risk Assessment",
+        "description": "融合作物图像、无人机巡检、土壤湿度、天气数据和历史长势记录，判断缺水、病虫害或长势异常风险。",
+        "tags": [
+          "smart-agriculture",
+          "crop",
+          "multisource",
+          "risk"
+        ]
+      },
+      {
+        "id": "smart_agriculture.field_management.recommend",
+        "name": "Field Management Recommendation",
+        "description": "根据作物长势、病虫害、土壤水分、天气、无人机巡检和历史记录生成灌溉、施肥、植保和田块管理建议。",
+        "tags": [
+          "smart-agriculture",
+          "field",
+          "recommendation"
+        ]
+      },
+      {
+        "id": "smart_agriculture.crop.historical_growth_trend.analyze",
+        "name": "Crop Historical Growth Trend Analysis",
+        "description": "分析作物历史长势记录、NDVI、图像指标和产量趋势，识别异常增长、缺水或病害风险。",
+        "tags": [
+          "smart-agriculture",
+          "crop",
+          "history",
+          "trend"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-027",
+    "name": "Smart Greenhouse Environment Agent",
+    "description": "该智能体面向智慧温室、植物工厂和设施农业环境调控任务，能够处理温室空气温度、空气湿度、CO₂、光照、通风、补光、营养液、灌溉、设备状态和能耗数据；支持环境异常检测、多源健康度评估、植物工厂配方评估、温室调控建议、生产排程和结构化运行报告。",
+    "url": "http://[fd10::1:2]:8077",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_greenhouse.env.temperature.control",
+        "name": "Greenhouse Temperature Control",
+        "description": "基于作物需求和外部气候数据，自动调节温室加热、通风和遮阳系统，将温度维持在设定范围内。",
+        "tags": [
+          "smart-greenhouse",
+          "env",
+          "temperature",
+          "control"
+        ]
+      },
+      {
+        "id": "smart_greenhouse.env.humidity.control",
+        "name": "Greenhouse Humidity Control",
+        "description": "监测温室内湿度变化，联动加湿器、排风扇和滴灌系统，防止过高湿度引发病害或过低湿度导致失水。",
+        "tags": [
+          "smart-greenhouse",
+          "env",
+          "humidity",
+          "control"
+        ]
+      },
+      {
+        "id": "smart_greenhouse.env.co2.control",
+        "name": "Greenhouse CO2 Control",
+        "description": "监测温室CO₂浓度变化，通过通风或CO₂补充系统将浓度维持在作物最适光合范围，提升作物产量。",
+        "tags": [
+          "smart-greenhouse",
+          "env",
+          "co2",
+          "control"
+        ]
+      },
+      {
+        "id": "smart_greenhouse.env.lighting.control",
+        "name": "Greenhouse Supplemental Lighting Control",
+        "description": "根据作物光周期需求和自然光照强度，自动调节补光灯的开关时间和光照强度，优化光合效率。",
+        "tags": [
+          "smart-greenhouse",
+          "env",
+          "lighting",
+          "control"
+        ]
+      },
+      {
+        "id": "smart_greenhouse.env.nutrient_solution.manage",
+        "name": "Nutrient Solution Manage",
+        "description": "监测水培或基质栽培营养液的EC值、pH值和液温，自动补液和调节，确保作物养分供给平衡。",
+        "tags": [
+          "smart-greenhouse",
+          "env",
+          "nutrient-solution",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_greenhouse.env.irrigation.schedule",
+        "name": "Greenhouse Irrigation Schedule",
+        "description": "根据基质湿度传感器数据和作物蒸腾需求，生成精准的灌溉时间表，支持分区独立控制。",
+        "tags": [
+          "smart-greenhouse",
+          "env",
+          "irrigation",
+          "schedule"
+        ]
+      },
+      {
+        "id": "smart_greenhouse.env.ventilation.optimize",
+        "name": "Ventilation Optimize",
+        "description": "综合温室内外温差、湿度和CO₂浓度，动态调节侧窗、顶窗和风机的通风量，平衡温度与气体交换。",
+        "tags": [
+          "smart-greenhouse",
+          "env",
+          "ventilation",
+          "optimize"
+        ]
+      },
+      {
+        "id": "smart_greenhouse.env.energy.optimize",
+        "name": "Greenhouse Energy Optimize",
+        "description": "分析温室各能耗设备（加热、补光、循环泵）的运行数据，识别节能空间并输出优化调度建议。",
+        "tags": [
+          "smart-greenhouse",
+          "env",
+          "energy",
+          "optimize"
+        ]
+      },
+      {
+        "id": "smart_greenhouse.env.anomaly.detect",
+        "name": "Greenhouse Environment Anomaly Detect",
+        "description": "检测温室环境参数（温度、湿度、CO₂、光照）的突变和持续超限情况，识别设备故障和外部极端气候影响。",
+        "tags": [
+          "smart-greenhouse",
+          "env",
+          "anomaly",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_greenhouse.env.pest_disease_risk.assess",
+        "name": "Pest Disease Risk Assess",
+        "description": "基于温室温湿度条件和历史病虫害记录，评估当前病虫害发生风险并输出预警等级和防控建议。",
+        "tags": [
+          "smart-greenhouse",
+          "env",
+          "pest-disease-risk",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_greenhouse.env.seedling_growth.monitor",
+        "name": "Seedling Growth Monitor",
+        "description": "基于育苗区图像，监测幼苗出芽率、株高整齐度和生长均匀性，识别弱苗和异常幼苗区域。",
+        "tags": [
+          "smart-greenhouse",
+          "env",
+          "seedling-growth",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_greenhouse.env.plant_factory_recipe.manage",
+        "name": "Plant Factory Recipe Manage",
+        "description": "管理植物工厂各作物品种的环境配方（光照、温度、营养液配方），支持按生长阶段动态切换和版本管理。",
+        "tags": [
+          "smart-greenhouse",
+          "env",
+          "plant-factory-recipe",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_greenhouse.env.production_schedule.plan",
+        "name": "Greenhouse Production Schedule Plan",
+        "description": "根据市场需求和温室产能，制定作物品种、批次、种植区域和采收时间的生产排程计划。",
+        "tags": [
+          "smart-greenhouse",
+          "env",
+          "production-schedule",
+          "plan"
+        ]
+      },
+      {
+        "id": "smart_greenhouse.env.harvest_quality.assess",
+        "name": "Harvest Quality Assess",
+        "description": "对采收的温室产品进行外观、大小、成熟度和品质的图像检测，输出分级结果和不合格品比例。",
+        "tags": [
+          "smart-greenhouse",
+          "env",
+          "harvest-quality",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_greenhouse.env.equipment_status.monitor",
+        "name": "Greenhouse Equipment Status Monitor",
+        "description": "监测温室加热系统、补光灯、水泵、风机等设备的运行状态，识别设备故障和性能衰退趋势。",
+        "tags": [
+          "smart-greenhouse",
+          "env",
+          "equipment-status",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_greenhouse.env.water_quality.monitor",
+        "name": "Irrigation Water Quality Monitor",
+        "description": "监测灌溉水源的水质指标（硬度、余氯、重金属）变化，识别水质超标风险并触发水处理联动。",
+        "tags": [
+          "smart-greenhouse",
+          "env",
+          "water-quality",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_greenhouse.env.labor_efficiency.analyze",
+        "name": "Labor Efficiency Analyze",
+        "description": "分析温室作业人员的工时投入、区域分布和作业类型，识别人力配置不均和低效作业环节。",
+        "tags": [
+          "smart-greenhouse",
+          "env",
+          "labor-efficiency",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_greenhouse.env.cost_per_kg.calculate",
+        "name": "Cost Per Kg Calculate",
+        "description": "计算温室各作物品种的单位产量综合成本（能耗、人工、农资、折旧），支持品种盈利性对比分析。",
+        "tags": [
+          "smart-greenhouse",
+          "env",
+          "cost-per-kg",
+          "calculate"
+        ]
+      },
+      {
+        "id": "smart_greenhouse.env.batch_traceability.generate",
+        "name": "Greenhouse Batch Traceability Generate",
+        "description": "生成温室农产品批次的全程溯源记录，涵盖种植环境、投入品、采收日期和质检结果，支持食品安全追溯。",
+        "tags": [
+          "smart-greenhouse",
+          "env",
+          "batch-traceability",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_greenhouse.env.qa.answer",
+        "name": "Greenhouse QA Answer",
+        "description": "回答用户关于温室环境状态、作物生长进度、设备运行、产量预期和生产成本的问题，并基于相关数据提供解释。",
+        "tags": [
+          "smart-greenhouse",
+          "env"
+        ]
+      },
+      {
+        "id": "smart_greenhouse.env.multisource_control.recommend",
+        "name": "Greenhouse Multi-Source Control Recommendation",
+        "description": "融合温室温度、湿度、CO₂、光照、通风、补光、灌溉和设备状态，生成温室环境调控建议。",
+        "tags": [
+          "smart-greenhouse",
+          "env",
+          "multisource",
+          "recommendation"
+        ]
+      },
+      {
+        "id": "smart_greenhouse.env.operation_effect.assess",
+        "name": "Plant Factory Operation Effect Assessment",
+        "description": "融合温室环境、作物病虫害、设备能耗、灌溉状态和植物生长配方，评估植物工厂运行效果。",
+        "tags": [
+          "smart-greenhouse",
+          "plant-factory",
+          "assessment"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-028",
+    "name": "Smart Medical Ward Monitoring Agent",
+    "description": "该智能体面向智慧病房监护、患者活动安全和护理风险评估任务，能够基于视频、传感器、医疗设备、床旁设备、护理记录和呼叫记录监测患者离床、跌倒风险、生命体征异常、输液异常、医护响应、护理事件和用药合规；支持临床文本记录结构化抽取、护理风险分级、多源融合判断和病房事件报告。",
+    "url": "http://[fd10::1:2]:8078",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_medical.ward.patient_fall.detect",
+        "name": "Patient Fall Detect",
+        "description": "基于病房视频实时检测患者跌倒或坠床事件，返回事件位置、时间和置信度，并立即触发护士站告警。",
+        "tags": [
+          "smart-medical",
+          "ward",
+          "patient-fall",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_medical.ward.bed_exit.detect",
+        "name": "Patient Bed Exit Detect",
+        "description": "识别患者离床或尝试起身动作，对高风险坠床患者提前预警，支持床旁探视和夜间重点监护场景。",
+        "tags": [
+          "smart-medical",
+          "ward",
+          "bed-exit",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_medical.ward.patient_activity.monitor",
+        "name": "Patient Activity Monitor",
+        "description": "监测患者在病房内的活动状态（卧床、坐起、站立、行走），识别长时间不动或活动异常减少等情况。",
+        "tags": [
+          "smart-medical",
+          "ward",
+          "patient-activity",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_medical.ward.vital_sign_anomaly.detect",
+        "name": "Vital Sign Anomaly Detect",
+        "description": "检测来自心电监护仪、血氧仪和血压计的生命体征异常波动，识别超出安全阈值的指标并触发告警。",
+        "tags": [
+          "smart-medical",
+          "ward",
+          "vital-sign-anomaly",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_medical.ward.infusion.monitor",
+        "name": "Infusion Monitor",
+        "description": "监测输液进度、输液管是否通畅和输液瓶液面高度，识别即将滴空和输液异常情况并通知护士处理。",
+        "tags": [
+          "smart-medical",
+          "ward",
+          "infusion",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_medical.ward.medication_compliance.verify",
+        "name": "Medication Compliance Verify",
+        "description": "核验护士给药流程是否符合规范（核对腕带、药品核查、记录执行），识别给药环节的操作遗漏或错误。",
+        "tags": [
+          "smart-medical",
+          "ward",
+          "medication-compliance",
+          "verify"
+        ]
+      },
+      {
+        "id": "smart_medical.ward.hand_hygiene.detect",
+        "name": "Hand Hygiene Compliance Detect",
+        "description": "检测医护人员在接触患者前后是否执行手卫生操作，识别洗手/消毒步骤缺失，用于院感防控合规管理。",
+        "tags": [
+          "smart-medical",
+          "ward",
+          "hand-hygiene",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_medical.ward.ppe_compliance.detect",
+        "name": "Medical PPE Compliance Detect",
+        "description": "检测医护人员进入特殊病房（隔离病房、ICU）时是否正确穿戴防护口罩、手套、隔离衣等防护装备。",
+        "tags": [
+          "smart-medical",
+          "ward",
+          "ppe-compliance",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_medical.ward.nurse_response_time.monitor",
+        "name": "Nurse Response Time Monitor",
+        "description": "监测护士响应患者呼叫铃的时间，识别超时未响应情况，统计各班次的平均响应时长用于服务质量评估。",
+        "tags": [
+          "smart-medical",
+          "ward",
+          "nurse-response-time",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_medical.ward.patient_identification.verify",
+        "name": "Patient Identification Verify",
+        "description": "通过人脸识别和腕带核验，确认医疗操作前的患者身份，防止错误给药、错误手术等医疗差错。",
+        "tags": [
+          "smart-medical",
+          "ward",
+          "patient-identification",
+          "verify"
+        ]
+      },
+      {
+        "id": "smart_medical.ward.visitor.manage",
+        "name": "Ward Visitor Manage",
+        "description": "管理病区探视访客的进入权限、探视时段和人数限制，识别非授权人员进入隔离病区或ICU等敏感区域。",
+        "tags": [
+          "smart-medical",
+          "ward",
+          "visitor",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_medical.ward.pain_expression.detect",
+        "name": "Patient Pain Expression Detect",
+        "description": "从视频中识别患者的疼痛表情和肢体表现，用于辅助评估无法言语沟通患者（昏迷、婴儿）的疼痛程度。",
+        "tags": [
+          "smart-medical",
+          "ward",
+          "pain-expression",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_medical.ward.pressure_ulcer_risk.assess",
+        "name": "Pressure Ulcer Risk Assess",
+        "description": "基于患者卧床时长、翻身频率和体位数据，评估压疮发生风险，输出高风险患者清单和翻身提醒计划。",
+        "tags": [
+          "smart-medical",
+          "ward",
+          "pressure-ulcer-risk",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_medical.ward.agitation.detect",
+        "name": "Patient Agitation Detect",
+        "description": "识别患者异常躁动、挣扎拔管或攻击行为的早期信号，用于镇静评估和保护性约束的及时干预。",
+        "tags": [
+          "smart-medical",
+          "ward",
+          "agitation",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_medical.ward.isolation_protocol.monitor",
+        "name": "Isolation Protocol Monitor",
+        "description": "监测隔离病房的人员进出合规性、缓冲间操作规范和隔离设备完好状态，防止院内感染扩散。",
+        "tags": [
+          "smart-medical",
+          "ward",
+          "isolation-protocol",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_medical.ward.equipment_alarm.classify",
+        "name": "Medical Equipment Alarm Classify",
+        "description": "对病房内医疗设备（心电监护、呼吸机、输液泵）触发的告警进行分类，区分紧急告警和技术性误报。",
+        "tags": [
+          "smart-medical",
+          "ward",
+          "equipment-alarm",
+          "classify"
+        ]
+      },
+      {
+        "id": "smart_medical.ward.rehabilitation_exercise.monitor",
+        "name": "Rehabilitation Exercise Monitor",
+        "description": "监测康复患者执行康复训练动作的规范性和完成度，识别动作偏差和疲劳信号，辅助康复治疗师评估。",
+        "tags": [
+          "smart-medical",
+          "ward",
+          "rehabilitation-exercise",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_medical.ward.workload.analyze",
+        "name": "Nursing Workload Analyze",
+        "description": "分析各班次护士的操作频次、响应时长和患者覆盖情况，识别护理资源分配不均和超负荷工作状态。",
+        "tags": [
+          "smart-medical",
+          "ward",
+          "workload",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_medical.ward.incident_report.generate",
+        "name": "Ward Incident Report Generate",
+        "description": "生成病房安全事件报告，涵盖跌倒、坠床、拔管、医疗差错等事件的发生过程、处置记录和改进建议。",
+        "tags": [
+          "smart-medical",
+          "ward",
+          "incident-report",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_medical.ward.qa.answer",
+        "name": "Ward Monitoring QA Answer",
+        "description": "回答用户关于患者监护状态、护理合规、医疗设备告警和病房安全事件的问题，并基于相关数据提供解释。",
+        "tags": [
+          "smart-medical",
+          "ward"
+        ]
+      },
+      {
+        "id": "smart_medical.ward.nursing_record.extract",
+        "name": "Ward Nursing Record Extraction",
+        "description": "从护理记录、交接班记录和病房事件记录中抽取患者状态、离床、跌倒、呼叫、异常和护理风险线索。",
+        "tags": [
+          "smart-medical",
+          "ward",
+          "nursing-record",
+          "extract"
+        ]
+      },
+      {
+        "id": "smart_medical.ward.multisource_fall_risk.assess",
+        "name": "Ward Multi-Source Fall Risk Assessment",
+        "description": "融合病房视频、床旁传感器、生命体征、护理记录和呼叫记录，判断患者离床跌倒或护理风险等级。",
+        "tags": [
+          "smart-medical",
+          "ward",
+          "multisource",
+          "fall-risk"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-029",
+    "name": "Smart Senior Care Agent",
+    "description": "该智能体面向养老院与居家养老监护任务，能够融合视频、音频、传感器、床旁/房间占用数据、可穿戴设备和照护记录，评估老人跌倒、离床、长时间静止、夜间活动、呼救、用药依从性和护理介入需求；支持占用状态检测、风险等级计算、照护建议和家属/护理报告。",
+    "url": "http://[fd10::1:2]:8079",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_care.senior.fall.detect",
+        "name": "Senior Fall Detect",
+        "description": "实时检测养老院或居家环境中老人的跌倒事件，返回跌倒位置、时间和置信度，并立即触发紧急呼救流程。",
+        "tags": [
+          "smart-care",
+          "senior",
+          "fall",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_care.senior.activity_pattern.analyze",
+        "name": "Daily Activity Pattern Analyze",
+        "description": "分析老人全天的活动规律（起床、用餐、如厕、休息、外出），识别偏离历史习惯的活动模式异常。",
+        "tags": [
+          "smart-care",
+          "senior",
+          "activity-pattern",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_care.senior.inactivity.alert",
+        "name": "Prolonged Inactivity Alert",
+        "description": "当老人长时间（可配置阈值）无活动信号时触发告警，区分正常深睡和异常静止无响应状态。",
+        "tags": [
+          "smart-care",
+          "senior",
+          "inactivity",
+          "alert"
+        ]
+      },
+      {
+        "id": "smart_care.senior.wandering.detect",
+        "name": "Wandering Detect",
+        "description": "识别老人（尤其是失智老人）在养老院内的无目的游荡行为和尝试离开受控区域的动作，及时预警。",
+        "tags": [
+          "smart-care",
+          "senior",
+          "wandering",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_care.senior.elopement.alert",
+        "name": "Elopement Risk Alert",
+        "description": "检测老人接近或尝试穿越养老院出口门禁的行为，对失智或高风险老人触发出走预警并通知看护人员。",
+        "tags": [
+          "smart-care",
+          "senior",
+          "elopement",
+          "alert"
+        ]
+      },
+      {
+        "id": "smart_care.senior.medication.remind",
+        "name": "Medication Reminder",
+        "description": "根据老人用药处方时间表，在指定时间提醒用药，并通过视频或传感器确认用药动作是否完成。",
+        "tags": [
+          "smart-care",
+          "senior",
+          "medication",
+          "remind"
+        ]
+      },
+      {
+        "id": "smart_care.senior.medication_adherence.verify",
+        "name": "Medication Adherence Verify",
+        "description": "核验老人是否按时、按量服药，识别漏服、重复服药和服药方式错误等情况，输出用药依从性记录。",
+        "tags": [
+          "smart-care",
+          "senior",
+          "medication-adherence",
+          "verify"
+        ]
+      },
+      {
+        "id": "smart_care.senior.vital_sign.monitor",
+        "name": "Senior Vital Sign Monitor",
+        "description": "持续监测老人心率、血压、血氧和体温等生命体征数据，识别超出安全范围的异常变化并触发告警。",
+        "tags": [
+          "smart-care",
+          "senior",
+          "vital-sign",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_care.senior.sleep_quality.analyze",
+        "name": "Sleep Quality Analyze",
+        "description": "基于床垫传感器或视频，分析老人的睡眠时长、翻身次数、夜间起床频率和异常睡眠行为，评估睡眠质量。",
+        "tags": [
+          "smart-care",
+          "senior",
+          "sleep-quality",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_care.senior.meal_intake.monitor",
+        "name": "Meal Intake Monitor",
+        "description": "监测老人的进餐时间规律和餐食摄入情况，识别长期食欲不振或进餐时间异常，预警营养摄入不足风险。",
+        "tags": [
+          "smart-care",
+          "senior",
+          "meal-intake",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_care.senior.gait.analyze",
+        "name": "Gait Analysis",
+        "description": "分析老人步态特征（步速、步幅、步态稳定性），识别步态退化趋势，评估跌倒风险和认知功能变化。",
+        "tags": [
+          "smart-care",
+          "senior",
+          "gait",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_care.senior.social_interaction.monitor",
+        "name": "Social Interaction Monitor",
+        "description": "监测老人与其他老人和工作人员的社交互动频率，识别社交退缩和孤立行为，用于抑郁风险早期筛查。",
+        "tags": [
+          "smart-care",
+          "senior",
+          "social-interaction",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_care.senior.emotion.recognize",
+        "name": "Senior Emotion Recognize",
+        "description": "从视频中识别老人的面部表情和情绪状态，持续追踪情绪变化趋势，用于心理健康评估和照护干预。",
+        "tags": [
+          "smart-care",
+          "senior",
+          "emotion",
+          "recognize"
+        ]
+      },
+      {
+        "id": "smart_care.senior.caregiver_behavior.verify",
+        "name": "Caregiver Behavior Verify",
+        "description": "核验护理人员的照护操作是否符合标准流程（翻身、清洁、喂食），识别操作遗漏和不当行为。",
+        "tags": [
+          "smart-care",
+          "senior",
+          "caregiver-behavior",
+          "verify"
+        ]
+      },
+      {
+        "id": "smart_care.senior.abuse_risk.detect",
+        "name": "Elder Abuse Risk Detect",
+        "description": "识别可能存在老人虐待风险的异常行为迹象（强制约束、粗暴操作、长期忽视），触发保护性告警。",
+        "tags": [
+          "smart-care",
+          "senior",
+          "abuse-risk",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_care.senior.cognitive_decline.assess",
+        "name": "Cognitive Decline Assess",
+        "description": "综合老人行为规律变化、活动减少、游荡增加和语言交互数据，评估认知功能退化趋势和失智风险。",
+        "tags": [
+          "smart-care",
+          "senior",
+          "cognitive-decline",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_care.senior.emergency.respond",
+        "name": "Senior Emergency Respond",
+        "description": "在检测到老人跌倒、突发昏迷或心跳异常等紧急事件后，自动触发多级应急响应流程，协调救援资源。",
+        "tags": [
+          "smart-care",
+          "senior",
+          "emergency",
+          "respond"
+        ]
+      },
+      {
+        "id": "smart_care.senior.family_report.generate",
+        "name": "Family Care Report Generate",
+        "description": "生成面向家属的老人日常照护报告，以通俗语言呈现健康状态、活动情况、用药合规和近期异常事件。",
+        "tags": [
+          "smart-care",
+          "senior",
+          "family-report",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_care.senior.health_trend.analyze",
+        "name": "Senior Health Trend Analyze",
+        "description": "分析老人健康指标的长期变化趋势，识别生理功能退化加速、慢性病恶化信号，输出健康预警报告。",
+        "tags": [
+          "smart-care",
+          "senior",
+          "health-trend",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_care.senior.qa.answer",
+        "name": "Senior Care QA Answer",
+        "description": "回答用户关于老人健康状态、日常活动、用药情况、安全事件和照护质量的问题，并基于相关数据提供解释。",
+        "tags": [
+          "smart-care",
+          "senior"
+        ]
+      },
+      {
+        "id": "smart_care.senior.occupancy.detect",
+        "name": "Senior Room Occupancy Detection",
+        "description": "基于房间活动状态、床旁传感器或占用传感器识别老人是否在床、离床、房间内活动或长时间无响应。",
+        "tags": [
+          "smart-care",
+          "senior",
+          "occupancy"
+        ]
+      },
+      {
+        "id": "smart_care.senior.care_intervention.assess",
+        "name": "Senior Care Intervention Assessment",
+        "description": "融合呼救音频、房间活动状态、夜间离床记录和老人风险指标，判断是否需要护理人员介入。",
+        "tags": [
+          "smart-care",
+          "senior",
+          "care-intervention"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-030",
+    "name": "Smart Building Elevator & Vertical Transport Agent",
+    "description": "该智能体面向智慧楼宇电梯与垂直交通管理任务，能够处理电梯调度优化、轿厢状态监控、乘客行为检测、设备健康评估和电梯能耗管理，为办公楼、商业综合体和医院等多梯群场景提供精细化垂直交通运营能力。",
+    "url": "http://[fd10::1:2]:8080",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_building.elevator.dispatch.optimize",
+        "name": "Elevator Group Dispatch Optimize",
+        "description": "基于实时呼梯分布和人流预测，动态优化多台电梯的调度策略，降低平均等候时间和空载率。",
+        "tags": [
+          "smart-building",
+          "elevator",
+          "dispatch",
+          "optimize"
+        ]
+      },
+      {
+        "id": "smart_building.elevator.cabin_occupancy.detect",
+        "name": "Cabin Occupancy Detect",
+        "description": "实时检测电梯轿厢内乘客人数和重量，识别超员情况并触发超载保护联动。",
+        "tags": [
+          "smart-building",
+          "elevator",
+          "cabin-occupancy",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_building.elevator.door_obstruction.detect",
+        "name": "Door Obstruction Detect",
+        "description": "识别电梯门口被物品或人员阻挡导致无法正常关门的情况，区分主动撑门与误触发并返回处理建议。",
+        "tags": [
+          "smart-building",
+          "elevator",
+          "door-obstruction",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_building.elevator.trapped_person.detect",
+        "name": "Trapped Person Detect",
+        "description": "检测电梯停机故障时轿厢内是否有乘客被困，识别困梯时长和乘客状态，触发紧急救援流程。",
+        "tags": [
+          "smart-building",
+          "elevator",
+          "trapped-person",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_building.elevator.abnormal_behavior.detect",
+        "name": "Elevator Abnormal Behavior Detect",
+        "description": "识别轿厢内的异常行为，包括跳跃、撞击轿厢壁、蓄意破坏按钮和可疑行为，返回事件记录。",
+        "tags": [
+          "smart-building",
+          "elevator",
+          "abnormal-behavior",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_building.elevator.health.assess",
+        "name": "Elevator Health Assess",
+        "description": "基于电梯运行数据（振动、噪声、开关门时间、加速度曲线），评估电梯设备健康状态和故障风险。",
+        "tags": [
+          "smart-building",
+          "elevator",
+          "health",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_building.elevator.predictive_maintenance.plan",
+        "name": "Elevator Predictive Maintenance Plan",
+        "description": "根据设备劣化趋势和历史故障数据，生成电梯预防性维护计划，输出维护项目优先级和建议时间窗口。",
+        "tags": [
+          "smart-building",
+          "elevator",
+          "predictive-maintenance",
+          "plan"
+        ]
+      },
+      {
+        "id": "smart_building.elevator.energy.monitor",
+        "name": "Elevator Energy Monitor",
+        "description": "监测单台及群组电梯的能耗数据，识别高耗能运行模式（频繁短途、空载运行），输出节能优化建议。",
+        "tags": [
+          "smart-building",
+          "elevator",
+          "energy",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_building.elevator.peak_flow.predict",
+        "name": "Peak Traffic Flow Predict",
+        "description": "基于历史人流规律和日程数据预测早晚高峰的电梯需求分布，提前调整待机楼层和调度策略。",
+        "tags": [
+          "smart-building",
+          "elevator",
+          "peak-flow",
+          "predict"
+        ]
+      },
+      {
+        "id": "smart_building.elevator.vip_priority.manage",
+        "name": "VIP Priority Manage",
+        "description": "管理特定楼层或人员的电梯优先权限，在VIP到达时自动预留电梯，减少等候时间。",
+        "tags": [
+          "smart-building",
+          "elevator",
+          "vip-priority",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_building.elevator.accessibility.manage",
+        "name": "Accessibility Mode Manage",
+        "description": "为残疾人、老人和轮椅用户提供无障碍电梯优先调度，自动延长开门时间和调整运行模式。",
+        "tags": [
+          "smart-building",
+          "elevator",
+          "accessibility",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_building.elevator.fire_recall.control",
+        "name": "Fire Recall Control",
+        "description": "在消防报警触发时，自动将所有电梯召回首层或疏散层，切断电梯正常服务并配合消防联动系统。",
+        "tags": [
+          "smart-building",
+          "elevator",
+          "fire-recall",
+          "control"
+        ]
+      },
+      {
+        "id": "smart_building.elevator.fault.diagnose",
+        "name": "Elevator Fault Diagnose",
+        "description": "对电梯故障告警进行自动诊断，区分机械故障、控制系统异常和传感器误报，输出故障原因和处置建议。",
+        "tags": [
+          "smart-building",
+          "elevator",
+          "fault",
+          "diagnose"
+        ]
+      },
+      {
+        "id": "smart_building.elevator.waiting_time.monitor",
+        "name": "Waiting Time Monitor",
+        "description": "监测各楼层电梯等候时间，识别长时间未响应楼层和服务盲区，用于调度策略评估和优化。",
+        "tags": [
+          "smart-building",
+          "elevator",
+          "waiting-time",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_building.elevator.certificate.check",
+        "name": "Elevator Certificate Compliance Check",
+        "description": "检查电梯年检证书、维保合同和操作人员资质是否在有效期内，输出合规状态和到期预警。",
+        "tags": [
+          "smart-building",
+          "elevator",
+          "certificate",
+          "check"
+        ]
+      },
+      {
+        "id": "smart_building.elevator.goods_lift.manage",
+        "name": "Goods Lift Manage",
+        "description": "管理货梯的使用预约、装卸时段控制和超重检测，防止货梯被乘客占用影响物流作业效率。",
+        "tags": [
+          "smart-building",
+          "elevator",
+          "goods-lift",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_building.elevator.maintenance_log.record",
+        "name": "Maintenance Log Record",
+        "description": "自动记录电梯维保人员的到场时间、作业内容和部件更换情况，生成结构化维保日志供审计使用。",
+        "tags": [
+          "smart-building",
+          "elevator",
+          "maintenance-log",
+          "record"
+        ]
+      },
+      {
+        "id": "smart_building.elevator.remote_monitor.connect",
+        "name": "Remote Monitor Connect",
+        "description": "提供电梯实时运行数据的远程监控接口，支持维保单位和物业管理方实时查看电梯状态和历史记录。",
+        "tags": [
+          "smart-building",
+          "elevator",
+          "remote-monitor",
+          "connect"
+        ]
+      },
+      {
+        "id": "smart_building.elevator.monthly_report.generate",
+        "name": "Elevator Monthly Report Generate",
+        "description": "生成电梯运营月报，涵盖运行次数、故障统计、能耗对比、维保记录和等候时间分析。",
+        "tags": [
+          "smart-building",
+          "elevator",
+          "monthly-report",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_building.elevator.qa.answer",
+        "name": "Elevator QA Answer",
+        "description": "回答用户关于电梯运行状态、故障记录、调度效率、维保计划和能耗情况的问题，并提供数据解释。",
+        "tags": [
+          "smart-building",
+          "elevator"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-031",
+    "name": "Smart Building Fire Safety Agent",
+    "description": "该智能体面向智慧楼宇消防安全管理任务，能够处理火灾早期探测、消防设施巡检、疏散通道合规、灭火联动控制和消防演练管理，为高层办公楼、商业综合体、医院等高密度场所提供全周期消防安全保障能力。",
+    "url": "http://[fd10::1:2]:8081",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_building.fire.smoke.detect",
+        "name": "Smoke Detect",
+        "description": "从楼宇摄像头视频中识别烟雾迹象，区分真实火灾烟雾与水蒸气、粉尘等干扰源，降低误报率。",
+        "tags": [
+          "smart-building",
+          "fire",
+          "smoke",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_building.fire.flame.detect",
+        "name": "Flame Detect",
+        "description": "从视频中识别明火特征，结合温度传感器数据判断火焰真实性，输出火源位置和火势初步评估。",
+        "tags": [
+          "smart-building",
+          "fire",
+          "flame",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_building.fire.heat_anomaly.detect",
+        "name": "Heat Anomaly Detect",
+        "description": "基于热成像或温度传感数据识别楼宇内异常高温区域，用于火灾早期预警和电气过热隐患排查。",
+        "tags": [
+          "smart-building",
+          "fire",
+          "heat-anomaly",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_building.fire.sprinkler.monitor",
+        "name": "Sprinkler System Monitor",
+        "description": "监测自动喷淋系统的水压、阀门状态和喷头完好性，识别系统缺陷并确认触发时的实际喷水状态。",
+        "tags": [
+          "smart-building",
+          "fire",
+          "sprinkler",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_building.fire.hydrant.inspect",
+        "name": "Fire Hydrant Inspect",
+        "description": "检查楼宇消火栓的水压、箱门完好性、水带配备和配件齐全情况，生成定期巡检记录。",
+        "tags": [
+          "smart-building",
+          "fire",
+          "hydrant",
+          "inspect"
+        ]
+      },
+      {
+        "id": "smart_building.fire.extinguisher.inspect",
+        "name": "Fire Extinguisher Inspect",
+        "description": "检查灭火器的压力指示、有效期、铅封完好性和摆放位置合规性，输出巡检结果和到期更换提醒。",
+        "tags": [
+          "smart-building",
+          "fire",
+          "extinguisher",
+          "inspect"
+        ]
+      },
+      {
+        "id": "smart_building.fire.evacuation_route.check",
+        "name": "Evacuation Route Compliance Check",
+        "description": "检查疏散通道、安全出口和疏散指示标志是否被占用、遮挡或损坏，输出不合规位置和整改建议。",
+        "tags": [
+          "smart-building",
+          "fire",
+          "evacuation-route",
+          "check"
+        ]
+      },
+      {
+        "id": "smart_building.fire.fire_door.monitor",
+        "name": "Fire Door Status Monitor",
+        "description": "监测防火门的开关状态，识别防火门被长期楔开、损坏关不严或闭门器失效等不合规情况。",
+        "tags": [
+          "smart-building",
+          "fire",
+          "fire-door",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_building.fire.alarm_panel.read",
+        "name": "Fire Alarm Panel Read",
+        "description": "读取消防报警控制器面板的告警信息、故障点位和系统状态，转换为结构化数据供运维系统调用。",
+        "tags": [
+          "smart-building",
+          "fire",
+          "alarm-panel",
+          "read"
+        ]
+      },
+      {
+        "id": "smart_building.fire.evacuation_drill.manage",
+        "name": "Evacuation Drill Manage",
+        "description": "管理消防疏散演练的计划制定、执行监控和效果评估，记录疏散时间、路线选择和人员到达情况。",
+        "tags": [
+          "smart-building",
+          "fire",
+          "evacuation-drill",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_building.fire.hazardous_material.detect",
+        "name": "Hazardous Material Storage Detect",
+        "description": "检测楼宇内违规存放易燃易爆、危化品等危险物品的行为，返回位置、物品类型和风险等级。",
+        "tags": [
+          "smart-building",
+          "fire",
+          "hazardous-material",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_building.fire.electrical_overload.detect",
+        "name": "Electrical Overload Detect",
+        "description": "监测配电回路的电流、温度和功率数据，识别电气过载、短路风险和线路老化等潜在火灾隐患。",
+        "tags": [
+          "smart-building",
+          "fire",
+          "electrical-overload",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_building.fire.linkage.control",
+        "name": "Fire Linkage Control",
+        "description": "在火灾确认后，协调触发排烟系统、切断非消防电源、关闭防火阀和启动广播疏散等联动控制指令。",
+        "tags": [
+          "smart-building",
+          "fire",
+          "linkage",
+          "control"
+        ]
+      },
+      {
+        "id": "smart_building.fire.rescue_access.check",
+        "name": "Fire Rescue Access Check",
+        "description": "检查楼宇消防车道和登高作业面是否被车辆或物品占用，确保消防救援通道全时畅通。",
+        "tags": [
+          "smart-building",
+          "fire",
+          "rescue-access",
+          "check"
+        ]
+      },
+      {
+        "id": "smart_building.fire.high_risk_area.assess",
+        "name": "High Risk Area Fire Assess",
+        "description": "评估楼宇内厨房、配电间、发电机房等高风险区域的消防隐患等级，输出隐患清单和整改优先级。",
+        "tags": [
+          "smart-building",
+          "fire",
+          "high-risk-area",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_building.fire.training_record.manage",
+        "name": "Fire Training Record Manage",
+        "description": "管理员工消防培训的参与记录、培训内容和考核结果，识别培训缺口和未受训人员。",
+        "tags": [
+          "smart-building",
+          "fire",
+          "training-record",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_building.fire.insurance_compliance.assess",
+        "name": "Fire Insurance Compliance Assess",
+        "description": "评估楼宇消防系统和管理制度是否满足保险公司和消防监管部门的合规要求，输出合规差距报告。",
+        "tags": [
+          "smart-building",
+          "fire",
+          "insurance-compliance",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_building.fire.post_incident.analyze",
+        "name": "Post Incident Analyze",
+        "description": "在火灾或演练结束后，分析事件起因、蔓延路径、响应时间和损失情况，生成结构化事故分析报告。",
+        "tags": [
+          "smart-building",
+          "fire",
+          "post-incident",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_building.fire.annual_report.generate",
+        "name": "Fire Safety Annual Report Generate",
+        "description": "生成楼宇消防安全年度报告，涵盖隐患整改、演练记录、设施巡检、培训完成率和事件统计。",
+        "tags": [
+          "smart-building",
+          "fire",
+          "annual-report",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_building.fire.qa.answer",
+        "name": "Fire Safety QA Answer",
+        "description": "回答用户关于楼宇消防隐患、设施状态、疏散路线、演练计划和合规情况的问题，并提供数据解释。",
+        "tags": [
+          "smart-building",
+          "fire"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-032",
+    "name": "Smart Building Tenant & Space Management Agent",
+    "description": "该智能体面向智慧楼宇租户管理与空间运营任务，能够处理租户信息管理、租约合规、空间使用分析、工位预约、公区服务和楼宇满意度管理，为商业办公楼、联合办公和商业综合体提供精细化空间运营支撑。",
+    "url": "http://[fd10::1:2]:8082",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_building.tenant.profile.manage",
+        "name": "Tenant Profile Manage",
+        "description": "管理租户的基本信息、合同档案、联系方式和入驻状态，支持租户信息的新增、更新和到期预警。",
+        "tags": [
+          "smart-building",
+          "tenant",
+          "profile",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_building.tenant.lease_expiry.alert",
+        "name": "Lease Expiry Alert",
+        "description": "监测各租约的到期时间，提前触发续租提醒，识别即将到期、已逾期和退租申请中的合同状态。",
+        "tags": [
+          "smart-building",
+          "tenant",
+          "lease-expiry",
+          "alert"
+        ]
+      },
+      {
+        "id": "smart_building.tenant.desk_booking.manage",
+        "name": "Desk Booking Manage",
+        "description": "管理楼宇工位和共享桌的预约、签到核验和使用统计，识别频繁爽约行为并优化工位分配策略。",
+        "tags": [
+          "smart-building",
+          "tenant",
+          "desk-booking",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_building.tenant.floor_occupancy.analyze",
+        "name": "Floor Occupancy Analyze",
+        "description": "分析各楼层租户的实际在场率和空间使用强度，识别长期低使用率区域，支持空间重新规划决策。",
+        "tags": [
+          "smart-building",
+          "tenant",
+          "floor-occupancy",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_building.tenant.complaint.manage",
+        "name": "Tenant Complaint Manage",
+        "description": "管理租户投诉工单的受理、分派、处理进度和满意度回访，识别高频投诉类型和服务薄弱环节。",
+        "tags": [
+          "smart-building",
+          "tenant",
+          "complaint",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_building.tenant.service_request.manage",
+        "name": "Service Request Manage",
+        "description": "处理租户提交的维修、清洁、会议室配置等服务请求，跟踪工单状态并自动回复处理进度。",
+        "tags": [
+          "smart-building",
+          "tenant",
+          "service-request",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_building.tenant.common_area.monitor",
+        "name": "Common Area Usage Monitor",
+        "description": "监测楼宇公共区域（大堂、休息区、餐厅、健身室）的实时使用人数和拥挤状态，支持容量管控。",
+        "tags": [
+          "smart-building",
+          "tenant",
+          "common-area",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_building.tenant.delivery.manage",
+        "name": "Package Delivery Manage",
+        "description": "管理租户快递和外卖的前台收件、通知领取和超时处理流程，支持智能柜和人工收件两种模式。",
+        "tags": [
+          "smart-building",
+          "tenant",
+          "delivery",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_building.tenant.rent.calculate",
+        "name": "Rent Calculate",
+        "description": "根据租约条款、实际使用面积和能耗分摊数据，计算月度租金账单，支持多种计价模式和税务处理。",
+        "tags": [
+          "smart-building",
+          "tenant",
+          "rent",
+          "calculate"
+        ]
+      },
+      {
+        "id": "smart_building.tenant.utility_bill.allocate",
+        "name": "Utility Bill Allocate",
+        "description": "基于各租户的实际能耗计量数据，公平分摊水电费账单，生成逐租户的费用明细和差异分析。",
+        "tags": [
+          "smart-building",
+          "tenant",
+          "utility-bill",
+          "allocate"
+        ]
+      },
+      {
+        "id": "smart_building.tenant.satisfaction.survey",
+        "name": "Tenant Satisfaction Survey",
+        "description": "定期开展租户满意度调研，收集对设施、服务、安全和物业管理的评价，输出满意度评分和改进建议。",
+        "tags": [
+          "smart-building",
+          "tenant",
+          "satisfaction",
+          "survey"
+        ]
+      },
+      {
+        "id": "smart_building.tenant.move_in.manage",
+        "name": "Tenant Move In Manage",
+        "description": "管理租户入驻的预约时间、货梯预留、装修许可和水电开通等流程，输出入驻进度和待办事项。",
+        "tags": [
+          "smart-building",
+          "tenant",
+          "move-in",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_building.tenant.move_out.manage",
+        "name": "Tenant Move Out Manage",
+        "description": "管理租户退租的场地验收、水电结算、押金退还和门禁注销流程，生成退租交接确认报告。",
+        "tags": [
+          "smart-building",
+          "tenant",
+          "move-out",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_building.tenant.amenity_booking.manage",
+        "name": "Amenity Booking Manage",
+        "description": "管理楼宇公共设施（停车位、储物间、共享会议室、活动区域）的预约分配和使用记录。",
+        "tags": [
+          "smart-building",
+          "tenant",
+          "amenity-booking",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_building.tenant.notice.broadcast",
+        "name": "Tenant Notice Broadcast",
+        "description": "向全体或指定楼层租户推送楼宇公告、停电停水通知、消防演练安排和物业服务变更信息。",
+        "tags": [
+          "smart-building",
+          "tenant",
+          "notice",
+          "broadcast"
+        ]
+      },
+      {
+        "id": "smart_building.tenant.renewal_risk.predict",
+        "name": "Renewal Risk Predict",
+        "description": "综合租户满意度、空间使用率和合同到期时间，预测租户续租意愿，识别高流失风险租户。",
+        "tags": [
+          "smart-building",
+          "tenant",
+          "renewal-risk",
+          "predict"
+        ]
+      },
+      {
+        "id": "smart_building.tenant.space_planning.recommend",
+        "name": "Space Planning Recommend",
+        "description": "基于当前租户分布、使用率和增长预测，推荐楼宇空间重新规划方案，优化租赁收益和使用效率。",
+        "tags": [
+          "smart-building",
+          "tenant",
+          "space-planning",
+          "recommend"
+        ]
+      },
+      {
+        "id": "smart_building.tenant.green_certification.support",
+        "name": "Green Certification Support",
+        "description": "为租户提供绿色办公认证所需的能耗、碳排和用水数据支撑，协助准备认证申报材料。",
+        "tags": [
+          "smart-building",
+          "tenant",
+          "green-certification",
+          "support"
+        ]
+      },
+      {
+        "id": "smart_building.tenant.occupancy_report.generate",
+        "name": "Tenant Occupancy Report Generate",
+        "description": "生成楼宇租赁运营报告，涵盖出租率、到期合同、投诉处理、满意度评分和能耗分摊概览。",
+        "tags": [
+          "smart-building",
+          "tenant",
+          "occupancy-report",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_building.tenant.qa.answer",
+        "name": "Tenant Management QA Answer",
+        "description": "回答用户关于租户合同、空间使用、服务请求、费用账单和满意度的问题，并提供数据解释。",
+        "tags": [
+          "smart-building",
+          "tenant"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-033",
+    "name": "Smart Building Parking Management Agent",
+    "description": "该智能体面向智慧楼宇停车场视频、车位、进出场、收费和运营管理任务，能够处理停车场视频中的异常停车/违停/占道、车牌识别、车位占用、进出场记录、排队、充电桩、停车引导和停车场安全事件；支持停车异常判断、停车引导建议、运营日报和结构化报告。",
+    "url": "http://[fd10::1:2]:8083",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_building.parking.space_status.detect",
+        "name": "Parking Space Status Detect",
+        "description": "实时检测地下车场和地面停车位的占用状态，输出分层分区的空位数量和位置图，支持车位引导屏联动。",
+        "tags": [
+          "smart-building",
+          "parking",
+          "space-status",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_building.parking.entry_queue.monitor",
+        "name": "Entry Queue Monitor",
+        "description": "监测停车场入口排队车辆数量和等待时长，在超过阈值时触发分流建议或开放备用通道。",
+        "tags": [
+          "smart-building",
+          "parking",
+          "entry-queue",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_building.parking.license_plate.recognize",
+        "name": "Parking License Plate Recognize",
+        "description": "在停车场出入口识别车牌号码，记录进出场时间，作为无感支付和月租核验的数据基础。",
+        "tags": [
+          "smart-building",
+          "parking",
+          "license-plate",
+          "recognize"
+        ]
+      },
+      {
+        "id": "smart_building.parking.monthly_permit.manage",
+        "name": "Monthly Permit Manage",
+        "description": "管理停车场月租用户的车牌绑定、有效期、固定车位分配和费用扣缴，输出到期续费提醒。",
+        "tags": [
+          "smart-building",
+          "parking",
+          "monthly-permit",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_building.parking.fee.calculate",
+        "name": "Parking Fee Calculate",
+        "description": "根据车辆类型、停车时长、时段和优惠策略，自动计算停车费用，支持无感支付和扫码支付两种模式。",
+        "tags": [
+          "smart-building",
+          "parking",
+          "fee",
+          "calculate"
+        ]
+      },
+      {
+        "id": "smart_building.parking.ev_charging.manage",
+        "name": "EV Charging Manage",
+        "description": "管理停车场充电桩的实时使用状态、充电预约和功率分配，识别充电桩故障和非充电车辆占用情况。",
+        "tags": [
+          "smart-building",
+          "parking",
+          "ev-charging",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_building.parking.illegal_parking.detect",
+        "name": "Parking Illegal Behavior Detect",
+        "description": "识别停车场内的违规行为，包括占用残疾车位、消防通道停车、逆向行驶和越线停放，返回违规信息。",
+        "tags": [
+          "smart-building",
+          "parking",
+          "illegal-parking",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_building.parking.lost_vehicle.locate",
+        "name": "Lost Vehicle Locate",
+        "description": "根据用户提供的车牌号或进场时间，在车场摄像头中定位车辆当前停放位置，输出停车层号和区域。",
+        "tags": [
+          "smart-building",
+          "parking",
+          "lost-vehicle",
+          "locate"
+        ]
+      },
+      {
+        "id": "smart_building.parking.security_patrol.monitor",
+        "name": "Parking Security Patrol Monitor",
+        "description": "监测停车场安保巡逻覆盖情况，识别死角区域和巡逻间隔过长的时段，用于安防管理优化。",
+        "tags": [
+          "smart-building",
+          "parking",
+          "security-patrol",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_building.parking.damage_incident.detect",
+        "name": "Vehicle Damage Incident Detect",
+        "description": "从停车场视频中识别车辆被刮擦、碰撞或人为损坏事件，提取事件时间、地点和相关车辆信息作为证据。",
+        "tags": [
+          "smart-building",
+          "parking",
+          "damage-incident",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_building.parking.peak_hour.predict",
+        "name": "Peak Hour Predict",
+        "description": "基于历史停车数据和楼宇活动日程，预测停车场高峰时段和停满风险，提前发布提示信息。",
+        "tags": [
+          "smart-building",
+          "parking",
+          "peak-hour",
+          "predict"
+        ]
+      },
+      {
+        "id": "smart_building.parking.turnover_rate.analyze",
+        "name": "Parking Turnover Rate Analyze",
+        "description": "分析各区域停车位的周转率、平均停放时长和使用效率，识别长期占用车位和低效停车区域。",
+        "tags": [
+          "smart-building",
+          "parking",
+          "turnover-rate",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_building.parking.valet.manage",
+        "name": "Valet Parking Manage",
+        "description": "管理代客泊车服务的车辆接收、停放位置记录和取车响应流程，支持APP取车预约和位置推送。",
+        "tags": [
+          "smart-building",
+          "parking",
+          "valet",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_building.parking.revenue.analyze",
+        "name": "Parking Revenue Analyze",
+        "description": "分析停车场的日均收入、车位利用率和收费结构，识别收益提升空间和定价优化机会。",
+        "tags": [
+          "smart-building",
+          "parking",
+          "revenue",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_building.parking.lighting.control",
+        "name": "Parking Lighting Control",
+        "description": "根据停车场各区域的实时车辆和人员存在状态，自动调节照明开关和亮度，实现节能管理。",
+        "tags": [
+          "smart-building",
+          "parking",
+          "lighting",
+          "control"
+        ]
+      },
+      {
+        "id": "smart_building.parking.ventilation.control",
+        "name": "Parking Ventilation Control",
+        "description": "监测地下车场的CO浓度和PM2.5数据，联动排风系统自动调节换气量，保障车场空气质量安全。",
+        "tags": [
+          "smart-building",
+          "parking",
+          "ventilation",
+          "control"
+        ]
+      },
+      {
+        "id": "smart_building.parking.reservation.manage",
+        "name": "Parking Reservation Manage",
+        "description": "管理访客和商户的停车位预约，锁定指定车位并在预约时段外自动释放，减少车位空置浪费。",
+        "tags": [
+          "smart-building",
+          "parking",
+          "reservation",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_building.parking.smart_lock.control",
+        "name": "Smart Parking Lock Control",
+        "description": "控制地面停车位地锁的升降，结合车牌识别实现授权车辆自动落锁，防止非授权占用。",
+        "tags": [
+          "smart-building",
+          "parking",
+          "smart-lock",
+          "control"
+        ]
+      },
+      {
+        "id": "smart_building.parking.daily_report.generate",
+        "name": "Parking Daily Report Generate",
+        "description": "生成停车场运营日报，涵盖进出场量、高峰时段、收入统计、违规记录和充电桩使用情况。",
+        "tags": [
+          "smart-building",
+          "parking",
+          "daily-report",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_building.parking.qa.answer",
+        "name": "Parking QA Answer",
+        "description": "回答用户关于停车位状态、进出场记录、费用账单、充电桩和违规情况的问题，并提供数据解释。",
+        "tags": [
+          "smart-building",
+          "parking"
+        ]
+      },
+      {
+        "id": "smart_building.parking.guidance.generate",
+        "name": "Building Parking Guidance Generation",
+        "description": "根据车位占用、车辆进出记录、排队状态、异常停车和停车场规则生成可执行停车引导建议。",
+        "tags": [
+          "smart-building",
+          "parking",
+          "guidance"
+        ]
+      },
+      {
+        "id": "smart_building.parking.video_illegal_parking.detect",
+        "name": "Building Parking Video Illegal Parking Detection",
+        "description": "基于停车场视频识别异常停车、占道、堵塞通道、非授权停车和车辆异常停留。",
+        "tags": [
+          "smart-building",
+          "parking",
+          "video",
+          "illegal-parking"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-034",
+    "name": "Smart Campus Perimeter & Intrusion Agent",
+    "description": "该智能体面向智慧园区周界安防、入侵检测和安防风险融合任务，能够处理围界翻越、非法入侵、夜间入侵、无人机、周界视频、报警日志、照明状态、人员门禁、巡检记录、设备遮挡和误报过滤；支持日志结构化解析、多源证据融合、风险评分、风险地图、事件时间线、联动告警和周界安防报告。",
+    "url": "http://[fd10::1:2]:8084",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_campus.perimeter.fence_climb.detect",
+        "name": "Fence Climbing Detect",
+        "description": "实时检测人员翻越园区围栏、翻墙进入和辅助攀爬工具使用行为，触发周界告警和联动录像。",
+        "tags": [
+          "smart-campus",
+          "perimeter",
+          "fence-climb",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_campus.perimeter.cut_wire.detect",
+        "name": "Wire Cut Detect",
+        "description": "识别园区围网、电子围栏被剪断或破坏的行为，结合振动传感器数据确认入侵事件。",
+        "tags": [
+          "smart-campus",
+          "perimeter",
+          "cut-wire",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_campus.perimeter.night_intrusion.detect",
+        "name": "Night Intrusion Detect",
+        "description": "在夜间低光照条件下，结合红外热成像和可见光摄像头，检测园区内的非授权人员入侵行为。",
+        "tags": [
+          "smart-campus",
+          "perimeter",
+          "night-intrusion",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_campus.perimeter.drone.detect",
+        "name": "Unauthorized Drone Detect",
+        "description": "检测园区上空飞行的未授权无人机，识别无人机类型、飞行轨迹和悬停行为，支持反制措施联动。",
+        "tags": [
+          "smart-campus",
+          "perimeter",
+          "drone",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_campus.perimeter.vehicle_ram.detect",
+        "name": "Vehicle Ram Detect",
+        "description": "检测车辆高速冲撞园区闸机或大门的冲闸行为，识别恶意冲撞与事故的差异并触发紧急封锁。",
+        "tags": [
+          "smart-campus",
+          "perimeter",
+          "vehicle-ram",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_campus.perimeter.blind_spot.monitor",
+        "name": "Perimeter Blind Spot Monitor",
+        "description": "识别园区周界摄像头覆盖盲区，分析盲区在不同时段的入侵风险，输出补盲建议和临时加强巡逻方案。",
+        "tags": [
+          "smart-campus",
+          "perimeter",
+          "blind-spot",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_campus.perimeter.alarm_zone.configure",
+        "name": "Alarm Zone Configure",
+        "description": "配置和管理周界告警区域的范围、灵敏度和联动规则，支持按时段和区域差异化设置报警策略。",
+        "tags": [
+          "smart-campus",
+          "perimeter",
+          "alarm-zone",
+          "configure"
+        ]
+      },
+      {
+        "id": "smart_campus.perimeter.guard_post.monitor",
+        "name": "Guard Post Monitor",
+        "description": "监测周界哨位的驻守状态，识别岗位无人、哨兵离岗和异常行为，确保关键节点的人工安防覆盖。",
+        "tags": [
+          "smart-campus",
+          "perimeter",
+          "guard-post",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_campus.perimeter.person_trajectory.track",
+        "name": "Intruder Trajectory Track",
+        "description": "在入侵事件触发后，跨摄像头追踪入侵者在园区内的移动轨迹，输出实时位置和行动路线。",
+        "tags": [
+          "smart-campus",
+          "perimeter",
+          "person-trajectory",
+          "track"
+        ]
+      },
+      {
+        "id": "smart_campus.perimeter.device_tamper.detect",
+        "name": "Security Device Tamper Detect",
+        "description": "检测周界摄像头、传感器或围栏控制器被遮挡、移位或人为破坏的情况，触发设备防拆告警。",
+        "tags": [
+          "smart-campus",
+          "perimeter",
+          "device-tamper",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_campus.perimeter.loitering_outside.detect",
+        "name": "External Loitering Detect",
+        "description": "识别园区围界外部人员的长时间徘徊和踩点行为，用于主动安全预判和提前干预。",
+        "tags": [
+          "smart-campus",
+          "perimeter",
+          "loitering-outside",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_campus.perimeter.emergency_lockdown.control",
+        "name": "Emergency Lockdown Control",
+        "description": "在安全威胁确认后，触发园区紧急封锁程序，自动关闭所有出入口闸机并推送人员疏散和封锁指令。",
+        "tags": [
+          "smart-campus",
+          "perimeter",
+          "emergency-lockdown",
+          "control"
+        ]
+      },
+      {
+        "id": "smart_campus.perimeter.weather_impact.assess",
+        "name": "Weather Impact Security Assess",
+        "description": "评估恶劣天气（大雾、暴雨、强风）对周界摄像头视野和传感器有效性的影响，调整安防策略补偿。",
+        "tags": [
+          "smart-campus",
+          "perimeter",
+          "weather-impact",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_campus.perimeter.patrol_robot.dispatch",
+        "name": "Patrol Robot Dispatch",
+        "description": "调度园区巡逻机器人的路线和任务，与固定摄像头形成动态覆盖网络，响应周界告警进行定点核查。",
+        "tags": [
+          "smart-campus",
+          "perimeter",
+          "patrol-robot",
+          "dispatch"
+        ]
+      },
+      {
+        "id": "smart_campus.perimeter.false_alarm.reduce",
+        "name": "False Alarm Reduction",
+        "description": "对周界告警进行多维度验证（视频确认、传感器交叉比对），过滤动物、树木晃动等环境误报。",
+        "tags": [
+          "smart-campus",
+          "perimeter",
+          "false-alarm",
+          "reduce"
+        ]
+      },
+      {
+        "id": "smart_campus.perimeter.evidence.collect",
+        "name": "Intrusion Evidence Collect",
+        "description": "在入侵事件发生后，自动采集相关时段的多路视频、传感器日志和门禁记录，生成结构化证据包。",
+        "tags": [
+          "smart-campus",
+          "perimeter",
+          "evidence",
+          "collect"
+        ]
+      },
+      {
+        "id": "smart_campus.perimeter.risk_map.generate",
+        "name": "Perimeter Risk Map Generate",
+        "description": "基于历史告警频次和地形分析，生成园区周界安全风险热力图，标注高风险区段和建议加固位置。",
+        "tags": [
+          "smart-campus",
+          "perimeter",
+          "risk-map",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_campus.perimeter.cross_department.alert",
+        "name": "Cross Department Alert",
+        "description": "将周界安防告警信息同步推送至安保、消防、运营和管理层等多部门，支持分级响应和责任分工。",
+        "tags": [
+          "smart-campus",
+          "perimeter",
+          "cross-department",
+          "alert"
+        ]
+      },
+      {
+        "id": "smart_campus.perimeter.monthly_report.generate",
+        "name": "Perimeter Monthly Report Generate",
+        "description": "生成园区周界安防月报，涵盖告警次数、事件类型、处置响应时间、误报率和设备在线率统计。",
+        "tags": [
+          "smart-campus",
+          "perimeter",
+          "monthly-report",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_campus.perimeter.qa.answer",
+        "name": "Perimeter Security QA Answer",
+        "description": "回答用户关于周界入侵事件、设备状态、巡逻覆盖和安全风险分布的问题，并提供数据解释。",
+        "tags": [
+          "smart-campus",
+          "perimeter"
+        ]
+      },
+      {
+        "id": "smart_campus.perimeter.alarm_log.parse",
+        "name": "Campus Perimeter Alarm Log Parsing",
+        "description": "解析周界入侵报警、设备告警、巡检记录和安防日志，提取事件类型、时间、区域、告警级别和处置状态。",
+        "tags": [
+          "smart-campus",
+          "perimeter",
+          "alarm-log"
+        ]
+      },
+      {
+        "id": "smart_campus.perimeter.lighting_status.assess",
+        "name": "Campus Perimeter Lighting Status Assessment",
+        "description": "评估周界照明状态是否满足夜间安防需求，并结合入侵报警和视频检测结果判断风险影响。",
+        "tags": [
+          "smart-campus",
+          "perimeter",
+          "lighting"
+        ]
+      },
+      {
+        "id": "smart_campus.perimeter.multisource_risk.assess",
+        "name": "Campus Perimeter Multi-Source Risk Assessment",
+        "description": "融合周界视频、入侵报警、照明状态、人员门禁和巡检记录，计算园区安防风险等级并输出证据链。",
+        "tags": [
+          "smart-campus",
+          "perimeter",
+          "multisource",
+          "risk"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-035",
+    "name": "Smart Campus Logistics & Warehouse Agent",
+    "description": "该智能体面向智慧园区物流与仓储管理任务，能够处理货物收发验收、库存盘点、仓储空间优化、拣货作业、出入库追踪和物流车辆调度，为工业园区、电商仓库和制造业配套仓储提供精细化仓储运营能力。",
+    "url": "http://[fd10::1:2]:8085",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_campus.logistics.inbound.verify",
+        "name": "Inbound Cargo Verify",
+        "description": "核验到货货物的品种、数量、规格和外包装完好性，与采购订单对比识别差异并生成收货确认记录。",
+        "tags": [
+          "smart-campus",
+          "logistics",
+          "inbound",
+          "verify"
+        ]
+      },
+      {
+        "id": "smart_campus.logistics.outbound.dispatch",
+        "name": "Outbound Dispatch",
+        "description": "处理货物出库指令，核验出库单与实物，生成出库记录并更新库存台账，支持批次先进先出管理。",
+        "tags": [
+          "smart-campus",
+          "logistics",
+          "outbound",
+          "dispatch"
+        ]
+      },
+      {
+        "id": "smart_campus.logistics.inventory.count",
+        "name": "Inventory Count",
+        "description": "基于RFID、条码扫描或视频识别，对仓储货物进行盘点，识别账实差异、货位错放和损耗情况。",
+        "tags": [
+          "smart-campus",
+          "logistics",
+          "inventory",
+          "count"
+        ]
+      },
+      {
+        "id": "smart_campus.logistics.inventory_shortage.alert",
+        "name": "Inventory Shortage Alert",
+        "description": "监测各物料的库存水位，当低于安全库存阈值时触发补货预警，输出缺货品种和建议补货量。",
+        "tags": [
+          "smart-campus",
+          "logistics",
+          "inventory-shortage",
+          "alert"
+        ]
+      },
+      {
+        "id": "smart_campus.logistics.storage_location.optimize",
+        "name": "Storage Location Optimize",
+        "description": "基于货物周转率、重量体积和关联性，推荐最优货位分配方案，减少拣货行走距离和存取时间。",
+        "tags": [
+          "smart-campus",
+          "logistics",
+          "storage-location",
+          "optimize"
+        ]
+      },
+      {
+        "id": "smart_campus.logistics.pick_task.plan",
+        "name": "Pick Task Plan",
+        "description": "根据出库订单和货位分布，生成最优拣货路线和任务分配，支持批量拣货和单品拣货两种模式。",
+        "tags": [
+          "smart-campus",
+          "logistics",
+          "pick-task",
+          "plan"
+        ]
+      },
+      {
+        "id": "smart_campus.logistics.barcode_qr.scan",
+        "name": "Barcode QR Scan",
+        "description": "从图像中识别货物条形码、二维码和RFID标签，提取货物编号和批次信息，用于入出库和盘点作业。",
+        "tags": [
+          "smart-campus",
+          "logistics",
+          "barcode-qr",
+          "scan"
+        ]
+      },
+      {
+        "id": "smart_campus.logistics.expiry_date.monitor",
+        "name": "Expiry Date Monitor",
+        "description": "监测仓储物料的生产日期和有效期，识别临期和过期货物，触发先行出库或报废处理提醒。",
+        "tags": [
+          "smart-campus",
+          "logistics",
+          "expiry-date",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_campus.logistics.forklift_task.dispatch",
+        "name": "Forklift Task Dispatch",
+        "description": "根据入出库任务和叉车位置，分配叉车搬运任务，优化叉车调度路径，减少空驶和等待时间。",
+        "tags": [
+          "smart-campus",
+          "logistics",
+          "forklift-task",
+          "dispatch"
+        ]
+      },
+      {
+        "id": "smart_campus.logistics.loading_dock.manage",
+        "name": "Loading Dock Manage",
+        "description": "管理装卸货月台的车辆预约、占用时间和装卸进度，识别月台堵塞和超时占用情况。",
+        "tags": [
+          "smart-campus",
+          "logistics",
+          "loading-dock",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_campus.logistics.cold_chain.monitor",
+        "name": "Cold Chain Monitor",
+        "description": "监测冷库和冷链运输环节的温湿度变化，识别温度超标事件并触发告警，保障冷链产品质量安全。",
+        "tags": [
+          "smart-campus",
+          "logistics",
+          "cold-chain",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_campus.logistics.dangerous_goods.manage",
+        "name": "Dangerous Goods Manage",
+        "description": "管理危险品的分类存放、隔离要求、出入库规范和应急处置预案，输出危险品库存合规状态。",
+        "tags": [
+          "smart-campus",
+          "logistics",
+          "dangerous-goods",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_campus.logistics.carrier_performance.evaluate",
+        "name": "Carrier Performance Evaluate",
+        "description": "评估各物流承运商的准时率、货损率、响应速度和服务投诉情况，生成承运商绩效排名和建议。",
+        "tags": [
+          "smart-campus",
+          "logistics",
+          "carrier-performance",
+          "evaluate"
+        ]
+      },
+      {
+        "id": "smart_campus.logistics.cross_docking.manage",
+        "name": "Cross Docking Manage",
+        "description": "管理货物从卸货到直接装车发货的越库作业流程，减少仓储停留时间，提升物流响应速度。",
+        "tags": [
+          "smart-campus",
+          "logistics",
+          "cross-docking",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_campus.logistics.return_goods.process",
+        "name": "Return Goods Process",
+        "description": "处理退货货物的入库验收、质量检验、分类处置（返厂、维修、报废）和账务调整全流程。",
+        "tags": [
+          "smart-campus",
+          "logistics",
+          "return-goods",
+          "process"
+        ]
+      },
+      {
+        "id": "smart_campus.logistics.space_utilization.analyze",
+        "name": "Warehouse Space Utilization Analyze",
+        "description": "分析仓库各区域的空间占用率、货架利用率和通道顺畅度，识别空间浪费和扩容需求。",
+        "tags": [
+          "smart-campus",
+          "logistics",
+          "space-utilization",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_campus.logistics.worker_efficiency.analyze",
+        "name": "Warehouse Worker Efficiency Analyze",
+        "description": "统计仓储作业人员的拣货效率、错误率和工时分布，识别绩效差异和培训需求。",
+        "tags": [
+          "smart-campus",
+          "logistics",
+          "worker-efficiency",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_campus.logistics.delivery_route.optimize",
+        "name": "Delivery Route Optimize",
+        "description": "根据配送地点、时间窗口和车辆容量，规划最优配送路线，降低配送里程和车辆使用成本。",
+        "tags": [
+          "smart-campus",
+          "logistics",
+          "delivery-route",
+          "optimize"
+        ]
+      },
+      {
+        "id": "smart_campus.logistics.monthly_report.generate",
+        "name": "Logistics Monthly Report Generate",
+        "description": "生成园区物流仓储月报，涵盖出入库量、库存周转率、作业效率、异常事件和承运商绩效。",
+        "tags": [
+          "smart-campus",
+          "logistics",
+          "monthly-report",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_campus.logistics.qa.answer",
+        "name": "Logistics QA Answer",
+        "description": "回答用户关于库存状态、出入库记录、货物位置、物流进度和仓储效率的问题，并提供数据解释。",
+        "tags": [
+          "smart-campus",
+          "logistics"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-036",
+    "name": "Smart Campus Utilities Management Agent",
+    "description": "该智能体面向智慧园区公共设施、能源、通信和基础设施运行健康评估任务，能够处理供电、供水、供气、网络、路灯、太阳能、储能、污水、废弃物、碳核算、故障告警、巡检和设施资产数据；支持多源设施状态融合、告警聚合、规则驱动异常判定、运行健康评分、基础设施报告、能源报告和应急维修建议。",
+    "url": "http://[fd10::1:2]:8086",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_campus.utilities.power_supply.monitor",
+        "name": "Power Supply Monitor",
+        "description": "监测园区变配电系统的电压、电流、功率因数和负荷率，识别供电异常和过负荷风险。",
+        "tags": [
+          "smart-campus",
+          "utilities",
+          "power-supply",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_campus.utilities.power_outage.predict",
+        "name": "Power Outage Predict",
+        "description": "基于设备老化数据和运行历史，预测变压器、开关柜等关键供电设备的故障风险和停电概率。",
+        "tags": [
+          "smart-campus",
+          "utilities",
+          "power-outage",
+          "predict"
+        ]
+      },
+      {
+        "id": "smart_campus.utilities.generator.manage",
+        "name": "Backup Generator Manage",
+        "description": "管理园区备用发电机的定期测试、油量监测、启动响应和负荷切换，确保停电时应急电源可靠运行。",
+        "tags": [
+          "smart-campus",
+          "utilities",
+          "generator",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_campus.utilities.water_supply.monitor",
+        "name": "Water Supply Monitor",
+        "description": "监测园区供水管网的水压、流量和水质数据，识别管网漏损、水压异常和用水峰值超限情况。",
+        "tags": [
+          "smart-campus",
+          "utilities",
+          "water-supply",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_campus.utilities.pipe_leak.detect",
+        "name": "Underground Pipe Leak Detect",
+        "description": "基于流量差值分析和声波检测，识别园区地下供水管网的泄漏点位和漏损量，支持抢修定位。",
+        "tags": [
+          "smart-campus",
+          "utilities",
+          "pipe-leak",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_campus.utilities.gas_supply.monitor",
+        "name": "Gas Supply Monitor",
+        "description": "监测园区天然气供应管网的压力、流量和用气量数据，识别压力异常和可能的泄漏风险。",
+        "tags": [
+          "smart-campus",
+          "utilities",
+          "gas-supply",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_campus.utilities.gas_leak.detect",
+        "name": "Gas Leak Detect",
+        "description": "结合气体传感器和视频数据，识别园区内天然气、LPG或有毒气体泄漏事件，触发紧急关阀联动。",
+        "tags": [
+          "smart-campus",
+          "utilities",
+          "gas-leak",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_campus.utilities.network.monitor",
+        "name": "Campus Network Monitor",
+        "description": "监测园区通信基础设施（光纤、交换机、基站）的运行状态，识别网络中断、带宽瓶颈和设备故障。",
+        "tags": [
+          "smart-campus",
+          "utilities",
+          "network",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_campus.utilities.street_lighting.control",
+        "name": "Street Lighting Control",
+        "description": "根据时间、光照强度和区域活动情况，智能控制园区路灯的开关和亮度，实现节能和安全保障平衡。",
+        "tags": [
+          "smart-campus",
+          "utilities",
+          "street-lighting",
+          "control"
+        ]
+      },
+      {
+        "id": "smart_campus.utilities.solar_panel.monitor",
+        "name": "Solar Panel Monitor",
+        "description": "监测园区光伏发电系统的发电量、转化效率和设备故障，识别组件遮挡、老化和逆变器异常。",
+        "tags": [
+          "smart-campus",
+          "utilities",
+          "solar-panel",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_campus.utilities.energy_storage.manage",
+        "name": "Energy Storage Manage",
+        "description": "管理园区储能系统的充放电策略，结合电价曲线和用电需求实现削峰填谷，降低用电成本。",
+        "tags": [
+          "smart-campus",
+          "utilities",
+          "energy-storage",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_campus.utilities.sewage.monitor",
+        "name": "Sewage System Monitor",
+        "description": "监测园区污水处理设施的水质指标（COD、氨氮、SS）和设备运行状态，识别排放超标风险。",
+        "tags": [
+          "smart-campus",
+          "utilities",
+          "sewage",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_campus.utilities.waste.manage",
+        "name": "Waste Management",
+        "description": "管理园区各类废弃物（工业废料、生活垃圾、危险废物）的分类收集、转运记录和合规处置。",
+        "tags": [
+          "smart-campus",
+          "utilities",
+          "waste",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_campus.utilities.infrastructure_asset.manage",
+        "name": "Infrastructure Asset Manage",
+        "description": "管理园区公共基础设施资产的台账、折旧、维护历史和报废计划，支持全生命周期成本核算。",
+        "tags": [
+          "smart-campus",
+          "utilities",
+          "infrastructure-asset",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_campus.utilities.carbon_accounting.calculate",
+        "name": "Carbon Accounting Calculate",
+        "description": "核算园区各能源消耗类别的碳排放量，生成碳排放账单，支持绿色园区认证和碳配额管理。",
+        "tags": [
+          "smart-campus",
+          "utilities",
+          "carbon-accounting",
+          "calculate"
+        ]
+      },
+      {
+        "id": "smart_campus.utilities.demand_response.manage",
+        "name": "Demand Response Manage",
+        "description": "在电网需求响应信号触发时，自动调减园区非关键负荷，参与需求侧响应获取电费补贴。",
+        "tags": [
+          "smart-campus",
+          "utilities",
+          "demand-response",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_campus.utilities.infrastructure_inspection.plan",
+        "name": "Infrastructure Inspection Plan",
+        "description": "制定园区供电、供水、供气等基础设施的定期巡检计划，分配巡检任务并跟踪巡检完成情况。",
+        "tags": [
+          "smart-campus",
+          "utilities",
+          "infrastructure-inspection",
+          "plan"
+        ]
+      },
+      {
+        "id": "smart_campus.utilities.emergency_repair.dispatch",
+        "name": "Emergency Repair Dispatch",
+        "description": "在基础设施故障告警触发后，快速调度维修人员和物料，协调多专业抢修作业并跟踪恢复进度。",
+        "tags": [
+          "smart-campus",
+          "utilities",
+          "emergency-repair",
+          "dispatch"
+        ]
+      },
+      {
+        "id": "smart_campus.utilities.energy_report.generate",
+        "name": "Campus Energy Report Generate",
+        "description": "生成园区能源综合报告，涵盖供电、供水、供气消耗量、成本分析、碳排核算和节能效果对比。",
+        "tags": [
+          "smart-campus",
+          "utilities",
+          "energy-report",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_campus.utilities.qa.answer",
+        "name": "Campus Utilities QA Answer",
+        "description": "回答用户关于园区供电、供水、供气状态、设备故障、能耗数据和维修进度的问题，并提供数据解释。",
+        "tags": [
+          "smart-campus",
+          "utilities"
+        ]
+      },
+      {
+        "id": "smart_campus.utilities.alert.aggregate",
+        "name": "Campus Utilities Alert Aggregation",
+        "description": "汇总园区供电、供水、网络、路灯、能源和基础设施故障告警，输出当前告警清单、级别和影响范围。",
+        "tags": [
+          "smart-campus",
+          "utilities",
+          "alert",
+          "aggregate"
+        ]
+      },
+      {
+        "id": "smart_campus.utilities.multisource_health.assess",
+        "name": "Campus Utilities Multi-Source Health Assessment",
+        "description": "融合水电设备、网络设备、路灯、环境传感器和故障告警，判断基础设施运行是否正常并给出健康评分。",
+        "tags": [
+          "smart-campus",
+          "utilities",
+          "multisource",
+          "health"
+        ]
+      },
+      {
+        "id": "smart_campus.utilities.anomaly_rule_judge",
+        "name": "Campus Utilities Rule-Based Anomaly Judgment",
+        "description": "基于多类公共设施状态、阈值、告警和运行规则判断路灯、供电、网络等基础设施是否异常。",
+        "tags": [
+          "smart-campus",
+          "utilities",
+          "rule",
+          "anomaly"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-037",
+    "name": "Smart Agriculture Soil & Water Agent",
+    "description": "该智能体面向智慧农业土壤、水资源和灌溉决策任务，能够监测土壤湿度、土壤温度、土壤养分、灌溉水量、水质、墒情、阈值参数和灌溉执行状态；支持阈值读取、数值比较、缺水判断、灌溉需求评估、节水建议和土壤水分报告。",
+    "url": "http://[fd10::1:2]:8087",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_agriculture.soil.moisture.monitor",
+        "name": "Soil Moisture Monitor",
+        "description": "监测农田各深度土层的土壤含水量变化，识别干旱胁迫和涝渍风险区域，驱动精准灌溉决策。",
+        "tags": [
+          "smart-agriculture",
+          "soil",
+          "moisture",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_agriculture.soil.temperature.monitor",
+        "name": "Soil Temperature Monitor",
+        "description": "监测不同深度的土壤温度变化，评估对作物根系发育、种子发芽和微生物活性的影响。",
+        "tags": [
+          "smart-agriculture",
+          "soil",
+          "temperature",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_agriculture.soil.ph.monitor",
+        "name": "Soil pH Monitor",
+        "description": "持续监测土壤酸碱度变化，识别超出作物适宜范围的pH异常区域，输出改良剂施用建议。",
+        "tags": [
+          "smart-agriculture",
+          "soil",
+          "ph",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_agriculture.soil.ec.monitor",
+        "name": "Soil EC Monitor",
+        "description": "监测土壤电导率（EC）反映的盐分和养分浓度水平，识别盐渍化区域和施肥过量引起的土壤板结风险。",
+        "tags": [
+          "smart-agriculture",
+          "soil",
+          "ec",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_agriculture.soil.nutrient.analyze",
+        "name": "Soil Nutrient Analyze",
+        "description": "分析土壤中氮、磷、钾及中微量元素的含量与分布，生成分区土壤养分图，支持精准施肥决策。",
+        "tags": [
+          "smart-agriculture",
+          "soil",
+          "nutrient",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_agriculture.soil.organic_matter.assess",
+        "name": "Soil Organic Matter Assess",
+        "description": "评估土壤有机质含量变化趋势，识别有机质下降区域，推荐有机肥投入和秸秆还田措施。",
+        "tags": [
+          "smart-agriculture",
+          "soil",
+          "organic-matter",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_agriculture.soil.compaction.detect",
+        "name": "Soil Compaction Detect",
+        "description": "检测农田土壤压实程度，识别机械作业引起的犁底层和紧实区域，支持深松作业决策。",
+        "tags": [
+          "smart-agriculture",
+          "soil",
+          "compaction",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_agriculture.soil.erosion.assess",
+        "name": "Soil Erosion Assess",
+        "description": "评估降雨和地形对农田土壤侵蚀的影响，识别高侵蚀风险区域，推荐水土保持措施。",
+        "tags": [
+          "smart-agriculture",
+          "soil",
+          "erosion",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_agriculture.water.irrigation_efficiency.analyze",
+        "name": "Irrigation Efficiency Analyze",
+        "description": "分析灌溉用水量与作物实际蒸腾需求的差异，计算灌溉水利用效率，识别渗漏和过度灌溉区域。",
+        "tags": [
+          "smart-agriculture",
+          "water",
+          "irrigation-efficiency",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_agriculture.water.drip_system.monitor",
+        "name": "Drip Irrigation System Monitor",
+        "description": "监测滴灌系统的管道压力、流量和滴头堵塞情况，识别系统故障和灌溉不均匀区域。",
+        "tags": [
+          "smart-agriculture",
+          "water",
+          "drip-system",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_agriculture.water.fertigation.control",
+        "name": "Fertigation Control",
+        "description": "控制水肥一体化系统的肥料配比、注入量和施用时间，确保作物在最适时机获得精准的养分供给。",
+        "tags": [
+          "smart-agriculture",
+          "water",
+          "fertigation",
+          "control"
+        ]
+      },
+      {
+        "id": "smart_agriculture.water.reservoir.monitor",
+        "name": "Agricultural Reservoir Monitor",
+        "description": "监测农业蓄水池和塘坝的水位、蓄水量和水质变化，预警枯水期供水不足和汛期溢坝风险。",
+        "tags": [
+          "smart-agriculture",
+          "water",
+          "reservoir",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_agriculture.water.pump_station.manage",
+        "name": "Pump Station Manage",
+        "description": "管理农业泵站的运行调度、能耗监测和设备维护，优化提水时段和泵组组合降低灌溉电费。",
+        "tags": [
+          "smart-agriculture",
+          "water",
+          "pump-station",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_agriculture.water.canal_loss.detect",
+        "name": "Canal Seepage Loss Detect",
+        "description": "通过流量差值分析识别灌溉渠道的渗漏点位和渗漏量，支持渠道防渗改造优先级排序。",
+        "tags": [
+          "smart-agriculture",
+          "water",
+          "canal-loss",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_agriculture.water.flood_risk.assess",
+        "name": "Agricultural Flood Risk Assess",
+        "description": "结合降雨预报和农田地形数据，评估内涝风险区域和排涝能力缺口，支持排水泵站预启动决策。",
+        "tags": [
+          "smart-agriculture",
+          "water",
+          "flood-risk",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_agriculture.water.quality.monitor",
+        "name": "Irrigation Water Quality Monitor",
+        "description": "监测灌溉水源的水质指标（重金属、农药残留、盐度），识别污染风险并建议替代水源启用。",
+        "tags": [
+          "smart-agriculture",
+          "water",
+          "quality",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_agriculture.soil.remediation.recommend",
+        "name": "Soil Remediation Recommend",
+        "description": "针对重金属污染、盐渍化、酸化等土壤问题，推荐针对性的修复措施和改良方案及预期效果。",
+        "tags": [
+          "smart-agriculture",
+          "soil",
+          "remediation",
+          "recommend"
+        ]
+      },
+      {
+        "id": "smart_agriculture.soil.sampling.plan",
+        "name": "Soil Sampling Plan",
+        "description": "根据农田面积、地块差异和作物种类，制定土壤取样方案，输出最优采样点位和取样深度建议。",
+        "tags": [
+          "smart-agriculture",
+          "soil",
+          "sampling",
+          "plan"
+        ]
+      },
+      {
+        "id": "smart_agriculture.soil.water_report.generate",
+        "name": "Soil Water Report Generate",
+        "description": "生成农田土壤与水资源综合管理报告，涵盖土壤健康评分、灌溉效率、用水量统计和改良建议。",
+        "tags": [
+          "smart-agriculture",
+          "soil",
+          "water-report",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_agriculture.soil.qa.answer",
+        "name": "Soil Water QA Answer",
+        "description": "回答用户关于土壤理化状态、灌溉系统、水资源利用和改良措施的问题，并提供数据解释。",
+        "tags": [
+          "smart-agriculture",
+          "soil"
+        ]
+      },
+      {
+        "id": "smart_agriculture.soil.irrigation_threshold.query",
+        "name": "Soil Irrigation Threshold Query",
+        "description": "查询作物、地块或土壤类型对应的灌溉阈值、墒情阈值和预设参数。",
+        "tags": [
+          "smart-agriculture",
+          "soil",
+          "threshold"
+        ]
+      },
+      {
+        "id": "smart_agriculture.soil.moisture_threshold.compare",
+        "name": "Soil Moisture Threshold Comparison",
+        "description": "比较当前土壤湿度与灌溉阈值，判断是否低于阈值以及是否需要灌溉。",
+        "tags": [
+          "smart-agriculture",
+          "soil",
+          "comparison",
+          "irrigation"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-038",
+    "name": "Smart Agriculture Equipment & Drone Agent",
+    "description": "该智能体面向智慧农业农机、无人机巡检、植保喷洒和作业轨迹评估任务，能够处理农机位置、作业参数、喷洒任务、无人机巡田视频/图像、关键帧提取、NDVI 图、病虫害图像分析、漏喷/药害/异常田块识别、地理围栏匹配和作业完成度评估。",
+    "url": "http://[fd10::1:2]:8088",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_agriculture.equipment.machine_location.track",
+        "name": "Farm Machine Location Track",
+        "description": "实时追踪农机在田间的位置和行驶轨迹，生成作业覆盖图，识别漏耕漏播区域和作业路径偏差。",
+        "tags": [
+          "smart-agriculture",
+          "equipment",
+          "machine-location",
+          "track"
+        ]
+      },
+      {
+        "id": "smart_agriculture.equipment.operation_parameter.monitor",
+        "name": "Operation Parameter Monitor",
+        "description": "监测农机作业的关键参数（耕深、幅宽、播种量、喷液量），识别参数偏离标准的作业异常。",
+        "tags": [
+          "smart-agriculture",
+          "equipment",
+          "operation-parameter",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_agriculture.equipment.fuel_consumption.monitor",
+        "name": "Fuel Consumption Monitor",
+        "description": "监测农机油耗数据，识别油耗异常（漏油、怠速过长、作业效率低）并输出节油建议。",
+        "tags": [
+          "smart-agriculture",
+          "equipment",
+          "fuel-consumption",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_agriculture.equipment.fault.diagnose",
+        "name": "Farm Machine Fault Diagnose",
+        "description": "基于发动机转速、温度、振动和故障码数据，诊断农机故障原因，输出维修建议和备件需求。",
+        "tags": [
+          "smart-agriculture",
+          "equipment",
+          "fault",
+          "diagnose"
+        ]
+      },
+      {
+        "id": "smart_agriculture.equipment.maintenance.schedule",
+        "name": "Equipment Maintenance Schedule",
+        "description": "根据农机工作小时数和季节性作业需求，生成保养计划，提前预警保养到期和易损件更换时机。",
+        "tags": [
+          "smart-agriculture",
+          "equipment",
+          "maintenance",
+          "schedule"
+        ]
+      },
+      {
+        "id": "smart_agriculture.equipment.task.dispatch",
+        "name": "Farm Machine Task Dispatch",
+        "description": "根据农田作业计划和农机可用状态，分配农机作业任务，优化多机协同作业路线和班次安排。",
+        "tags": [
+          "smart-agriculture",
+          "equipment",
+          "task",
+          "dispatch"
+        ]
+      },
+      {
+        "id": "smart_agriculture.equipment.utilization.analyze",
+        "name": "Equipment Utilization Analyze",
+        "description": "分析农机的作业时间、闲置时长和利用率，识别使用效率低下的机型和优化调配机会。",
+        "tags": [
+          "smart-agriculture",
+          "equipment",
+          "utilization",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_agriculture.equipment.harvest_progress.monitor",
+        "name": "Harvest Progress Monitor",
+        "description": "监测收割机的作业进度和剩余收割面积，结合天气预报预警收割进度风险，支持增援调度决策。",
+        "tags": [
+          "smart-agriculture",
+          "equipment",
+          "harvest-progress",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_agriculture.drone.patrol_flight.plan",
+        "name": "Drone Patrol Flight Plan",
+        "description": "规划无人机巡田飞行路线和拍摄参数，确保全覆盖无遗漏，并根据电量自动设计返航和换电策略。",
+        "tags": [
+          "smart-agriculture",
+          "drone",
+          "patrol-flight",
+          "plan"
+        ]
+      },
+      {
+        "id": "smart_agriculture.drone.image.analyze",
+        "name": "Drone Image Analyze",
+        "description": "分析无人机航拍图像，提取作物长势、病虫害分布、积水区域和边界侵占等关键农情信息。",
+        "tags": [
+          "smart-agriculture",
+          "drone",
+          "image",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_agriculture.drone.ndvi_map.generate",
+        "name": "NDVI Map Generate",
+        "description": "基于无人机多光谱图像，生成农田植被指数（NDVI）分布图，直观展示作物长势差异和问题区域。",
+        "tags": [
+          "smart-agriculture",
+          "drone",
+          "ndvi-map",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_agriculture.drone.spray_task.execute",
+        "name": "Drone Spray Task Execute",
+        "description": "控制植保无人机按照处方图进行变量喷洒，确保药液在病虫害区域精准施用，减少农药浪费。",
+        "tags": [
+          "smart-agriculture",
+          "drone",
+          "spray-task",
+          "execute"
+        ]
+      },
+      {
+        "id": "smart_agriculture.drone.spray_quality.verify",
+        "name": "Spray Quality Verify",
+        "description": "通过感应卡或雾滴图像分析，核验植保无人机喷洒的雾滴覆盖率和均匀度，评估施药效果。",
+        "tags": [
+          "smart-agriculture",
+          "drone",
+          "spray-quality",
+          "verify"
+        ]
+      },
+      {
+        "id": "smart_agriculture.drone.seeding_task.execute",
+        "name": "Drone Seeding Task Execute",
+        "description": "控制播种无人机按照规划路径进行精准播种，监测播种量和漏播情况，生成播种作业报告。",
+        "tags": [
+          "smart-agriculture",
+          "drone",
+          "seeding-task",
+          "execute"
+        ]
+      },
+      {
+        "id": "smart_agriculture.drone.battery.manage",
+        "name": "Drone Battery Manage",
+        "description": "管理无人机电池的充电调度、健康状态和轮换使用，识别容量衰减电池并安排更换。",
+        "tags": [
+          "smart-agriculture",
+          "drone",
+          "battery",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_agriculture.drone.no_fly_zone.check",
+        "name": "No Fly Zone Check",
+        "description": "在飞行任务执行前核验飞行区域是否涉及禁飞区、限飞区和临时管控空域，输出合规飞行许可结论。",
+        "tags": [
+          "smart-agriculture",
+          "drone",
+          "no-fly-zone",
+          "check"
+        ]
+      },
+      {
+        "id": "smart_agriculture.drone.fleet.coordinate",
+        "name": "Drone Fleet Coordinate",
+        "description": "协调多架无人机的分区作业，避免飞行路径冲突，实现大面积农田的多机并行高效覆盖。",
+        "tags": [
+          "smart-agriculture",
+          "drone",
+          "fleet",
+          "coordinate"
+        ]
+      },
+      {
+        "id": "smart_agriculture.equipment.cost_per_mu.calculate",
+        "name": "Cost Per Mu Calculate",
+        "description": "计算各农机和无人机作业项目的每亩综合成本（燃料、折旧、人工），支持作业外包定价和自营对比分析。",
+        "tags": [
+          "smart-agriculture",
+          "equipment",
+          "cost-per-mu",
+          "calculate"
+        ]
+      },
+      {
+        "id": "smart_agriculture.equipment.season_report.generate",
+        "name": "Equipment Season Report Generate",
+        "description": "生成农机和无人机的季度作业报告，涵盖作业面积、工时统计、油耗、故障记录和作业质量评估。",
+        "tags": [
+          "smart-agriculture",
+          "equipment",
+          "season-report",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_agriculture.equipment.qa.answer",
+        "name": "Equipment Drone QA Answer",
+        "description": "回答用户关于农机位置、作业进度、故障诊断、无人机任务和作业成本的问题，并提供数据解释。",
+        "tags": [
+          "smart-agriculture",
+          "equipment"
+        ]
+      },
+      {
+        "id": "smart_agriculture.drone.video_keyframe.extract",
+        "name": "Agriculture Drone Video Keyframe Extraction",
+        "description": "从无人机巡检视频中提取关键帧、代表性田块画面和异常区域截图，为后续图像分析提供输入。",
+        "tags": [
+          "smart-agriculture",
+          "drone",
+          "video",
+          "keyframe"
+        ]
+      },
+      {
+        "id": "smart_agriculture.drone.field_anomaly_image.analyze",
+        "name": "Drone Field Anomaly Image Analysis",
+        "description": "分析无人机田块图像中的病虫害、缺水、药害、漏喷、倒伏和作业质量异常。",
+        "tags": [
+          "smart-agriculture",
+          "drone",
+          "image",
+          "field-anomaly"
+        ]
+      },
+      {
+        "id": "smart_agriculture.equipment.geofence_match.check",
+        "name": "Agriculture Equipment Geofence Match Check",
+        "description": "将农机或无人机作业轨迹与田块边界、地理围栏和任务区域进行匹配，判断覆盖是否完整。",
+        "tags": [
+          "smart-agriculture",
+          "equipment",
+          "geofence"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-039",
+    "name": "Smart Agriculture Supply Chain & Traceability Agent",
+    "description": "该智能体面向智慧农业供应链管理与农产品溯源任务，能够处理从农田投入品采购、生产过程记录、采收加工、冷链物流到零售终端的全链路追溯，为农产品品牌化、食品安全监管和出口认证提供可信的全程溯源数据支撑。",
+    "url": "http://[fd10::1:2]:8089",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_agriculture.supply_chain.input_record.manage",
+        "name": "Agricultural Input Record Manage",
+        "description": "记录种子、农药、化肥、农膜等农业投入品的来源、批次、用量和使用地块，支持投入品合规审查。",
+        "tags": [
+          "smart-agriculture",
+          "supply-chain",
+          "input-record",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_agriculture.supply_chain.pesticide_residue.check",
+        "name": "Pesticide Residue Check",
+        "description": "对农产品样品进行农药残留检测记录管理，核验检测结果是否符合国家限量标准，输出合格判定。",
+        "tags": [
+          "smart-agriculture",
+          "supply-chain",
+          "pesticide-residue",
+          "check"
+        ]
+      },
+      {
+        "id": "smart_agriculture.supply_chain.harvest_batch.record",
+        "name": "Harvest Batch Record",
+        "description": "记录每批次农产品的采收日期、地块编号、采收量和操作人员，生成可追溯的批次身份档案。",
+        "tags": [
+          "smart-agriculture",
+          "supply-chain",
+          "harvest-batch",
+          "record"
+        ]
+      },
+      {
+        "id": "smart_agriculture.supply_chain.post_harvest.manage",
+        "name": "Post Harvest Manage",
+        "description": "管理采后清洗、分级、包装、预冷和仓储环节的操作记录，确保加工过程数据纳入溯源链条。",
+        "tags": [
+          "smart-agriculture",
+          "supply-chain",
+          "post-harvest",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_agriculture.supply_chain.cold_chain.monitor",
+        "name": "Agricultural Cold Chain Monitor",
+        "description": "全程监测农产品冷链物流的温湿度记录，识别断链风险并生成每批次的温控合规证明。",
+        "tags": [
+          "smart-agriculture",
+          "supply-chain",
+          "cold-chain",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_agriculture.supply_chain.certification.manage",
+        "name": "Agricultural Certification Manage",
+        "description": "管理绿色食品、有机认证、GAP认证等农业认证的申报材料、有效期和年度检查记录。",
+        "tags": [
+          "smart-agriculture",
+          "supply-chain",
+          "certification",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_agriculture.supply_chain.traceability_code.generate",
+        "name": "Traceability Code Generate",
+        "description": "为每批次农产品生成唯一溯源码，关联从生产到销售的全链路数据，支持消费者扫码查询。",
+        "tags": [
+          "smart-agriculture",
+          "supply-chain",
+          "traceability-code",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_agriculture.supply_chain.blockchain.record",
+        "name": "Blockchain Record",
+        "description": "将关键溯源节点数据（播种、施药、采收、检测、物流）上链存证，防篡改并支持监管方链上核查。",
+        "tags": [
+          "smart-agriculture",
+          "supply-chain",
+          "blockchain",
+          "record"
+        ]
+      },
+      {
+        "id": "smart_agriculture.supply_chain.export_compliance.check",
+        "name": "Export Compliance Check",
+        "description": "核验农产品出口所需的检疫证书、原产地证明、农残报告和目标国准入资质，识别合规缺口。",
+        "tags": [
+          "smart-agriculture",
+          "supply-chain",
+          "export-compliance",
+          "check"
+        ]
+      },
+      {
+        "id": "smart_agriculture.supply_chain.price.monitor",
+        "name": "Agricultural Price Monitor",
+        "description": "监测主要农产品的批发市场价格变动，结合生产成本分析，输出销售时机建议和价格风险预警。",
+        "tags": [
+          "smart-agriculture",
+          "supply-chain",
+          "price",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_agriculture.supply_chain.order.manage",
+        "name": "Agricultural Order Manage",
+        "description": "管理农产品订购合同的签订、交货进度跟踪和质量纠纷记录，支持买家和销售渠道的多方协同。",
+        "tags": [
+          "smart-agriculture",
+          "supply-chain",
+          "order",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_agriculture.supply_chain.loss_rate.analyze",
+        "name": "Post Harvest Loss Rate Analyze",
+        "description": "分析从采收到终端销售各环节的损耗率和损耗原因，识别减损关键节点和改进措施。",
+        "tags": [
+          "smart-agriculture",
+          "supply-chain",
+          "loss-rate",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_agriculture.supply_chain.supplier.evaluate",
+        "name": "Agricultural Input Supplier Evaluate",
+        "description": "评估种子、农药、化肥供应商的质量稳定性、交货及时率和价格竞争力，输出供应商评级。",
+        "tags": [
+          "smart-agriculture",
+          "supply-chain",
+          "supplier",
+          "evaluate"
+        ]
+      },
+      {
+        "id": "smart_agriculture.supply_chain.food_safety_recall.manage",
+        "name": "Food Safety Recall Manage",
+        "description": "在发现质量问题时，快速定位问题批次的流向，协调启动召回程序，输出召回范围和执行记录。",
+        "tags": [
+          "smart-agriculture",
+          "supply-chain",
+          "food-safety-recall",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_agriculture.supply_chain.insurance.manage",
+        "name": "Agricultural Insurance Manage",
+        "description": "管理农业保险的投保信息、理赔材料和赔偿记录，在灾害发生后快速生成理赔所需的损失证明数据。",
+        "tags": [
+          "smart-agriculture",
+          "supply-chain",
+          "insurance",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_agriculture.supply_chain.subsidy.apply",
+        "name": "Agricultural Subsidy Apply",
+        "description": "整合作物种植面积、品种和投入数据，辅助准备农业补贴申报材料，核验申报数据的完整性和合规性。",
+        "tags": [
+          "smart-agriculture",
+          "supply-chain",
+          "subsidy",
+          "apply"
+        ]
+      },
+      {
+        "id": "smart_agriculture.supply_chain.consumer_feedback.analyze",
+        "name": "Consumer Feedback Analyze",
+        "description": "收集和分析农产品终端消费者的品质评价、投诉和复购数据，反馈至生产端用于品质改进决策。",
+        "tags": [
+          "smart-agriculture",
+          "supply-chain",
+          "consumer-feedback",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_agriculture.supply_chain.carbon_footprint.calculate",
+        "name": "Agricultural Carbon Footprint Calculate",
+        "description": "计算农产品从生产到消费全链路的碳排放量，支持低碳农产品认证和碳标签申请。",
+        "tags": [
+          "smart-agriculture",
+          "supply-chain",
+          "carbon-footprint",
+          "calculate"
+        ]
+      },
+      {
+        "id": "smart_agriculture.supply_chain.annual_report.generate",
+        "name": "Supply Chain Annual Report Generate",
+        "description": "生成农业供应链年度报告，涵盖生产批次、质检合规率、溯源覆盖率、认证状态和销售渠道分析。",
+        "tags": [
+          "smart-agriculture",
+          "supply-chain",
+          "annual-report",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_agriculture.supply_chain.qa.answer",
+        "name": "Supply Chain QA Answer",
+        "description": "回答用户关于农产品溯源、质量检测、认证状态、冷链合规和供应链各环节数据的问题，并提供解释。",
+        "tags": [
+          "smart-agriculture",
+          "supply-chain"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-040",
+    "name": "Smart Medical ICU Monitoring Agent",
+    "description": "该智能体面向 ICU 重症监护场景，能够处理生命体征融合、ICU 监护设备状态、呼吸机、输注泵、报警声音、设备告警、护理记录、历史异常趋势和早期预警评分；支持高危风险判断、护理记录结构化、设备运行状态查询、报警疲劳分析和 ICU 风险报告。",
+    "url": "http://[fd10::1:2]:8090",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_medical.icu.vital_sign_fusion.analyze",
+        "name": "Vital Sign Fusion Analyze",
+        "description": "融合心电、血氧、血压、体温和呼吸率等多参数生命体征数据，进行综合分析并识别早期恶化趋势。",
+        "tags": [
+          "smart-medical",
+          "icu",
+          "vital-sign-fusion",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_medical.icu.early_warning_score.calculate",
+        "name": "Early Warning Score Calculate",
+        "description": "基于生命体征数据实时计算NEWS2或SOFA等预警评分，识别高分值患者并触发医护预警通知。",
+        "tags": [
+          "smart-medical",
+          "icu",
+          "early-warning-score",
+          "calculate"
+        ]
+      },
+      {
+        "id": "smart_medical.icu.ventilator.monitor",
+        "name": "Ventilator Parameter Monitor",
+        "description": "监测呼吸机的潮气量、气道压、呼吸频率和FiO₂参数，识别人机对抗、管路脱落和参数超限情况。",
+        "tags": [
+          "smart-medical",
+          "icu",
+          "ventilator",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_medical.icu.sedation_level.assess",
+        "name": "Sedation Level Assess",
+        "description": "基于RASS量表标准，结合视频分析患者的肢体活动和面部反应，辅助评估ICU患者的镇静深度。",
+        "tags": [
+          "smart-medical",
+          "icu",
+          "sedation-level",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_medical.icu.delirium.detect",
+        "name": "ICU Delirium Detect",
+        "description": "识别ICU患者谵妄发作的早期行为特征，包括躁动、注意力不集中和意识混乱，支持早期干预。",
+        "tags": [
+          "smart-medical",
+          "icu",
+          "delirium",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_medical.icu.sepsis_risk.predict",
+        "name": "Sepsis Risk Predict",
+        "description": "综合体温、心率、血压、白细胞计数和乳酸水平，预测脓毒症风险并提示启动集束化治疗措施。",
+        "tags": [
+          "smart-medical",
+          "icu",
+          "sepsis-risk",
+          "predict"
+        ]
+      },
+      {
+        "id": "smart_medical.icu.fluid_balance.monitor",
+        "name": "Fluid Balance Monitor",
+        "description": "实时统计ICU患者的液体入量（输液、口服）和出量（尿量、引流、出血），计算24小时液体平衡。",
+        "tags": [
+          "smart-medical",
+          "icu",
+          "fluid-balance",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_medical.icu.catheter_infection_risk.assess",
+        "name": "Catheter Infection Risk Assess",
+        "description": "跟踪中心静脉导管、尿管和气管插管的留置天数，结合操作规范检查评估导管相关感染风险。",
+        "tags": [
+          "smart-medical",
+          "icu",
+          "catheter-infection-risk",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_medical.icu.alarm_fatigue.reduce",
+        "name": "Alarm Fatigue Reduce",
+        "description": "对ICU监护仪告警进行智能过滤和优先级排序，抑制非临床相关的技术性误报，减少医护告警疲劳。",
+        "tags": [
+          "smart-medical",
+          "icu",
+          "alarm-fatigue",
+          "reduce"
+        ]
+      },
+      {
+        "id": "smart_medical.icu.medication_infusion.monitor",
+        "name": "Medication Infusion Monitor",
+        "description": "监测升压药、镇静药和抗凝药等高风险药物的持续泵入速率和累计剂量，识别用药偏差风险。",
+        "tags": [
+          "smart-medical",
+          "icu",
+          "medication-infusion",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_medical.icu.turning_reminder.generate",
+        "name": "Patient Turning Reminder Generate",
+        "description": "根据压疮预防协议，按时生成翻身提醒并记录执行情况，跟踪各患者的体位变换合规率。",
+        "tags": [
+          "smart-medical",
+          "icu",
+          "turning-reminder",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_medical.icu.extubation_readiness.assess",
+        "name": "Extubation Readiness Assess",
+        "description": "综合自主呼吸试验结果、神经肌肉功能和咳嗽能力，辅助评估患者拔管时机和拔管后失败风险。",
+        "tags": [
+          "smart-medical",
+          "icu",
+          "extubation-readiness",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_medical.icu.bed_turnover.optimize",
+        "name": "ICU Bed Turnover Optimize",
+        "description": "分析ICU床位使用效率和患者转出时机，识别可安全降级的患者，优化ICU资源分配和床位周转。",
+        "tags": [
+          "smart-medical",
+          "icu",
+          "bed-turnover",
+          "optimize"
+        ]
+      },
+      {
+        "id": "smart_medical.icu.infection_control.monitor",
+        "name": "ICU Infection Control Monitor",
+        "description": "监测ICU医护人员的手卫生、隔离措施和无菌操作合规性，识别院内感染传播风险行为。",
+        "tags": [
+          "smart-medical",
+          "icu",
+          "infection-control",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_medical.icu.family_communication.support",
+        "name": "Family Communication Support",
+        "description": "生成面向患者家属的ICU病情简报，以通俗语言描述患者当前状态、主要治疗措施和注意事项。",
+        "tags": [
+          "smart-medical",
+          "icu",
+          "family-communication",
+          "support"
+        ]
+      },
+      {
+        "id": "smart_medical.icu.digital_twin.simulate",
+        "name": "ICU Digital Twin Simulate",
+        "description": "构建ICU患者的数字孪生模型，模拟不同治疗方案对生命体征的预期影响，辅助临床决策制定。",
+        "tags": [
+          "smart-medical",
+          "icu",
+          "digital-twin",
+          "simulate"
+        ]
+      },
+      {
+        "id": "smart_medical.icu.multidisciplinary_round.support",
+        "name": "Multidisciplinary Round Support",
+        "description": "在多学科查房前汇总患者的关键指标、化验结果、影像和治疗记录，生成结构化查房摘要。",
+        "tags": [
+          "smart-medical",
+          "icu",
+          "multidisciplinary-round",
+          "support"
+        ]
+      },
+      {
+        "id": "smart_medical.icu.outcome.predict",
+        "name": "ICU Patient Outcome Predict",
+        "description": "基于患者入ICU时的生理评分、疾病严重程度和治疗响应，预测ICU住院时长和临床结局风险。",
+        "tags": [
+          "smart-medical",
+          "icu",
+          "outcome",
+          "predict"
+        ]
+      },
+      {
+        "id": "smart_medical.icu.quality_indicator.report",
+        "name": "ICU Quality Indicator Report",
+        "description": "生成ICU质量指标报告，涵盖VAP发生率、CLABSI率、床位使用率、告警响应时间和非计划拔管率。",
+        "tags": [
+          "smart-medical",
+          "icu",
+          "quality-indicator",
+          "report"
+        ]
+      },
+      {
+        "id": "smart_medical.icu.qa.answer",
+        "name": "ICU Monitoring QA Answer",
+        "description": "回答用户关于ICU患者生命体征、治疗进展、设备告警、感染风险和预后预测的问题，并提供数据解释。",
+        "tags": [
+          "smart-medical",
+          "icu"
+        ]
+      },
+      {
+        "id": "smart_medical.icu.device_status.query",
+        "name": "ICU Monitoring Device Status Query",
+        "description": "查询 ICU 监护仪、呼吸机、输注泵、报警设备等监护设备的在线状态、运行状态、告警状态和关键参数。",
+        "tags": [
+          "smart-medical",
+          "icu",
+          "device-status"
+        ]
+      },
+      {
+        "id": "smart_medical.icu.nursing_record.extract",
+        "name": "ICU Nursing Record Extraction",
+        "description": "从 ICU 护理记录、交接班记录和历史异常趋势中抽取患者风险线索、事件时间和护理关注点。",
+        "tags": [
+          "smart-medical",
+          "icu",
+          "nursing-record"
+        ]
+      },
+      {
+        "id": "smart_medical.icu.high_risk_fusion.assess",
+        "name": "ICU High-Risk Multisource Assessment",
+        "description": "融合 ICU 生命体征、设备状态、报警声音、护理记录和历史异常趋势，判断患者高危风险等级。",
+        "tags": [
+          "smart-medical",
+          "icu",
+          "multisource",
+          "risk"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-041",
+    "name": "Smart Medical Operating Room Agent",
+    "description": "该智能体面向智慧医疗手术室管理任务，能够处理手术排程优化、手术室环境监控、手术器械管理、手术团队合规核查、手术进度追踪和手术室运营分析，为医院手术室管理部门提供全流程精细化管理能力。",
+    "url": "http://[fd10::1:2]:8091",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_medical.or.schedule.optimize",
+        "name": "Operating Room Schedule Optimize",
+        "description": "基于手术类型、时长预估、医生排班和手术室设备可用性，优化手术排程，提升手术室使用效率。",
+        "tags": [
+          "smart-medical",
+          "or",
+          "schedule",
+          "optimize"
+        ]
+      },
+      {
+        "id": "smart_medical.or.patient_safety_check.verify",
+        "name": "Patient Safety Check Verify",
+        "description": "核验手术安全核查表（手术部位标记、过敏史、知情同意、仪器清点）的完成情况，识别遗漏项目。",
+        "tags": [
+          "smart-medical",
+          "or",
+          "patient-safety-check",
+          "verify"
+        ]
+      },
+      {
+        "id": "smart_medical.or.timeout.manage",
+        "name": "Surgical Timeout Manage",
+        "description": "管理手术开始前的暂停核查（Time-Out）程序，记录参与人员、核查项目和确认结果，确保合规执行。",
+        "tags": [
+          "smart-medical",
+          "or",
+          "timeout",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_medical.or.environment.monitor",
+        "name": "OR Environment Monitor",
+        "description": "监测手术室的温湿度、气压差、洁净度（悬浮粒子）和换气次数，识别超标情况并触发净化联动。",
+        "tags": [
+          "smart-medical",
+          "or",
+          "environment",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_medical.or.instrument_count.verify",
+        "name": "Instrument Count Verify",
+        "description": "在手术开始和结束时，核验手术器械、纱布和缝针的数量，识别器械遗留体腔风险。",
+        "tags": [
+          "smart-medical",
+          "or",
+          "instrument-count",
+          "verify"
+        ]
+      },
+      {
+        "id": "smart_medical.or.instrument_sterilization.track",
+        "name": "Instrument Sterilization Track",
+        "description": "追踪手术器械的灭菌批次、有效期和使用记录，确保每次手术使用的器械均在有效灭菌状态内。",
+        "tags": [
+          "smart-medical",
+          "or",
+          "instrument-sterilization",
+          "track"
+        ]
+      },
+      {
+        "id": "smart_medical.or.implant.manage",
+        "name": "Surgical Implant Manage",
+        "description": "管理手术植入物（骨钉、关节、网片）的型号、批次、有效期和使用记录，支持不良事件追溯。",
+        "tags": [
+          "smart-medical",
+          "or",
+          "implant",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_medical.or.surgical_progress.track",
+        "name": "Surgical Progress Track",
+        "description": "实时追踪手术各阶段的进度和时长，识别手术时间异常延长，支持家属候诊区信息屏实时更新。",
+        "tags": [
+          "smart-medical",
+          "or",
+          "surgical-progress",
+          "track"
+        ]
+      },
+      {
+        "id": "smart_medical.or.blood_product.manage",
+        "name": "Blood Product Manage",
+        "description": "管理手术用血的申请、备血、输注记录和血型核验，追踪血液制品使用量和库存余量。",
+        "tags": [
+          "smart-medical",
+          "or",
+          "blood-product",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_medical.or.anesthesia.monitor",
+        "name": "Anesthesia Monitor",
+        "description": "监测麻醉深度、呼吸参数、肌松程度和麻醉药用量，识别麻醉异常事件并提示麻醉师干预。",
+        "tags": [
+          "smart-medical",
+          "or",
+          "anesthesia",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_medical.or.staff_scrub_compliance.detect",
+        "name": "Staff Scrub Compliance Detect",
+        "description": "核验手术人员进入手术室前的手术刷手、穿戴无菌手术衣和手套的流程合规性，识别操作遗漏。",
+        "tags": [
+          "smart-medical",
+          "or",
+          "staff-scrub-compliance",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_medical.or.energy_device.monitor",
+        "name": "Surgical Energy Device Monitor",
+        "description": "监测电刀、超声刀、激光等手术能量设备的使用参数和安全状态，识别设备异常和使用风险。",
+        "tags": [
+          "smart-medical",
+          "or",
+          "energy-device",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_medical.or.turnover_time.optimize",
+        "name": "OR Turnover Time Optimize",
+        "description": "分析两台手术之间的术间准备时间，识别耗时过长的环节，推荐流程优化措施提升手术室周转效率。",
+        "tags": [
+          "smart-medical",
+          "or",
+          "turnover-time",
+          "optimize"
+        ]
+      },
+      {
+        "id": "smart_medical.or.cancellation.analyze",
+        "name": "Surgery Cancellation Analyze",
+        "description": "分析手术取消和延迟的原因分布（患者原因、床位不足、设备故障、人员原因），输出改进建议。",
+        "tags": [
+          "smart-medical",
+          "or",
+          "cancellation",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_medical.or.waste.manage",
+        "name": "OR Medical Waste Manage",
+        "description": "管理手术室医疗废物的分类、计重、转运和处置记录，确保符合医疗废物管理法规要求。",
+        "tags": [
+          "smart-medical",
+          "or",
+          "waste",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_medical.or.complication_risk.predict",
+        "name": "Surgical Complication Risk Predict",
+        "description": "基于患者术前评估数据、手术类型和麻醉方案，预测术中和术后并发症风险，辅助术前谈话和准备。",
+        "tags": [
+          "smart-medical",
+          "or",
+          "complication-risk",
+          "predict"
+        ]
+      },
+      {
+        "id": "smart_medical.or.video_recording.manage",
+        "name": "Surgical Video Recording Manage",
+        "description": "管理手术视频的录制、存档和授权访问，支持医疗纠纷举证、教学培训和手术质量回顾。",
+        "tags": [
+          "smart-medical",
+          "or",
+          "video-recording",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_medical.or.equipment_readiness.check",
+        "name": "Equipment Readiness Check",
+        "description": "在手术开始前核验所有手术设备（麻醉机、监护仪、影像设备）的开机自检状态，识别设备故障。",
+        "tags": [
+          "smart-medical",
+          "or",
+          "equipment-readiness",
+          "check"
+        ]
+      },
+      {
+        "id": "smart_medical.or.utilization_report.generate",
+        "name": "OR Utilization Report Generate",
+        "description": "生成手术室运营报告，涵盖手术台次、使用率、平均手术时长、准时开台率、取消率和设备故障统计。",
+        "tags": [
+          "smart-medical",
+          "or",
+          "utilization-report",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_medical.or.qa.answer",
+        "name": "Operating Room QA Answer",
+        "description": "回答用户关于手术排程、器械状态、手术进度、合规记录和手术室运营效率的问题，并提供数据解释。",
+        "tags": [
+          "smart-medical",
+          "or"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-042",
+    "name": "Smart Medical Pharmacy & Medication Agent",
+    "description": "该智能体面向智慧药房、处方审核、配药核验和用药管理风险评估任务，能够处理药品库存、药品标签、处方、配药核验、用药提醒记录、用药依从性、药物相互作用、过敏、有效期和不良反应数据；支持文本/标签结构化抽取、用药风险融合、用药提醒判断、药房报告和用药安全建议。",
+    "url": "http://[fd10::1:2]:8092",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_medical.pharmacy.inventory.manage",
+        "name": "Pharmacy Inventory Manage",
+        "description": "管理药房药品库存的实时水位、补货触发、效期监控和滞销药品处置，支持多仓库统一库存调配。",
+        "tags": [
+          "smart-medical",
+          "pharmacy",
+          "inventory",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_medical.pharmacy.prescription.review",
+        "name": "Prescription Review",
+        "description": "对处方进行自动化合理性审核，识别超剂量、配伍禁忌、重复用药和适应症不符等用药问题。",
+        "tags": [
+          "smart-medical",
+          "pharmacy",
+          "prescription",
+          "review"
+        ]
+      },
+      {
+        "id": "smart_medical.pharmacy.dispensing.verify",
+        "name": "Dispensing Verify",
+        "description": "核验药师配药过程中的药品品种、规格、数量和患者信息匹配正确性，识别调配差错风险。",
+        "tags": [
+          "smart-medical",
+          "pharmacy",
+          "dispensing",
+          "verify"
+        ]
+      },
+      {
+        "id": "smart_medical.pharmacy.drug_interaction.check",
+        "name": "Drug Interaction Check",
+        "description": "检查患者用药方案中的药物相互作用，按严重程度（禁忌、慎用、一般）分级输出相互作用告警。",
+        "tags": [
+          "smart-medical",
+          "pharmacy",
+          "drug-interaction",
+          "check"
+        ]
+      },
+      {
+        "id": "smart_medical.pharmacy.allergy.alert",
+        "name": "Drug Allergy Alert",
+        "description": "将处方药品与患者已知过敏史进行交叉比对，在存在过敏风险时触发用药禁忌告警并阻断配药。",
+        "tags": [
+          "smart-medical",
+          "pharmacy",
+          "allergy",
+          "alert"
+        ]
+      },
+      {
+        "id": "smart_medical.pharmacy.cold_chain_drug.monitor",
+        "name": "Cold Chain Drug Monitor",
+        "description": "监测冰箱和冷链运输中生物制剂、疫苗和胰岛素等冷链药品的温度合规性，识别冷链断链风险。",
+        "tags": [
+          "smart-medical",
+          "pharmacy",
+          "cold-chain-drug",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_medical.pharmacy.narcotic_drug.manage",
+        "name": "Narcotic Drug Manage",
+        "description": "管理麻醉药品和精神药品的处方限量、双人核查、使用记录和残余销毁，确保特殊药品全程受控。",
+        "tags": [
+          "smart-medical",
+          "pharmacy",
+          "narcotic-drug",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_medical.pharmacy.adverse_reaction.track",
+        "name": "Adverse Drug Reaction Track",
+        "description": "收集和分析药品不良反应上报记录，识别高发不良反应药品和高风险患者群体，输出用药安全预警。",
+        "tags": [
+          "smart-medical",
+          "pharmacy",
+          "adverse-reaction",
+          "track"
+        ]
+      },
+      {
+        "id": "smart_medical.pharmacy.antibiotic.manage",
+        "name": "Antibiotic Stewardship Manage",
+        "description": "监测抗菌药物的使用强度（DDD值）、限制级抗生素审批合规性和围手术期预防用药规范执行情况。",
+        "tags": [
+          "smart-medical",
+          "pharmacy",
+          "antibiotic",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_medical.pharmacy.high_alert_drug.manage",
+        "name": "High Alert Drug Manage",
+        "description": "对高警示药品（胰岛素、浓氯化钾、化疗药）实施专项管控，核验双人复核和标识规范执行情况。",
+        "tags": [
+          "smart-medical",
+          "pharmacy",
+          "high-alert-drug",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_medical.pharmacy.expiry_date.monitor",
+        "name": "Drug Expiry Date Monitor",
+        "description": "监测药房各品规药品的有效期，提前触发临期药品预警和近效期优先使用提醒，防止过期药使用。",
+        "tags": [
+          "smart-medical",
+          "pharmacy",
+          "expiry-date",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_medical.pharmacy.patient_counseling.support",
+        "name": "Patient Medication Counseling Support",
+        "description": "为药师提供用药指导话术支持，生成针对患者疾病和用药方案的个性化用药教育材料。",
+        "tags": [
+          "smart-medical",
+          "pharmacy",
+          "patient-counseling",
+          "support"
+        ]
+      },
+      {
+        "id": "smart_medical.pharmacy.recall.manage",
+        "name": "Drug Recall Manage",
+        "description": "在药品召回通知发布后，快速定位召回批次的库存位置和已发药记录，协调停用和召回执行。",
+        "tags": [
+          "smart-medical",
+          "pharmacy",
+          "recall",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_medical.pharmacy.medication_error.analyze",
+        "name": "Medication Error Analyze",
+        "description": "分析用药差错事件的原因分布（处方错误、调配错误、给药错误），输出根因分析和系统改进建议。",
+        "tags": [
+          "smart-medical",
+          "pharmacy",
+          "medication-error",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_medical.pharmacy.drug_cost.analyze",
+        "name": "Drug Cost Analyze",
+        "description": "分析各科室和病种的药品使用金额、药占比和高价药品使用情况，识别费用管控薄弱环节。",
+        "tags": [
+          "smart-medical",
+          "pharmacy",
+          "drug-cost",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_medical.pharmacy.smart_cabinet.manage",
+        "name": "Smart Drug Cabinet Manage",
+        "description": "管理病区智能药柜的药品补充、借用记录和库存差异，支持急救药品就近快速取用和用药可追溯。",
+        "tags": [
+          "smart-medical",
+          "pharmacy",
+          "smart-cabinet",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_medical.pharmacy.formula_preparation.manage",
+        "name": "Formula Preparation Manage",
+        "description": "管理静脉用药调配中心（PIVAS）的医嘱审核、配制排程、成品核查和配送全流程记录。",
+        "tags": [
+          "smart-medical",
+          "pharmacy",
+          "formula-preparation",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_medical.pharmacy.supplier.evaluate",
+        "name": "Drug Supplier Evaluate",
+        "description": "评估药品供应商的质量记录、供货及时率、价格合理性和资质合规性，输出供应商综合评级。",
+        "tags": [
+          "smart-medical",
+          "pharmacy",
+          "supplier",
+          "evaluate"
+        ]
+      },
+      {
+        "id": "smart_medical.pharmacy.monthly_report.generate",
+        "name": "Pharmacy Monthly Report Generate",
+        "description": "生成药房运营月报，涵盖用药金额、药占比、不合理处方率、不良反应上报数和抗菌药物使用强度。",
+        "tags": [
+          "smart-medical",
+          "pharmacy",
+          "monthly-report",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_medical.pharmacy.qa.answer",
+        "name": "Pharmacy QA Answer",
+        "description": "回答用户关于药品库存、处方审核结果、用药安全事件、费用分析和合规状态的问题，并提供数据解释。",
+        "tags": [
+          "smart-medical",
+          "pharmacy"
+        ]
+      },
+      {
+        "id": "smart_medical.pharmacy.medication_adherence.analyze",
+        "name": "Medication Adherence Analysis",
+        "description": "分析用药提醒记录、处方执行记录、患者用药记录和配药核验结果，判断用药依从性和遗漏风险。",
+        "tags": [
+          "smart-medical",
+          "pharmacy",
+          "adherence"
+        ]
+      },
+      {
+        "id": "smart_medical.pharmacy.risk_fusion_report.generate",
+        "name": "Pharmacy Medication Risk Fusion Report",
+        "description": "融合药品库存、药品标签、配药核验、患者处方和用药提醒记录，判断用药管理风险并生成结构化报告。",
+        "tags": [
+          "smart-medical",
+          "pharmacy",
+          "risk",
+          "report"
+        ]
+      },
+      {
+        "id": "smart_medical.pharmacy.label_text.extract",
+        "name": "Pharmacy Label Text Extraction",
+        "description": "从药品标签、包装、说明和OCR文本中提取药名、剂量、用法、有效期、批号和提醒信息。",
+        "tags": [
+          "smart-medical",
+          "pharmacy",
+          "label",
+          "extract"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-043",
+    "name": "Smart Building Smart Meeting Agent",
+    "description": "该智能体面向智慧楼宇会议室全生命周期管理任务，能够处理会议预约、到场核验、会议设备状态、会议室环境数据、会议音频、会议纪要、设备故障、噪声水平、使用效率和可用性判断；支持会议室可用性融合评估、使用情况总结和会议室报告生成。",
+    "url": "http://[fd10::1:2]:8093",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_building.meeting.room_booking.manage",
+        "name": "Meeting Room Booking Manage",
+        "description": "管理会议室预约的创建、修改、取消和冲突检测，支持按人数、设备需求和楼层筛选最优会议室。",
+        "tags": [
+          "smart-building",
+          "meeting",
+          "room-booking",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_building.meeting.check_in.verify",
+        "name": "Meeting Check In Verify",
+        "description": "核验预约参会人员是否在会议开始后到场签到，对超时无人报到的会议自动释放房间资源。",
+        "tags": [
+          "smart-building",
+          "meeting",
+          "check-in",
+          "verify"
+        ]
+      },
+      {
+        "id": "smart_building.meeting.attendee_count.detect",
+        "name": "Attendee Count Detect",
+        "description": "实时检测会议室实际参会人数，识别人数与预约规模的差异，为会议室容量规划提供数据依据。",
+        "tags": [
+          "smart-building",
+          "meeting",
+          "attendee-count",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_building.meeting.device_autostart.control",
+        "name": "Device Auto Start Control",
+        "description": "在会议开始时自动启动投影仪、视频会议终端和空调照明，会议结束后自动关闭所有设备。",
+        "tags": [
+          "smart-building",
+          "meeting",
+          "device-autostart",
+          "control"
+        ]
+      },
+      {
+        "id": "smart_building.meeting.remote_participant.manage",
+        "name": "Remote Participant Manage",
+        "description": "管理视频会议的远端参会人员加入、音视频质量监测和网络异常处理，确保混合会议体验稳定。",
+        "tags": [
+          "smart-building",
+          "meeting",
+          "remote-participant",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_building.meeting.minutes.generate",
+        "name": "Meeting Minutes Generate",
+        "description": "基于会议录音或转写文本，自动提取议题、决议、责任人和截止日期，生成结构化会议纪要。",
+        "tags": [
+          "smart-building",
+          "meeting",
+          "minutes",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_building.meeting.action_item.track",
+        "name": "Action Item Track",
+        "description": "跟踪会议纪要中各行动项的完成状态，在截止日期前发送提醒，输出未完成事项汇总报告。",
+        "tags": [
+          "smart-building",
+          "meeting",
+          "action-item",
+          "track"
+        ]
+      },
+      {
+        "id": "smart_building.meeting.no_show.analyze",
+        "name": "No Show Analyze",
+        "description": "分析各部门和个人的会议爽约率，识别高频爽约行为和虚假占用会议室的浪费情况。",
+        "tags": [
+          "smart-building",
+          "meeting",
+          "no-show",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_building.meeting.noise_level.monitor",
+        "name": "Meeting Noise Level Monitor",
+        "description": "监测会议室内噪声水平，在超过舒适阈值时提示调整音量或关闭门窗，保障会议沟通质量。",
+        "tags": [
+          "smart-building",
+          "meeting",
+          "noise-level",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_building.meeting.catering.manage",
+        "name": "Meeting Catering Manage",
+        "description": "管理会议餐饮的预订、配送时间和用餐数量，与会议排程联动，避免餐食浪费和供应不足。",
+        "tags": [
+          "smart-building",
+          "meeting",
+          "catering",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_building.meeting.visitor_invite.manage",
+        "name": "Visitor Invite Manage",
+        "description": "管理外部访客的会议邀请、临时门禁授权和接待安排，在访客到达时自动通知对接联系人。",
+        "tags": [
+          "smart-building",
+          "meeting",
+          "visitor-invite",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_building.meeting.room_equipment_fault.detect",
+        "name": "Room Equipment Fault Detect",
+        "description": "检测会议室投影仪、麦克风、摄像头和网络设备的运行故障，在会议前触发设备检查并报修。",
+        "tags": [
+          "smart-building",
+          "meeting",
+          "room-equipment-fault",
+          "detect"
+        ]
+      },
+      {
+        "id": "smart_building.meeting.hot_desk.manage",
+        "name": "Hot Desk Manage",
+        "description": "管理共享工位的预约、使用时长和清洁交接，实现固定工位向弹性工位的高效转换。",
+        "tags": [
+          "smart-building",
+          "meeting",
+          "hot-desk",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_building.meeting.focus_room.manage",
+        "name": "Focus Room Manage",
+        "description": "管理电话间和专注工作小间的即时预约和使用监控，防止长时间占用影响其他人需求。",
+        "tags": [
+          "smart-building",
+          "meeting",
+          "focus-room",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_building.meeting.peak_demand.predict",
+        "name": "Meeting Room Peak Demand Predict",
+        "description": "基于历史预约数据，预测各时段的会议室需求高峰，为空间规划和弹性会议室设置提供依据。",
+        "tags": [
+          "smart-building",
+          "meeting",
+          "peak-demand",
+          "predict"
+        ]
+      },
+      {
+        "id": "smart_building.meeting.energy_saving.control",
+        "name": "Meeting Energy Saving Control",
+        "description": "在会议室无人使用时自动关闭空调、照明和待机设备，减少会议室空置能耗。",
+        "tags": [
+          "smart-building",
+          "meeting",
+          "energy-saving",
+          "control"
+        ]
+      },
+      {
+        "id": "smart_building.meeting.feedback.collect",
+        "name": "Meeting Room Feedback Collect",
+        "description": "在会议结束后采集参会者对会议室设施、舒适度和服务的满意度评分，识别持续改进点。",
+        "tags": [
+          "smart-building",
+          "meeting",
+          "feedback",
+          "collect"
+        ]
+      },
+      {
+        "id": "smart_building.meeting.compliance_recording.manage",
+        "name": "Compliance Recording Manage",
+        "description": "管理需要合规存档的会议录制文件，包括存储加密、访问权限和保留期限管理。",
+        "tags": [
+          "smart-building",
+          "meeting",
+          "compliance-recording",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_building.meeting.utilization_report.generate",
+        "name": "Meeting Utilization Report Generate",
+        "description": "生成会议室使用效率报告，涵盖利用率、高峰时段、爽约率、平均会议时长和设备故障频次。",
+        "tags": [
+          "smart-building",
+          "meeting",
+          "utilization-report",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_building.meeting.qa.answer",
+        "name": "Meeting Room QA Answer",
+        "description": "回答用户关于会议室预约状态、设备情况、使用效率和会议纪要的问题，并提供数据解释。",
+        "tags": [
+          "smart-building",
+          "meeting"
+        ]
+      },
+      {
+        "id": "smart_building.meeting.room_usage_summary.generate",
+        "name": "Meeting Room Usage Summary Generation",
+        "description": "融合会议预约、人员到场、设备状态、环境数据和会议音频，生成会议室使用情况总结。",
+        "tags": [
+          "smart-building",
+          "meeting-room",
+          "summary"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-044",
+    "name": "Smart Campus Environment & Sustainability Agent",
+    "description": "该智能体面向智慧园区环境监测、碳核算、可持续运营和 ESG 报告任务，能够处理空气质量、噪声、水质、绿化、碳排放、能耗、人流、废弃物、可再生能源和环境合规数据；支持环境舒适度评估、碳排放核算、可持续运营分析、环境风险评估、ESG 报告和年度/周期环境报告生成。",
+    "url": "http://[fd10::1:2]:8094",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_campus.env.air_quality.monitor",
+        "name": "Campus Air Quality Monitor",
+        "description": "监测园区PM2.5、PM10、SO₂、NO₂、O₃和VOC等大气污染物浓度，识别超标区域和污染来源。",
+        "tags": [
+          "smart-campus",
+          "env",
+          "air-quality",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_campus.env.noise_pollution.monitor",
+        "name": "Noise Pollution Monitor",
+        "description": "监测园区厂界和环境敏感点的噪声分贝水平，识别超标排放源并支持噪声扰民投诉的数据举证。",
+        "tags": [
+          "smart-campus",
+          "env",
+          "noise-pollution",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_campus.env.wastewater.monitor",
+        "name": "Wastewater Discharge Monitor",
+        "description": "监测园区废水排放口的COD、氨氮、总磷和重金属浓度，识别超标排放事件并触发应急预警。",
+        "tags": [
+          "smart-campus",
+          "env",
+          "wastewater",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_campus.env.soil_contamination.assess",
+        "name": "Soil Contamination Assess",
+        "description": "评估园区内重点区域（储油罐、危化品存放区）的土壤污染风险，输出污染物清单和修复建议。",
+        "tags": [
+          "smart-campus",
+          "env",
+          "soil-contamination",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_campus.env.greenhouse_gas.monitor",
+        "name": "Greenhouse Gas Monitor",
+        "description": "监测园区主要温室气体（CO₂、CH₄、N₂O）的排放浓度，支持排放量核算和减排措施效果评估。",
+        "tags": [
+          "smart-campus",
+          "env",
+          "greenhouse-gas",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_campus.env.carbon_neutrality.track",
+        "name": "Carbon Neutrality Progress Track",
+        "description": "追踪园区碳中和目标的实现进度，整合排放数据、可再生能源使用量和碳汇数据，输出达标差距分析。",
+        "tags": [
+          "smart-campus",
+          "env",
+          "carbon-neutrality",
+          "track"
+        ]
+      },
+      {
+        "id": "smart_campus.env.green_area.manage",
+        "name": "Green Area Manage",
+        "description": "管理园区绿化植被的生长状态、灌溉计划和病虫害防治，维护绿化覆盖率满足园区环境标准。",
+        "tags": [
+          "smart-campus",
+          "env",
+          "green-area",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_campus.env.stormwater.manage",
+        "name": "Stormwater Management",
+        "description": "管理园区雨水收集、渗透和排放系统，在强降雨事件中监测积水情况并协调排涝作业。",
+        "tags": [
+          "smart-campus",
+          "env",
+          "stormwater",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_campus.env.hazardous_waste.manage",
+        "name": "Hazardous Waste Manage",
+        "description": "管理园区危险废物的产生登记、分类存放、转移联单和合规处置，确保全流程合法合规。",
+        "tags": [
+          "smart-campus",
+          "env",
+          "hazardous-waste",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_campus.env.recycling.manage",
+        "name": "Recycling Program Manage",
+        "description": "管理园区可回收废弃物的分类收集、回收量统计和循环利用率，支持绿色园区资源化率考核。",
+        "tags": [
+          "smart-campus",
+          "env",
+          "recycling",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_campus.env.environmental_complaint.handle",
+        "name": "Environmental Complaint Handle",
+        "description": "受理和处理园区周边居民的环境投诉（噪声、废气、废水），记录投诉内容、调查结果和整改措施。",
+        "tags": [
+          "smart-campus",
+          "env",
+          "environmental-complaint",
+          "handle"
+        ]
+      },
+      {
+        "id": "smart_campus.env.inspection_compliance.manage",
+        "name": "Environmental Inspection Compliance Manage",
+        "description": "管理环保部门监督检查的预约接待、数据准备和整改落实，确保园区通过日常抽查和年度核查。",
+        "tags": [
+          "smart-campus",
+          "env",
+          "inspection-compliance",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_campus.env.emission_permit.manage",
+        "name": "Emission Permit Manage",
+        "description": "管理园区排污许可证的排放指标、使用进度和到期更新，防止超证排放和证件失效违规。",
+        "tags": [
+          "smart-campus",
+          "env",
+          "emission-permit",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_campus.env.esg_report.generate",
+        "name": "ESG Report Generate",
+        "description": "生成园区ESG（环境、社会、治理）报告，整合碳排、能耗、废弃物、绿化和社区关系等指标数据。",
+        "tags": [
+          "smart-campus",
+          "env",
+          "esg-report",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_campus.env.biodiversity.assess",
+        "name": "Biodiversity Assess",
+        "description": "评估园区绿地和水体的生物多样性指标，识别濒危物种栖息地和生态保护需求。",
+        "tags": [
+          "smart-campus",
+          "env",
+          "biodiversity",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_campus.env.environmental_risk.assess",
+        "name": "Environmental Risk Assess",
+        "description": "对园区危化品存储、生产工艺和废弃物处置进行环境风险评估，输出风险等级和应急预案建议。",
+        "tags": [
+          "smart-campus",
+          "env",
+          "environmental-risk",
+          "assess"
+        ]
+      },
+      {
+        "id": "smart_campus.env.water_recycling.manage",
+        "name": "Water Recycling Manage",
+        "description": "管理园区中水回用系统，监测回用水质合规性，统计节水量，提升园区用水循环利用率。",
+        "tags": [
+          "smart-campus",
+          "env",
+          "water-recycling",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_campus.env.renewable_energy.monitor",
+        "name": "Renewable Energy Usage Monitor",
+        "description": "监测园区太阳能、风能和生物质能等可再生能源的使用量和占比，支持绿电认证和绿色电力证书管理。",
+        "tags": [
+          "smart-campus",
+          "env",
+          "renewable-energy",
+          "monitor"
+        ]
+      },
+      {
+        "id": "smart_campus.env.annual_env_report.generate",
+        "name": "Annual Environmental Report Generate",
+        "description": "生成园区年度环境报告，涵盖污染物排放总量、能源消耗、废弃物处置、绿化和环保合规情况。",
+        "tags": [
+          "smart-campus",
+          "env",
+          "annual-env-report",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_campus.env.qa.answer",
+        "name": "Campus Environment QA Answer",
+        "description": "回答用户关于园区空气质量、废水排放、碳排量、危废合规和绿色认证进度的问题，并提供数据解释。",
+        "tags": [
+          "smart-campus",
+          "env"
+        ]
+      },
+      {
+        "id": "smart_campus.env.comfort_index.assess",
+        "name": "Campus Environment Comfort Index Assessment",
+        "description": "融合空气质量、噪声、人流密度、温湿度和绿化状态，评估当前园区环境舒适度。",
+        "tags": [
+          "smart-campus",
+          "environment",
+          "comfort"
+        ]
+      },
+      {
+        "id": "smart_campus.env.sustainability_report.generate",
+        "name": "Campus Sustainability Operation Report",
+        "description": "融合空气质量、噪声、碳排放、绿化、能耗和人流分布，生成环境与可持续运营分析报告。",
+        "tags": [
+          "smart-campus",
+          "environment",
+          "sustainability",
+          "report"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-045",
+    "name": "Smart Medical Outpatient & Appointment Agent",
+    "description": "该智能体面向智慧医疗门诊管理与预约服务任务，能够处理挂号预约优化、候诊管理、就诊流程引导、检查报告推送、门诊质量监控和患者随访，为医院门诊部门提供全流程智能化就诊体验和运营管理能力。",
+    "url": "http://[fd10::1:2]:8095",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "smart_medical.outpatient.appointment.manage",
+        "name": "Appointment Manage",
+        "description": "管理患者的分诊预约、号源分配、改约和取消，支持按症状智能推荐科室和医生。",
+        "tags": [
+          "smart-medical",
+          "outpatient",
+          "appointment",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_medical.outpatient.waiting_time.predict",
+        "name": "Waiting Time Predict",
+        "description": "基于当前候诊人数和医生诊疗速度，实时预测每位患者的预计候诊时长，支持手机端推送通知。",
+        "tags": [
+          "smart-medical",
+          "outpatient",
+          "waiting-time",
+          "predict"
+        ]
+      },
+      {
+        "id": "smart_medical.outpatient.queue.manage",
+        "name": "Outpatient Queue Manage",
+        "description": "管理门诊各诊室的叫号队列，支持优先叫号（急诊、老人）和跨诊室分流，优化患者就诊体验。",
+        "tags": [
+          "smart-medical",
+          "outpatient",
+          "queue",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_medical.outpatient.no_show.handle",
+        "name": "No Show Handle",
+        "description": "识别预约未到诊患者并处理号源释放，在患者错过时间后发送提醒并提供改约或退号选项。",
+        "tags": [
+          "smart-medical",
+          "outpatient",
+          "no-show",
+          "handle"
+        ]
+      },
+      {
+        "id": "smart_medical.outpatient.symptom_triage.support",
+        "name": "Symptom Triage Support",
+        "description": "基于患者描述的症状信息，提供初步分诊建议，推荐合适的就诊科室和紧急程度评估。",
+        "tags": [
+          "smart-medical",
+          "outpatient",
+          "symptom-triage",
+          "support"
+        ]
+      },
+      {
+        "id": "smart_medical.outpatient.wayfinding.guide",
+        "name": "Hospital Wayfinding Guide",
+        "description": "为患者提供院内导航引导，指引从挂号到候诊、检查、取药各环节的路线和所在位置。",
+        "tags": [
+          "smart-medical",
+          "outpatient",
+          "wayfinding",
+          "guide"
+        ]
+      },
+      {
+        "id": "smart_medical.outpatient.report_delivery.notify",
+        "name": "Report Delivery Notify",
+        "description": "在检验报告、影像报告出具后，自动推送通知给患者和主诊医生，支持异常报告加急提醒。",
+        "tags": [
+          "smart-medical",
+          "outpatient",
+          "report-delivery",
+          "notify"
+        ]
+      },
+      {
+        "id": "smart_medical.outpatient.medical_record.summarize",
+        "name": "Medical Record Summarize",
+        "description": "对患者历次就诊记录进行结构化摘要，提炼主要诊断、用药史和过敏史，辅助医生快速了解病情。",
+        "tags": [
+          "smart-medical",
+          "outpatient",
+          "medical-record",
+          "summarize"
+        ]
+      },
+      {
+        "id": "smart_medical.outpatient.prescription.manage",
+        "name": "Outpatient Prescription Manage",
+        "description": "管理门诊处方的开具、审核、取药引导和用药指导，支持电子处方流转和慢病长处方管理。",
+        "tags": [
+          "smart-medical",
+          "outpatient",
+          "prescription",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_medical.outpatient.follow_up.manage",
+        "name": "Patient Follow Up Manage",
+        "description": "管理出院和门诊患者的随访计划，定时推送随访问卷，收集康复状态和用药依从性数据。",
+        "tags": [
+          "smart-medical",
+          "outpatient",
+          "follow-up",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_medical.outpatient.chronic_disease.manage",
+        "name": "Chronic Disease Manage",
+        "description": "为高血压、糖尿病等慢性病患者建立连续管理档案，追踪指标变化和用药依从性，触发异常值提醒。",
+        "tags": [
+          "smart-medical",
+          "outpatient",
+          "chronic-disease",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_medical.outpatient.health_education.deliver",
+        "name": "Health Education Deliver",
+        "description": "根据患者诊断和用药方案，推送个性化健康教育内容，提升患者疾病认知和自我管理能力。",
+        "tags": [
+          "smart-medical",
+          "outpatient",
+          "health-education",
+          "deliver"
+        ]
+      },
+      {
+        "id": "smart_medical.outpatient.patient_satisfaction.survey",
+        "name": "Patient Satisfaction Survey",
+        "description": "在就诊结束后采集患者对就诊体验、医生服务和等候时间的满意度评分，识别服务改进重点。",
+        "tags": [
+          "smart-medical",
+          "outpatient",
+          "patient-satisfaction",
+          "survey"
+        ]
+      },
+      {
+        "id": "smart_medical.outpatient.doctor_workload.analyze",
+        "name": "Doctor Workload Analyze",
+        "description": "分析各科室和医生的门诊量、接诊时长和患者满意度，识别工作负荷不均和效率改进空间。",
+        "tags": [
+          "smart-medical",
+          "outpatient",
+          "doctor-workload",
+          "analyze"
+        ]
+      },
+      {
+        "id": "smart_medical.outpatient.complaint.handle",
+        "name": "Patient Complaint Handle",
+        "description": "受理和跟踪患者投诉，分配处理责任人，记录调查结果和解决方案，输出投诉原因分布分析。",
+        "tags": [
+          "smart-medical",
+          "outpatient",
+          "complaint",
+          "handle"
+        ]
+      },
+      {
+        "id": "smart_medical.outpatient.capacity.forecast",
+        "name": "Outpatient Capacity Forecast",
+        "description": "预测未来各时段的门诊就诊量，支持医生排班优化和诊室资源动态调配，平衡就诊等待时间。",
+        "tags": [
+          "smart-medical",
+          "outpatient",
+          "capacity",
+          "forecast"
+        ]
+      },
+      {
+        "id": "smart_medical.outpatient.referral.manage",
+        "name": "Referral Manage",
+        "description": "管理基层医疗机构向上级医院的转诊流程，协调床位预约和专科资源，生成转诊记录和反馈报告。",
+        "tags": [
+          "smart-medical",
+          "outpatient",
+          "referral",
+          "manage"
+        ]
+      },
+      {
+        "id": "smart_medical.outpatient.telemedicine.support",
+        "name": "Telemedicine Support",
+        "description": "支持远程问诊的预约管理、视频会诊连接和电子处方开具，为行动不便患者提供在线诊疗服务。",
+        "tags": [
+          "smart-medical",
+          "outpatient",
+          "telemedicine",
+          "support"
+        ]
+      },
+      {
+        "id": "smart_medical.outpatient.monthly_report.generate",
+        "name": "Outpatient Monthly Report Generate",
+        "description": "生成门诊运营月报，涵盖就诊量、平均等候时间、满意度评分、爽约率和科室工作量分布。",
+        "tags": [
+          "smart-medical",
+          "outpatient",
+          "monthly-report",
+          "generate"
+        ]
+      },
+      {
+        "id": "smart_medical.outpatient.qa.answer",
+        "name": "Outpatient QA Answer",
+        "description": "回答用户关于预约状态、候诊时间、检查报告、随访计划和门诊运营数据的问题，并提供数据解释。",
+        "tags": [
+          "smart-medical",
+          "outpatient"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-046",
+    "name": "Global Workflow Orchestration Agent",
+    "description": "该智能体面向跨场景复杂任务的统一编排与执行链管理，负责将已分解的子任务 DAG 进行依赖校验、能力约束检查、候选 agent 协同规划、跨 agent 输入输出 artifact 对齐、执行顺序优化、局部重调度和结果汇总协调；适合承担 workflow/orchestration/planning/scheduling/coordination 类任务，不负责原始视频、图像、音频、传感器感知。",
+    "url": "http://[fd10::1:2]:8096",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "global.workflow.dag.validate",
+        "name": "Workflow DAG Validation",
+        "description": "校验复杂任务 DAG 的依赖关系、输入输出 artifact、能力标签和执行顺序是否一致，识别缺失依赖、循环依赖和不可执行子任务。",
+        "tags": [
+          "global",
+          "workflow",
+          "dag",
+          "validate"
+        ]
+      },
+      {
+        "id": "global.workflow.agent_plan.generate",
+        "name": "Agent Execution Plan Generation",
+        "description": "根据子任务能力需求、候选 agent、依赖关系和运行提示生成多 agent 执行计划和调用顺序。",
+        "tags": [
+          "global",
+          "workflow",
+          "agent-plan"
+        ]
+      },
+      {
+        "id": "global.workflow.capability_gap.detect",
+        "name": "Capability Gap Detection",
+        "description": "检测子任务 required_capabilities 与 agent registry 的不匹配、缺失能力、命名不一致和需要继续拆分的任务。",
+        "tags": [
+          "global",
+          "workflow",
+          "capability"
+        ]
+      },
+      {
+        "id": "global.workflow.artifact_route.plan",
+        "name": "Artifact Route Planning",
+        "description": "规划跨 agent 的输入输出 artifact 传递路径，保证中间结果可被后续子任务引用。",
+        "tags": [
+          "global",
+          "workflow",
+          "artifact"
+        ]
+      },
+      {
+        "id": "global.workflow.local_reschedule.optimize",
+        "name": "Local Reschedule Optimization",
+        "description": "在部分子任务失败、超时或节点不可用时，基于已完成结果进行局部重调度，不丢弃已有中间产物。",
+        "tags": [
+          "global",
+          "workflow",
+          "reschedule"
+        ]
+      },
+      {
+        "id": "global.workflow.execution_trace.summarize",
+        "name": "Execution Trace Summary",
+        "description": "汇总多 agent 执行过程、子任务状态、失败原因、重试记录和最终结果，便于评测和报告生成。",
+        "tags": [
+          "global",
+          "workflow",
+          "trace"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-047",
+    "name": "Cross-Domain Fusion and Risk Assessment Agent",
+    "description": "该智能体面向跨场景多源证据融合、风险评分、规则推理和综合判断任务，能够接收视频、图像、音频、传感器、IoT、日志、历史记录和业务系统输出的结构化结果，进行时序对齐、空间对齐、证据冲突处理、风险等级计算、事件时间线生成和处置建议输出；适合补齐楼宇、园区、农业、医疗、工厂等复杂任务中缺失的统一融合/决策能力。",
+    "url": "http://[fd10::1:2]:8097",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "global.multisource.evidence.fuse",
+        "name": "Global Multi-Source Evidence Fusion",
+        "description": "融合多模态、多系统、多来源结构化证据，生成统一事件判断、证据链和置信度。",
+        "tags": [
+          "global",
+          "multisource",
+          "fusion"
+        ]
+      },
+      {
+        "id": "global.risk_level.assess",
+        "name": "Global Risk Level Assessment",
+        "description": "基于融合证据、规则阈值和业务上下文计算风险等级、影响范围和风险原因。",
+        "tags": [
+          "global",
+          "risk",
+          "assessment"
+        ]
+      },
+      {
+        "id": "global.rule_reasoning.judge",
+        "name": "Rule-Based Reasoning and Judgment",
+        "description": "根据业务规则、阈值、前置结果和上下文进行结构化判断，输出是否异常、是否需要处置以及判断依据。",
+        "tags": [
+          "global",
+          "reasoning",
+          "rule"
+        ]
+      },
+      {
+        "id": "global.event_timeline.generate",
+        "name": "Global Event Timeline Generation",
+        "description": "将不同 agent 输出的事件按时间、空间和来源整理成统一事件时间线。",
+        "tags": [
+          "global",
+          "timeline"
+        ]
+      },
+      {
+        "id": "global.decision_recommendation.generate",
+        "name": "Global Decision Recommendation Generation",
+        "description": "根据风险评估和业务目标生成处置建议、优化建议、调度建议或护理/维护/安防建议。",
+        "tags": [
+          "global",
+          "decision",
+          "recommendation"
+        ]
+      },
+      {
+        "id": "global.multisource.qa.answer",
+        "name": "Global Multi-Source Question Answering",
+        "description": "基于多个 agent 的结构化输出回答综合性问题，并解释依据、冲突和不确定性。",
+        "tags": [
+          "global",
+          "qa",
+          "multisource"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "agent-048",
+    "name": "Unified Report and Recommendation Agent",
+    "description": "该智能体面向跨场景统一汇报、结构化 JSON、日报、告警说明、优化建议和最终交付内容生成任务，能够将上游 agent 的感知结果、融合结果、风险评分、事件时间线和处置建议整理成短报告、长报告、JSON、PDF 摘要、告警通知、管理建议和评测摘要；适合承担 report/generate/summary/advice/notification/final_response 类任务，不负责原始感知推理。",
+    "url": "http://[fd10::1:2]:8098",
+    "version": "0.3.0",
+    "preferred_transport": "http",
+    "skills": [
+      {
+        "id": "global.report.generate",
+        "name": "Global Report Generation",
+        "description": "根据上游结构化结果生成跨场景报告、日报、周报、风险报告、运行报告或分析报告。",
+        "tags": [
+          "global",
+          "report"
+        ]
+      },
+      {
+        "id": "global.report.json.format",
+        "name": "Global JSON Result Formatting",
+        "description": "将检测、识别、评估、融合和决策结果整理为标准 JSON 字段、嵌套结构和可评测输出。",
+        "tags": [
+          "global",
+          "json",
+          "format"
+        ]
+      },
+      {
+        "id": "global.alert_summary.generate",
+        "name": "Global Alert Summary Generation",
+        "description": "根据异常检测和风险评估结果生成告警说明、风险原因、影响范围和处置建议。",
+        "tags": [
+          "global",
+          "alert",
+          "summary"
+        ]
+      },
+      {
+        "id": "global.optimization_advice.generate",
+        "name": "Global Optimization Advice Generation",
+        "description": "根据能耗、环境、农业、交通、医疗或设备状态评估结果生成可执行优化建议。",
+        "tags": [
+          "global",
+          "recommendation",
+          "optimization"
+        ]
+      },
+      {
+        "id": "global.operation_daily_report.generate",
+        "name": "Global Operation Daily Report Generation",
+        "description": "生成楼宇、园区、工厂、家庭、农业或医疗场景的运行状态日报和管理摘要。",
+        "tags": [
+          "global",
+          "daily-report"
+        ]
+      },
+      {
+        "id": "global.final_response.compose",
+        "name": "Final Response Composition",
+        "description": "将多 agent 执行结果整合为面向用户的最终回答，包括结论、依据、风险等级、建议和未覆盖能力说明。",
+        "tags": [
+          "global",
+          "final-response"
+        ]
+      }
+    ]
+  }
+]
