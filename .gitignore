@@ -22,14 +22,10 @@ Thumbs.db
 
 # Local scratch space and generated experiment artifacts
 tmp/
-6.结果输出/*
+/4.结果输出/
 *.pt
 *.log
 .coverage
 htmlcov/
 
-# Keep the result directory guide.
-!6.结果输出/README.md
 
-# The prepared JSONL dataset is intentionally versioned for reproducibility.
-# Large regenerated raw datasets should be reviewed before being added.

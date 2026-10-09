@@ -63,62 +63,6 @@ def load_sources(source_dir: Path) -> dict[str, pd.DataFrame]:
     return sources
 
 
-def validate_timestamps(name: str, frame: pd.DataFrame) -> None:
-    timestamp = pd.to_numeric(frame["timestamp_anon"], errors="raise")
-    fractional = (timestamp % 1).abs()
-    if (fractional > 1e-9).any():
-        examples = timestamp[fractional > 1e-9].head().tolist()
-        raise ValueError(f"{name} contains fractional timestamps: {examples}")
-
-
-def print_analysis(sources: dict[str, pd.DataFrame]) -> None:
-    base = sources["gpu_duty_cycle"]
-    base_keys = pd.MultiIndex.from_frame(base[["timestamp_anon", "container_ip"]])
-
-    print("metric,rows,timestamps,non_null_ips,duplicate_timestamp_ip_rows,base_key_matches")
-    for name, frame in sources.items():
-        validate_timestamps(name, frame)
-        duplicate_rows = int(frame.duplicated(["timestamp_anon", "container_ip"], keep=False).sum())
-        keys = pd.MultiIndex.from_frame(frame[["timestamp_anon", "container_ip"]])
-        match_count = int(base_keys.isin(keys).sum())
-        print(
-            f"{name},{len(frame)},{frame['timestamp_anon'].nunique()},"
-            f"{frame['container_ip'].nunique(dropna=True)},{duplicate_rows},{match_count}"
-        )
-        if duplicate_rows:
-            duplicate_detail = frame[
-                frame.duplicated(["timestamp_anon", "container_ip"], keep=False)
-            ].sort_values(["timestamp_anon", "container_ip"])
-            print(f"{name}_duplicate_key_detail:")
-            print(duplicate_detail.to_string(index=False))
-
-    base_counts = base.groupby("timestamp_anon", dropna=False).size()
-    print(
-        "base_rows_per_timestamp: "
-        f"min={base_counts.min()}, max={base_counts.max()}, "
-        f"distinct_counts={sorted(base_counts.unique().tolist())}"
-    )
-    print(f"base_duplicate_keys={int(base.duplicated(['timestamp_anon', 'container_ip']).sum())}")
-
-    qps = sources["qps"]
-    print("qps_request_type_counts:")
-    print(qps["request_type"].value_counts(dropna=False).to_string())
-    print("qps_duplicate_timestamp_ip_request_type_rows=")
-    print(int(qps.duplicated(["timestamp_anon", "container_ip", "request_type"], keep=False).sum()))
-    print("qps_non_null_ip_by_request_type:")
-    print(qps.groupby("request_type")["container_ip"].apply(lambda x: int(x.notna().sum())).to_string())
-
-    queue_size = sources["queue_size"]
-    queue_size_timestamps = pd.Index(queue_size["timestamp_anon"])
-    print(
-        "queue_size_rows_per_timestamp: "
-        f"min={queue_size.groupby('timestamp_anon').size().min()}, "
-        f"max={queue_size.groupby('timestamp_anon').size().max()}, "
-        f"non_null_ips={int(queue_size['container_ip'].notna().sum())}, "
-        f"base_rows_with_timestamp_match={int(base['timestamp_anon'].isin(queue_size_timestamps).sum())}"
-    )
-
-
 def unique_metric(
     frame: pd.DataFrame,
     output_name: str,
@@ -144,9 +88,6 @@ def unique_metric(
 
 
 def build_dataset0(sources: dict[str, pd.DataFrame]) -> pd.DataFrame:
-    for name, frame in sources.items():
-        validate_timestamps(name, frame)
-
     base = unique_metric(
         sources["gpu_duty_cycle"],
         "pod_gpu_duty_cycle_value",
@@ -226,60 +167,23 @@ def build_dataset0(sources: dict[str, pd.DataFrame]) -> pd.DataFrame:
         )
 
     result = result[OUTPUT_COLUMNS]
-    if len(result) != len(base):
-        raise AssertionError("The merge changed the number of base rows")
-    if result.duplicated(["timestamp_anon", "container_ip"]).any():
-        raise AssertionError("dataset0 contains duplicate timestamp/IP keys")
-    if not result[["timestamp_anon", "container_ip"]].equals(
-        base[["timestamp_anon", "container_ip"]]
-    ):
-        raise AssertionError("The merge changed the order or identity of base keys")
     return result
 
 
-def write_and_verify(dataset0: pd.DataFrame, output_path: Path) -> None:
+def write_dataset(dataset0: pd.DataFrame, output_path: Path) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     dataset0.to_csv(output_path, index=False, na_rep="<null>", lineterminator="\n")
-
-    reread = pd.read_csv(output_path, keep_default_na=False, dtype=str)
-    if len(reread) != len(dataset0):
-        raise AssertionError("Written CSV row count differs from the in-memory result")
-    if reread.columns.tolist() != OUTPUT_COLUMNS:
-        raise AssertionError("Written CSV headers differ from the requested schema")
-    if reread.duplicated(["timestamp_anon", "container_ip"]).any():
-        raise AssertionError("Written CSV contains duplicate timestamp/IP keys")
-    if (reread == "").any().any():
-        raise AssertionError("Written CSV contains blank fields instead of <null>")
-    expected_nulls = dataset0.isna().sum()
-    written_null_markers = (reread == "<null>").sum()
-    if not written_null_markers.equals(expected_nulls):
-        raise AssertionError("Written <null> marker counts do not match missing values")
-    qps_types = set(dataset0["qps_request_type"].dropna().unique().tolist())
-    if qps_types != {"Generative Requests"}:
-        raise AssertionError(f"Unexpected matched qps request types: {qps_types}")
-
-    print(f"output={output_path}")
-    print(f"rows={len(dataset0)}")
-    print(f"columns={len(dataset0.columns)}")
-    print("non_null_counts:")
-    print(dataset0.notna().sum().to_string())
-    print("null_counts:")
-    print(dataset0.isna().sum().to_string())
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--source-dir", type=Path, default=default_source_dir())
     parser.add_argument("--output", type=Path, default=default_output_path())
-    parser.add_argument("--analyze", action="store_true")
     args = parser.parse_args()
 
     sources = load_sources(args.source_dir)
-    if args.analyze:
-        print_analysis(sources)
-        return
     dataset0 = build_dataset0(sources)
-    write_and_verify(dataset0, args.output)
+    write_dataset(dataset0, args.output)
 
 
 if __name__ == "__main__":

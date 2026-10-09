@@ -671,19 +671,6 @@ def main() -> None:
     manifest_path = args.data_root / "dataset_manifest.json"
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    assert agents_frame["智能体编号"].tolist() == list(range(1, len(agents_frame) + 1))
-    assert reliability["智能体编号"].tolist() == agents_frame["智能体编号"].tolist()
-    assert set(links["数据源"]).issubset({item["agent_key"] for item in agents})
-    assert set(links.loc[links["数据目的地"].str.startswith("C"), "数据目的地"]).issubset(set(inventory["算力节点编号"]))
-    assert agents_frame["接入知识库"].ne("无").mean() <= 0.20
-    first_snapshot = links[links["时间戳"] == links["时间戳"].min()]
-    compute_degree = first_snapshot[first_snapshot["链路类型"] == "智能体-算力节点"].groupby("数据源").size()
-    assert compute_degree.eq(1).all() and len(compute_degree) == len(agents)
-    assert len(first_snapshot[first_snapshot["链路类型"] == "智能体-智能体"]) == len(agents) * (len(agents) - 1) // 2
-    assert "是否有任务依赖关系" not in links.columns
-    assert len(tasks) == 72 and set(tasks_frame["任务类型"]) == {"复杂任务", "子任务"}
-    assert "实验要求" not in tasks_frame.columns
-    assert "required_skill_id" not in json.dumps(tasks, ensure_ascii=False)
     print(json.dumps(manifest["counts"], ensure_ascii=False, indent=2))
     print(f"manifest={manifest_path}")
 

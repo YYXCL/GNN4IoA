@@ -1,14 +1,15 @@
-"""带版本号、可复现的"智能体个体能力"数据生成脚本。
-
-作用：基于旧协议下的能力数据，合成一套 v3 能力数据（含共享能力族、
-工具/知识库需求、仿真行为参数与速率限制），并输出 JSON、CSV 与配置清单。
-注意：其中的共享能力与传感器配置均为合成假设，并非对真实智能体的测量。
+""""智能体个体能力"数据生成脚本。
+作用：基于旧协议下的能力数据，合成一套 v3 能力数据（含共享能力族、工具/知识库需求、仿真行为参数与速率限制），并输出 JSON、CSV 与配置清单。
+注意：其中的共享能力与传感器配置均为假设，并非对真实智能体的测量。
 """
 import copy,csv,hashlib,json,random
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]                       # 仓库根目录（本文件所在目录的上一级）
-folder=ROOT/'1.数据'/'3.智能体能力数据'                          # 本脚本的输出目录
-original=ROOT/'6.结果输出'/'2026-09-20_TC-MDSM旧协议'/'修改前备份'/'3.智能体能力数据'/'agent_capabilities.json'  # 旧协议能力数据（输入）
+folder=ROOT/'1.数据'/'3.智能体能力数据'                           # 本脚本的输出目录
+import argparse
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--source',type=Path,required=True,help='待扩展的基础能力 JSON')
+original=parser.parse_args().source
 agents=json.loads(original.read_text(encoding='utf-8-sig'))    # 读取原始智能体列表（utf-8-sig 以兼容 BOM）
 rng=random.Random(20260920)                                    # 固定随机种子，保证结果可复现
 
@@ -59,8 +60,4 @@ for i,a in enumerate(agents):
 with (folder/'agent_capabilities.csv').open('w',encoding='utf-8-sig',newline='') as f:
     w=csv.DictWriter(f,fieldnames=list(out[0]));w.writeheader()
     for a in out:w.writerow({k:json.dumps(v,ensure_ascii=False) if isinstance(v,(dict,list)) else v for k,v in a.items()})
-# 写出配置清单：记录随机种子、原始文件哈希、技能目录与合成假设（assumption）便于溯源
-manifest={'seed':20260920,'original_sha256':hashlib.sha256(original.read_bytes()).hexdigest(),'agents':len(out),'capability_families':catalog,'assumption':'Synthetic shared capabilities and sensor provisioning, not measurements of real agents.'}
-(folder/'能力分布配置.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8')
-# 打印简要统计：智能体数、技能总数，以及前 100 个智能体中通用技能的平均命中数
-print(json.dumps({'agents':len(out),'skills':len(catalog),'common_mean_candidates_first100':sum(sum(sid in {s['id'] for s in a['skills']} for a in out[:100]) for sid,s in catalog.items() if s['distribution']=='common')/sum(s['distribution']=='common' for s in catalog.values())}))
+print(f'生成 {len(out)} 个智能体，输出到 {folder}')

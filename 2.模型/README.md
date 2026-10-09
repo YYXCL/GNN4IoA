@@ -8,7 +8,7 @@
 | GMATANN | 条件时序 VAE、局部与全局注意力，接入统一预测与调度接口 |
 | HM-MATAS | 异构节点与边注意力，接入统一预测与调度接口 |
 | Rule-Latency | 以观测时延筛选候选，使用共享 CP-SAT 后端 |
-| Full-State | 与 TC-MDSM 相同的历史 GRU、任务查询、图预测、32候选预算与 CP-SAT，仅取消状态组门控及维度掩码 |
-| StaticGraph | 当前状态异构图，不使用历史 GRU 与任务条件稀疏门控 |
+| Full-State | 与 TC-MDSM 相同的历史 GRU、任务查询、图预测、8候选预算与 CP-SAT，仅取消状态组门控及维度掩码 |
+| StaticGraph | 与TC-MDSM相同的门控、检索和图预测，仅使用最新状态、不使用历史GRU |
 
 GMATANN 与 HM-MATAS 是面向本任务的结构适配；图例使用论文给定的原名称，不加 adapted。旧 MA-TGN 的模型和独立基线目录已清理。

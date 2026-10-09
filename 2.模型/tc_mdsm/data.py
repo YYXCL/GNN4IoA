@@ -1,8 +1,7 @@
-""""第1步"""
+"""读取基础输入，生成快照、任务及训练执行观测。"""
 from __future__ import annotations
 
 import csv
-import gzip
 import hashlib
 import json
 from collections import defaultdict
@@ -10,12 +9,11 @@ from pathlib import Path
 
 import numpy as np
 
-from .types import Example, Observation, Snapshot, Task, Workflow, SCHEMA_VERSION
+from .types import Example, Observation, Snapshot, Task, Workflow
 
 # 三个业务场景与三个难度等级
 SCENARIOS = ("应急救援", "智慧家居", "智慧工厂")
 DIFFICULTIES = ("简单", "中等", "困难")
-GENERATOR_VERSION = "3-overlapping-individual-dynamic-first-pass"
 
 
 def balanced_hosts(agents, computes, rng):
@@ -33,24 +31,8 @@ def rounded(x):
     return np.asarray(x).round(5).tolist()
 
 
-def read_examples(path):
-    """按行读取 gzip 压缩的 jsonl 样本文件，逐条还原为 Example。"""
-    with gzip.open(path, "rt", encoding="utf-8") as handle:
-        for line in handle:
-            yield Example.from_dict(json.loads(line))
-
-
-def write_examples(path, examples):
-    """把样本逐行写入 gzip 压缩的 jsonl 文件。"""
-    path = Path(path)
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with gzip.open(path, "wt", encoding="utf-8") as handle:
-        for example in examples:
-            handle.write(json.dumps(example.to_dict(), ensure_ascii=False, separators=(",", ":")) + "\n")
-
-
 class Foundation:
-    """数据基座：只加载文档化的原始数据源，不读取、不依赖那些由旧教师模型/旧系统/旧规则产出的标签数据。"""
+    """读取智能体能力、任务模板和算力负载。"""
 
     def __init__(self, root):
         root = Path(root)
@@ -90,9 +72,6 @@ class Foundation:
             for index, t in enumerate(items):
                 split = "train" if index < len(items) - 2 else "val" if index == len(items) - 2 else "test"
                 self.partitions[split].append(t)
-        # 记录源文件哈希，保证数据可复现
-        self.source_hashes = {str(p.relative_to(root)): hashlib.sha256(p.read_bytes()).hexdigest()
-                              for p in (agent_path, task_path, load_path)}
 
     def bounds(self, split, history=16):
         """返回某切分可用的时序窗口下标范围，并做 history 长度的隔离（purge）。"""
@@ -212,12 +191,7 @@ class Foundation:
             deadline = float({"简单": 80, "中等": 160, "困难": 240}[source["难度级别"]])
             workflow = Workflow(f"{split}-{seed}-{index}-{b}", tasks, edges, 0, deadline, .9,
                                 source["场景"], source["难度级别"], source["任务id"])
-            # 溯源信息：记录生成器版本、切分、种子、压力设置与数据来源
-            provenance = {"generator_version": GENERATOR_VERSION, "split": split, "seed": seed, "episode": index, "batch": b,
-                          "world_seed": seed_of(seed, split, index, "world"), "stress": stress,
-                          "severity": severity, "trace_group": f"{split}:{start // history}",
-                          "trace_start": self.timestamps[start], "trace_end": self.timestamps[start + history - 1],
-                          "template_group": source["任务id"], "origin": "trace-backed simulation, not measured execution"}
+            provenance = {"split": split, "world_seed": seed_of(seed, split, index, "world")}
             example = Example(snapshot, workflow, [], provenance)
             # 观测由日志策略（混合探索）生成
             example.observations = logging_policy(example)
@@ -275,28 +249,3 @@ def logging_policy(example):
         else:
             return logs
     return logs
-
-
-def build_dataset(foundation, output, counts=(12000, 1500, 1500), seed=20260917, agents=100):
-    """构建完整的 train/val/test 数据集并写出 manifest。"""
-    output = Path(output)
-    output.mkdir(parents=True, exist_ok=True)
-    manifest = {"schema": SCHEMA_VERSION, "generator_version": GENERATOR_VERSION,
-                "seed": seed, "source_hashes": foundation.source_hashes,
-                "assumptions": ["virtual servers, 4 GPU slots / 64 GiB RAM / 32 GiB VRAM",
-                                "synthetic service work, permissions requirements, reliability and communication",
-                                "balanced random host assignment independent of capability type",
-                                "memory admission budgets equal floored remaining RAM/VRAM at snapshot, fixed per episode",
-                                "reused trace windows are grouped, not independent real measurements"], "splits": {}}
-    for split, count in zip(("train", "val", "test"), counts):
-        path = output / f"{split}.jsonl.gz"
-        # 每个样本轮换场景/难度，保证各分层均匀覆盖
-        examples = (foundation.episode(split, i, seed, agents=agents,
-                                      scenario=SCENARIOS[i % 3], difficulty=DIFFICULTIES[(i // 3) % 3],
-                                      stress="normal")[0] for i in range(count))
-        write_examples(path, examples)
-        manifest["splits"][split] = {"count": count, "trace_bounds": foundation.bounds(split),
-                                     "templates": [t["任务id"] for t in foundation.partitions[split]],
-                                     "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
-    (output / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
-    return manifest

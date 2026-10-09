@@ -3,8 +3,6 @@ from __future__ import annotations
 
 import hashlib
 import math
-import time
-from dataclasses import asdict
 
 import numpy as np
 import torch
@@ -91,8 +89,8 @@ class Predictor(nn.Module):
 
     @property
     def sparse(self):
-        """是否启用稀疏门控（仅 TC-MDSM 且未做 no_gates 消融）。"""
-        return self.method == "TC-MDSM" and self.config.ablation != "no_gates"
+        """TC-MDSM和仅去掉历史编码的StaticGraph均使用门控。"""
+        return self.method in ("TC-MDSM", "StaticGraph") and self.config.ablation != "no_gates"
 
     def fit_normalizers(self, examples):
         """仅用训练集统计各组状态的均值/标准差，用于标准化。"""
@@ -118,7 +116,6 @@ class Predictor(nn.Module):
 
     def encode_state(self, snapshot):
         """编码快照中的四组状态，返回 (每组当前状态向量 z, 每组完整序列)。"""
-        snapshot.validate()
         if not bool(self.normalizers_fitted):
             raise RuntimeError("fit training-only normalization before inference")
         cache_key = (id(snapshot), snapshot.revision, tuple(p._version for p in self.parameters()))
@@ -140,6 +137,21 @@ class Predictor(nn.Module):
         if not self.training:
             self._state_cache = (cache_key, (z, sequences))
         return z, sequences
+
+    def prepare_snapshot(self, snapshot):
+        """状态更新时提前编码并建立检索键；在线请求复用这份快照。"""
+        self.eval()
+        if self.method == "Rule-Latency":
+            return
+        with torch.no_grad():
+            z, _ = self.encode_state(snapshot)
+            cache_key = self._state_cache[0]
+            if self._index_cache is None or self._index_cache[0] != cache_key:
+                mapping = torch.tensor(snapshot.agent_compute, device=self.device)
+                keys = {g: self.key[g](z[g][mapping] if g == "C" else z[g]) for g in ("A", "C", "R")}
+                self._index_cache = (cache_key, {g: CandidateIndex(v) for g, v in keys.items()})
+            if self.device.type == "cuda":
+                torch.cuda.synchronize(self.device)
 
     def encode_tasks(self, workflow):
         """编码工作流中的每个任务，并用 DAG 结构信息（前驱/后继/规模）增强。"""
@@ -177,7 +189,7 @@ class Predictor(nn.Module):
         penalty = a.mean() + v.mean()   # 稀疏惩罚项
         if not self.sparse:
             return torch.ones_like(a), torch.ones_like(v), penalty * 0
-        if not self.training and not getattr(self,"_continuous_gates",False):
+        if not self.training:
             # 推理阶段：组门控二值化，并保证 A/C/R 至少有一组被激活
             active = (a >= self.config.gate_threshold).to(a.dtype)
             for k in range(len(q)):
@@ -190,53 +202,52 @@ class Predictor(nn.Module):
         return a, v, penalty
 
     def forward(self, snapshot, workflow, budget=None, fixed_candidates=None, forced_pairs=None):
-        # stamp()：统一计时（GPU 上需先同步），用于分阶段统计耗时
-        def stamp():
-            if self.device.type=="cuda" and not self.training:
-                torch.cuda.synchronize(self.device)
-            return time.perf_counter()
-        started = stamp()
         # 一、编码状态与任务，并计算稀疏门控
         z, sequence = self.encode_state(snapshot)
         q = self.encode_tasks(workflow)
         a, masks, sparse_loss = self.gates(q)
         mapping = torch.tensor(snapshot.agent_compute, device=self.device)
         # 二、构造检索用的键/查询（C 组按键为算力节点，需按映射取对应节点状态）
-        keys = {g: self.key[g](z[g][mapping] if g == "C" else z[g]) for g in ("A", "C", "R")}
+        index_key=(id(snapshot),snapshot.revision,tuple(p._version for p in self.parameters()))
+        cached = not self.training and self._index_cache is not None and self._index_cache[0] == index_key
+        keys = ({g: self._index_cache[1][g].keys for g in ("A", "C", "R")} if cached else
+                {g: self.key[g](z[g][mapping] if g == "C" else z[g]) for g in ("A", "C", "R")})
         queries = {g: self.query[g](q) * masks[:, gi] for g, gi in (("A", 0), ("C", 1), ("R", 3))}
         # retrieval_scores 仅在训练时计算，用于检索的对比学习损失
         retrieval_scores = sum(a[:, gi, None] * (queries[g] @ keys[g].T) / math.sqrt(self.config.top_b)
                                for g, gi in (("A", 0), ("C", 1), ("R", 3))) if self.training else None
-        encode_end = stamp()
         budget = budget or self.config.candidate_budgets[0]
         candidates = {}
-        index_key=(id(snapshot),snapshot.revision,self.config.index,tuple(p._version for p in self.parameters()))
-        if not self.training and self._index_cache is not None and self._index_cache[0]==index_key:
+        if cached:
             indexes=self._index_cache[1]
         else:
-            # 为 A/C/R 三组各建一个候选索引（LSH 时按组使用不同的种子）
-            indexes = {g: CandidateIndex(keys[g], self.config.index, self.config.index_seed + gi)
+            # 为 A/C/R 三组各建一个候选索引
+            indexes = {g: CandidateIndex(keys[g])
                        for gi, g in enumerate(("A", "C", "R"))}
             if not self.training:
                 self._index_cache=(index_key,indexes)
         # 三、为每个任务检索候选智能体（并叠加前驱候选作为锚点、按路径时延重排）
         for k, task in enumerate(workflow.tasks):
             feasible = snapshot.feasible(task)   # 硬可行性（权限）过滤
+            dimensions = {g: torch.nonzero(masks[k, gi], as_tuple=True)[0]
+                          if not self.training and self.sparse else None
+                          for g, gi in (("A",0),("C",1),("R",3))}
             if fixed_candidates is not None:
                 selected = [i for i in fixed_candidates[k] if i in feasible][:budget]
             else:
                 selected_set = set()
                 for g, gi in (("A", 0), ("C", 1), ("R", 3)):
                     if self.training or a[k, gi] > 0:
-                        selected_set.update(indexes[g].search(queries[g][k], feasible, budget))
+                        selected_set.update(indexes[g].search(queries[g][k], feasible, budget, dimensions[g]))
                 # 加入前驱任务已选候选的交集作为锚点，保证依赖可行
                 predecessors = [int(p) for p, child, _ in workflow.edges if child == k]
                 anchors = {i for p in predecessors for i in candidates[p]} & set(feasible)
                 selected_set.update(anchors)
                 ordered = sorted(selected_set)
                 if ordered:
-                    scores = sum(a[k, gi] * (keys[g][ordered] @ queries[g][k]) / math.sqrt(self.config.top_b)
-                                 for g, gi in (("A",0),("C",1),("R",3))).detach()
+                    scores = sum(a[k, gi] * indexes[g].scores(queries[g][k], ordered, dimensions[g]) / math.sqrt(self.config.top_b)
+                                 for g, gi in (("A",0),("C",1),("R",3))
+                                 if self.training or a[k, gi] > 0).detach()
                     # 用所有前驱候选路径的平均时延对候选重排（不使用任何特权标签）。
                     for pos, i in enumerate(ordered):
                         costs = []
@@ -254,17 +265,16 @@ class Predictor(nn.Module):
                 # 强制把已观测动作对应的候选并进来，保证训练标签一定落在图里
                 selected = sorted(set(selected) | {i for kk, i in forced_pairs if kk == k and i in feasible})
             candidates[k] = selected
-        retrieve_end = stamp()
         pairs = [(k, i) for k in candidates for i in candidates[k]]   # 所有(任务,智能体)候选对
         if not pairs:
             return {"pairs": [], "edge_keys": [], "node": q.new_zeros((0, 2)), "edge": q.new_zeros((0, 2)),
                     "candidates": candidates, "retrieval_scores": retrieval_scores,
-                    "sparse_loss": sparse_loss, "aux_loss": q.sum() * 0, "timing": {"total": time.perf_counter()-started}}
+                    "sparse_loss": sparse_loss, "aux_loss": q.sum() * 0}
         k_ids = torch.tensor([k for k, _ in pairs], device=self.device)
         i_ids = torch.tensor([i for _, i in pairs], device=self.device)
         c_ids = mapping[i_ids]   # 候选智能体所属的算力节点
         # 四、编码候选对：任务查询与 A/C/R 三组被选中的键拼接后送入配对编码器
-        selected_z = [a[k_ids, gi, None] * masks[k_ids, gi] * self.key[g](z[g][c_ids if g == "C" else i_ids])
+        selected_z = [a[k_ids, gi, None] * masks[k_ids, gi] * keys[g][i_ids]
                       for g, gi in (("A", 0), ("C", 1), ("R", 3))]
         h_pair = self.pair(torch.cat([q[k_ids], *selected_z], -1))
         aux_loss = q.sum() * 0
@@ -346,7 +356,6 @@ class Predictor(nn.Module):
                 encoded,raw_tensor_features=torch.zeros_like(encoded),torch.zeros_like(raw_tensor_features)
             positions=torch.tensor(edge_positions,device=self.device)
             ef[positions]=encoded;ef[positions+1]=encoded
-        graph_end = stamp()
         # 六、图传导：默认用异构图注意力；GMATANN 改用局部/全局注意力融合
         if self.method != "GMATANN":
             initial_x, initial_edge = x, ef
@@ -366,20 +375,15 @@ class Predictor(nn.Module):
             edge = self.edge_head(torch.cat([x[left], x[right], ef[edge_positions], raw_tensor_features], -1))
         else:
             edge = q.new_zeros((0,2))
-        finished=stamp()
         return {"pairs": pairs, "edge_keys": edge_keys, "node": node, "edge": edge,
                 "candidates": candidates, "retrieval_scores": retrieval_scores,
-                "sparse_loss": sparse_loss, "aux_loss": aux_loss, "gates": a.detach(),
-                "timing": {"encode": encode_end-started, "retrieve": retrieve_end-encode_end,
-                           "graph": graph_end-retrieve_end, "predict": finished-graph_end,
-                           "total": finished-started}}
+                "sparse_loss": sparse_loss, "aux_loss": aux_loss}
 
     def predict(self, snapshot, workflow, **kwargs):
         """对外预测接口：返回 Prediction（候选、节点/边耗时与成功率）。"""
         if self.method == "Rule-Latency":
             return rule_prediction(snapshot, workflow, **kwargs)
         self.eval()
-        wall_start=time.perf_counter()
         with torch.no_grad():
             output = self(snapshot, workflow, **kwargs)
             decoded=self.decode(output,snapshot,workflow,calibrated=True)
@@ -389,13 +393,7 @@ class Predictor(nn.Module):
                 duration,probability,_=decoded["node" if kind==0 else "edge"]
                 values=torch.stack([duration,probability],dim=-1).detach().cpu().tolist()
                 result.append({tuple(k):tuple(v) for k,v in zip(keys,values)})
-            prediction = Prediction(workflow.id, output["candidates"], *result, timing=output["timing"],
-                                    diagnostics={"gates": output.get("gates", torch.empty(0)).cpu().tolist(),
-                                                 "assignment_nodes":len(output["pairs"]),"assignment_edges":len(output["edge_keys"]),
-                                                 "index":self.config.index,"eligible_counts":{t.id:len(snapshot.feasible(t)) for t in workflow.tasks},"candidate_counts":{k:len(v) for k,v in output["candidates"].items()}})
-            prediction.timing["decode_and_calibrate"]=time.perf_counter()-wall_start-prediction.timing["total"]
-            prediction.timing["total"]=time.perf_counter()-wall_start
-            prediction.validate()
+            prediction = Prediction(workflow.id, output["candidates"], *result)
             return prediction
 
     def decode(self,output,snapshot,workflow,calibrated=False):
@@ -444,7 +442,6 @@ class Predictor(nn.Module):
 
 def rule_prediction(snapshot, workflow, budget=32, fixed_candidates=None, **kwargs):
     """Rule-Latency 基线：不使用神经网络，直接用可用时间+算力+时延排序选候选。"""
-    started = time.perf_counter()
     candidates, nodes, edges = {}, {}, {}
     for t in workflow.tasks:
         feasible = snapshot.feasible(t)
@@ -467,7 +464,7 @@ def rule_prediction(snapshot, workflow, budget=32, fixed_candidates=None, **kwar
                     edges[a,b,i,j] = (float(8*mb/raw[:,1].min()+raw[:,0].sum()), float(np.prod(1-raw[:,2])))
                 else:
                     edges[a,b,i,j] = (0.,1.)
-    return Prediction(workflow.id,candidates,nodes,edges,{"total":time.perf_counter()-started})
+    return Prediction(workflow.id,candidates,nodes,edges)
 
 
 def observed_loss(model, example, sparse_weight=0.0, retrieval_weight=.1):

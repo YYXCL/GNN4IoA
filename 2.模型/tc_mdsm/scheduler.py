@@ -25,11 +25,11 @@ def risk(probability):
     return int(math.ceil(-math.log(max(1e-9,min(1.,probability)))*RISK_SCALE-1e-9))
 
 
-def solve(snapshot, workflows, predictions, time_limit=30., seed=7, workers=1, completed=None, running=None, warm_start=None):
+def solve(snapshot, workflows, predictions, time_limit=30., seed=7, workers=1, reserved=None, timings=None):
     """用 CP-SAT 求解调度：先最大化接纳数，再最小化归一化完成时间与风险。"""
     started = time.perf_counter()
-    completed, running = completed or {}, running or {}
-    horizon = max(ticks(w.deadline) for w in workflows)
+    timings = timings if timings is not None else {}
+    horizon = max([ticks(w.deadline) for w in workflows]+[ticks(r['end']) for r in (reserved.assignments if reserved else [])])
     model = cp_model.CpModel()
     resources = defaultdict(list)   # 资源名 -> [(区间变量, 需求)]
     admissions, choices, starts, finishes, transfers, total_risks, secondary = {}, {}, {}, {}, {}, {}, []
@@ -37,55 +37,46 @@ def solve(snapshot, workflows, predictions, time_limit=30., seed=7, workers=1, c
     capacities = {f"agent:{i}": 1 for i in range(len(snapshot.skills))}
     capacities.update({f"compute:{c}:{d}": cap for c, caps in enumerate(snapshot.capacities) for d,cap in enumerate(caps)})
     capacities.update({f"link:{l}": bw for l,bw in enumerate(snapshot.bandwidth)})
-    # 已存在的资源预留作为不可占用的固定区间
-    for reservation in snapshot.reservations:
-        lo,hi=ticks(reservation["start"]),ticks(reservation["end"])
-        if hi > lo:
-            interval=model.new_interval_var(lo,hi-lo,hi,"reserved")
-            resources[reservation["resource"]].append((interval,reservation["demand"]))
+    # 先前分批得到的方案作为固定区间，后续批次不能重复占用资源。
+    if reserved is not None:
+        for row in reserved.assignments:
+            st,en=ticks(row['start']),ticks(row['end'])
+            interval=model.new_interval_var(st,en-st,en,'reserved_node')
+            resources[f"agent:{row['agent']}"].append((interval,1))
+            for dim,demand in enumerate(row['demand']):
+                resources[f"compute:{snapshot.agent_compute[row['agent']]}:{dim}"].append((interval,demand))
+        for row in reserved.transfers:
+            if not row['path']:continue
+            st,en=ticks(row['start']),ticks(row['end'])
+            interval=model.new_interval_var(st,en-st,en,'reserved_transfer')
+            for link in row['path']:resources[f'link:{link}'].append((interval,row['demand']))
     for w,p in zip(workflows,predictions):
         if time.perf_counter()-started>=time_limit:raise PlanningBudgetExceeded()
-        w.validate(); p.validate()
-        if w.id != p.workflow_id:
-            raise ValueError("prediction/workflow mismatch")
         accept=model.new_bool_var(f"accept:{w.id}")   # 是否接纳该工作流
         admissions[w.id]=accept
         risks=[]
         for task in w.tasks:
             key=(w.id,task.id)
-            done=completed.get(key)     # 已完成的动作：固定其智能体与时间
-            active=running.get(key)     # 正在执行的动作：固定起点
-            candidate_ids=[done["agent"]] if done else [active["agent"]] if active else p.candidates[task.id]
+            candidate_ids=p.candidates[task.id]
             st=model.new_int_var(0,horizon,f"start:{key}")
             en=model.new_int_var(0,horizon,f"end:{key}")
             starts[key],finishes[key]=st,en
             opts=[]
             for i in candidate_ids:
-                if i not in snapshot.feasible(task):
-                    raise ValueError("candidate bypassed hard feasibility")
-                if not done and (task.id,i) not in p.nodes:
+                if (task.id,i) not in p.nodes:
                     continue
                 x=model.new_bool_var(f"x:{key}:{i}")   # 是否把任务分配给智能体 i
                 choices[key,i]=x; opts.append(x)
-                duration=0 if done else ticks(p.nodes[task.id,i][0])
-                probability=1 if done else p.nodes[task.id,i][1]
-                if active:
-                    duration=max(1,ticks(active["end"])-ticks(snapshot.time))
+                duration=ticks(p.nodes[task.id,i][0])
+                probability=p.nodes[task.id,i][1]
                 interval=model.new_optional_interval_var(st,duration,en,x,f"run:{key}:{i}")
-                if not done:
-                    # 占用智能体槽位与算力节点资源
-                    resources[f"agent:{i}"].append((interval,1))
-                    for dim,demand in enumerate(task.demand):
-                        resources[f"compute:{snapshot.agent_compute[i]}:{dim}"].append((interval,demand))
-                    model.add(st>=ticks(max(snapshot.time,w.release,snapshot.available[i]))).only_enforce_if(x)
-                if active:
-                    model.add(st==ticks(snapshot.time)).only_enforce_if(x)
+                # 占用智能体槽位与算力节点资源
+                resources[f"agent:{i}"].append((interval,1))
+                for dim,demand in enumerate(task.demand):
+                    resources[f"compute:{snapshot.agent_compute[i]}:{dim}"].append((interval,demand))
+                model.add(st>=ticks(max(snapshot.time,w.release,snapshot.available[i]))).only_enforce_if(x)
                 risks.append(risk(probability)*x)
             model.add(sum(opts)==accept)   # 被接纳时恰好选一个候选
-            if done:
-                # 已完成任务的起止时间锁定
-                model.add(st==ticks(done["end"])).only_enforce_if(accept)
-                model.add(en==ticks(done["end"])).only_enforce_if(accept)
             model.add(st==0).only_enforce_if(accept.Not())
             model.add(en==0).only_enforce_if(accept.Not())
             model.add(en<=int(math.floor(w.deadline*TICKS))).only_enforce_if(accept)   # 截止时间约束
@@ -93,9 +84,7 @@ def solve(snapshot, workflows, predictions, time_limit=30., seed=7, workers=1, c
             # 依赖边：若父子分别选了 i、j，则需要一次传输区间，且子任务在传输结束后才能开始
             parent,child=int(parent),int(child)
             pk,ck=(w.id,parent),(w.id,child)
-            if ck in completed or ck in running:
-                continue
-            parent_ids=[completed[pk]["agent"]] if pk in completed else [running[pk]["agent"]] if pk in running else p.candidates[parent]
+            parent_ids=p.candidates[parent]
             child_ids=p.candidates[child]
             for i in parent_ids:
                 if time.perf_counter()-started>=time_limit:raise PlanningBudgetExceeded()
@@ -110,6 +99,10 @@ def solve(snapshot, workflows, predictions, time_limit=30., seed=7, workers=1, c
                         continue
                     y=model.new_bool_var(f"y:{w.id}:{edge}")   # y = xi AND xj
                     model.add(y<=xi);model.add(y<=xj);model.add(y>=xi+xj-1)
+                    if not path:
+                        model.add(starts[ck]>=finishes[pk]).only_enforce_if(y)
+                        transfers[w.id,edge]=(y,finishes[pk],finishes[pk],[],0)
+                        continue
                     duration,probability=p.edges[edge]
                     duration=0 if not path else ticks(duration)
                     st=model.new_int_var(0,horizon,"tx_start")
@@ -146,189 +139,84 @@ def solve(snapshot, workflows, predictions, time_limit=30., seed=7, workers=1, c
     # 目标：先最大化接纳数（权重远大于次级项），再最小化完成时间与风险
     upper=sum(1_000_000+(len(w.tasks)+len(w.edges))*risk(1e-9)+1 for w in workflows)
     model.minimize((upper+1)*sum(1-a for a in admissions.values())+sum(secondary))
-    invalid=model.validate()
-    if invalid:
-        raise ValueError(invalid)
     # 全拒绝是一个合法初始解，避免搜索预算很小时返回 UNKNOWN；目标随后可提升接纳数。
     for index,variable in enumerate(model.proto.variables):
         value=0 if variable.domain[0]<=0<=variable.domain[-1] else variable.domain[0]
         model.add_hint(model.get_int_var_from_proto_index(index),value)
-    if warm_start is not None:
-        # 用上一次的解作为热启动提示，加速收敛
-        model.clear_hints()
-        warm_rows={(r["workflow"],r["task"]):r for r in warm_start.assignments}
-        warm_tx={(r["workflow"],(r["parent"],r["child"],r["source"],r["target"])):r for r in warm_start.transfers}
-        for wid,var in admissions.items():model.add_hint(var,int(warm_start.admitted[wid]))
-        for (key,i),var in choices.items():model.add_hint(var,int(key in warm_rows and warm_rows[key]["agent"]==i))
-        for key,var in starts.items():model.add_hint(var,ticks(warm_rows[key]["start"]) if key in warm_rows else 0)
-        for key,var in finishes.items():model.add_hint(var,ticks(warm_rows[key]["end"]) if key in warm_rows else 0)
-        for key,(selected,st,en,path,demand) in transfers.items():
-            r=warm_tx.get(key);model.add_hint(selected,int(r is not None));model.add_hint(st,ticks(r["start"]) if r else 0);model.add_hint(en,ticks(r["end"]) if r else 0)
     solver=cp_model.CpSolver()
+    build_elapsed=time.perf_counter()-started
+    timings['constraint_build_s']=timings.get('constraint_build_s',0.)+build_elapsed
     solver.parameters.max_time_in_seconds=max(.001,time_limit-(time.perf_counter()-started))
     solver.parameters.num_search_workers=workers
     solver.parameters.random_seed=seed
+    solving=time.perf_counter()
     status=solver.solve(model)
+    timings['solver_s']=timings.get('solver_s',0.)+time.perf_counter()-solving
+    extracting=time.perf_counter()
     valid=status in (cp_model.FEASIBLE,cp_model.OPTIMAL)
     admitted={w.id: bool(solver.value(admissions[w.id])) if valid else False for w in workflows}
     rows,tx=[],[]
     if valid:
+        tasks={(w.id,t.id):t for w in workflows for t in w.tasks}
         # 抽取被选中的分配与传输
         for (key,i),x in choices.items():
             if solver.value(x):
                 rows.append({"workflow":key[0],"task":key[1],"agent":i,
                              "start":solver.value(starts[key])/TICKS,"end":solver.value(finishes[key])/TICKS,
-                             "completed":key in completed,"running":key in running})
+                             "demand":tasks[key].demand})
         for (wid,edge),(y,st,en,path,demand) in transfers.items():
             if solver.value(y):
                 tx.append({"workflow":wid,"parent":edge[0],"child":edge[1],"source":edge[2],"target":edge[3],
                            "start":solver.value(st)/TICKS,"end":solver.value(en)/TICKS,"path":path,"demand":demand})
-    plan=Plan(rows,tx,admitted,solver.status_name(status),time.perf_counter()-started,
-              {w.id:("" if admitted[w.id] else "no_incumbent" if not valid else "not_admitted_under_constraints") for w in workflows},
-              {"objective":solver.objective_value if valid else None,"best_bound":solver.best_objective_bound,
-               "workers":workers,"integer_time_unit":"millisecond","objective_rule":"admission then normalized elapsed plus log-risk"})
-    # 为未被接纳的工作流补上可读的原因
+    reasons={w.id:"" if admitted[w.id] else "solver_no_incumbent" if not valid
+             else "combined_constraints_or_deadline" for w in workflows}
     for w,p in zip(workflows,predictions):
-        if plan.admitted[w.id]:continue
-        if any(not snapshot.feasible(t) for t in w.tasks):plan.reasons[w.id]="no_permission_candidate"
-        elif any(not any(all(d<=cap for d,cap in zip(t.demand,snapshot.capacities[snapshot.agent_compute[i]])) for i in p.candidates[t.id]) for t in w.tasks):plan.reasons[w.id]="no_resource_compatible_retrieved_candidate"
-        elif not valid:plan.reasons[w.id]="solver_no_incumbent"
-        else:plan.reasons[w.id]="combined_constraints_or_deadline"
-    check_plan(snapshot,workflows,predictions,plan,completed,running)
-    return plan
+        if not admitted[w.id] and any(not p.candidates[t.id] for t in w.tasks):
+            reasons[w.id]="no_permission_candidate"
+    timings['solution_extract_s']=timings.get('solution_extract_s',0.)+time.perf_counter()-extracting
+    return Plan(rows,tx,admitted,solver.status_name(status),time.perf_counter()-started,reasons)
 
 
-def check_plan(snapshot,workflows,predictions,plan,completed=None,running=None):
-    """独立的时间区间扫描校验：不依赖 CP-SAT 变量，复核方案的各类约束。"""
-    completed,running=completed or {},running or {}
-    workflow_map={w.id:w for w in workflows}
-    pred_map={p.workflow_id:p for p in predictions}
-    rows={(r["workflow"],r["task"]):r for r in plan.assignments}
-    if len(rows)!=len(plan.assignments):
-        raise AssertionError("duplicate assignment")
-    tx={(r["workflow"],r["parent"],r["child"]):r for r in plan.transfers}
-    if len(tx)!=len(plan.transfers):
-        raise AssertionError("duplicate transfer")
-    intervals=defaultdict(list)
-    caps={f"agent:{i}":1 for i in range(len(snapshot.skills))}
-    caps.update({f"compute:{c}:{d}":cap for c,cs in enumerate(snapshot.capacities) for d,cap in enumerate(cs)})
-    caps.update({f"link:{l}":bw for l,bw in enumerate(snapshot.bandwidth)})
-    for r in snapshot.reservations:
-        intervals[r["resource"]].append((r["start"],r["end"],r["demand"]))
-    for wid,admitted in plan.admitted.items():
-        w,p=workflow_map[wid],pred_map[wid]
-        selected=[r for key,r in rows.items() if key[0]==wid]
-        assert len(selected)==(len(w.tasks) if admitted else 0), "partial workflow admission"
-        if not admitted:
-            continue
-        total=0.
-        for t in w.tasks:
-            key=(wid,t.id);r=rows[key];i=r["agent"]
-            assert i in snapshot.feasible(t), "infeasible permission"
-            assert r["end"]<=w.deadline+1e-7, "deadline"
-            if key in completed:
-                assert i==completed[key]["agent"] and abs(r["end"]-completed[key]["end"])<=.0011
-                continue
-            assert r["start"]+1e-7>=max(w.release,snapshot.time,snapshot.available[i]), "availability"
-            duration,prob=p.nodes[t.id,i]
-            if key in running:
-                assert i==running[key]["agent"] and r["start"]<=snapshot.time+.0011
-                duration=max(.001,running[key]["end"]-snapshot.time)
-            assert r["end"]-r["start"]+.0011>=duration, "execution duration"
-            total-=math.log(prob)
-            intervals[f"agent:{i}"].append((r["start"],r["end"],1))
-            for d,demand in enumerate(t.demand):
-                intervals[f"compute:{snapshot.agent_compute[i]}:{d}"].append((r["start"],r["end"],demand))
-        for parent,child,mb in w.edges:
-            parent,child=int(parent),int(child)
-            if (wid,child) in completed or (wid,child) in running:
-                continue
-            transfer=tx[wid,parent,child]
-            a,b=rows[wid,parent],rows[wid,child]
-            assert transfer["source"]==a["agent"] and transfer["target"]==b["agent"]
-            path=snapshot.path(a["agent"],b["agent"])
-            assert path is not None and path==transfer["path"], "path"
-            assert transfer["start"]+1e-7>=max(a["end"],snapshot.time), "transfer precedence"
-            assert b["start"]+1e-7>=transfer["end"], "task precedence"
-            duration,prob=p.edges[parent,child,a["agent"],b["agent"]]
-            if path:
-                assert transfer["end"]-transfer["start"]+.0011>=duration
-            total-=math.log(prob)
-            for l in path:
-                intervals[f"link:{l}"].append((transfer["start"],transfer["end"],transfer["demand"]))
-        assert math.isfinite(total), "finite soft risk"
-    # 对每个资源做事件扫描，检查任意时刻的占用不超容量
-    for resource,items in intervals.items():
-        events=[]
-        for lo,hi,demand in items:
-            if hi>lo:
-                events.extend([(lo,demand),(hi,-demand)])
-        used=0
-        for _,delta in sorted(events,key=lambda item:(item[0],item[1])):
-            used+=delta
-            assert used<=caps[resource], f"capacity violation: {resource}"
-    return True
-
-
-def plan_with_expansion(model,snapshot,workflows,budgets=(32,),time_limit=30.,seed=7,
-                        fixed_candidates=None,completed=None,running=None,transferred=None):
-    """在给定候选预算下预测并求解，保留最优方案（v3 固定预算 32）。"""
-    if tuple(budgets)!=(32,):
-        raise ValueError("v3 uses a fixed candidate budget of 32")
-    started=time.perf_counter();best=None;best_preds=None;attempts=[]
-    for budget in budgets:
+def plan_workflows(model,snapshot,workflows,budgets=None,time_limit=30.,seed=7):
+    """提前准备全局表示，在共享在线预算下分批预测/规划，保留已得到的方案。"""
+    preparing=time.perf_counter()
+    model.prepare_snapshot(snapshot)
+    timings={'global_prepare_s':time.perf_counter()-preparing,'online_prediction_s':0.,
+             'constraint_build_s':0.,'solver_s':0.,'solution_extract_s':0.}
+    started=time.perf_counter()
+    budget=(budgets or model.config.candidate_budgets)[0]
+    size=model.config.planning_batch_size
+    chunks=[workflows[i:i+size] for i in range(0,len(workflows),size)]
+    combined=Plan([],[],{w.id:False for w in workflows},'BUDGET_EXHAUSTED',0.,
+                  {w.id:'planning_budget_exhausted' for w in workflows},timings)
+    statuses=[]
+    for index,chunk in enumerate(chunks):
         remaining=time_limit-(time.perf_counter()-started)
-        if remaining<=0:
-            break
-        predictions=[]
-        for w in workflows:
-            if time.perf_counter()-started>=time_limit:break
-            fixed=fixed_candidates.get(w.id) if fixed_candidates is not None else None
-            # 已完成/正在执行的固定动作必须保留在候选中，即使不在检索 top-K 内。
-            forced=[(k,i["agent"]) for (wid,k),i in {**(completed or {}),**(running or {})}.items() if wid==w.id]
-            if forced and fixed is None:
-                preliminary=model.predict(snapshot,w,budget=budget)
-                fixed={k:list(v) for k,v in preliminary.candidates.items()}
-                for k,i in forced:
-                    fixed[k]=[i]+[j for j in fixed[k] if j!=i]
-            prediction=model.predict(snapshot,w,budget=budget,fixed_candidates=fixed)
-            if transferred:
-                # 已成功传输过的依赖边：概率固定为 1、耗时为 0
-                prediction.edges=dict(prediction.edges)
-                for wid,parent,child,source,target in transferred:
-                    key=(parent,child,source,target)
-                    if wid==w.id and key in prediction.edges:
-                        prediction.edges[key]=(0.,1.)
-            predictions.append(prediction)
-        remaining=time_limit-(time.perf_counter()-started)
-        if remaining<=0 or len(predictions)!=len(workflows):
-            break
-        exhausted=all(len(snapshot.feasible(t))<=budget for w in workflows for t in w.tasks)
-        allocation=max(.001,time_limit-(time.perf_counter()-started))
+        if remaining<=0:break
+        # 各批次分享剩余时间，防止第一批独占全部搜索预算。
+        allotted=remaining/(len(chunks)-index)
+        chunk_started=time.perf_counter();predictions=[]
+        for w in chunk:
+            if time.perf_counter()-chunk_started>=allotted:break
+            predictions.append(model.predict(snapshot,w,budget=budget))
+        prediction_elapsed=time.perf_counter()-chunk_started
+        timings['online_prediction_s']+=prediction_elapsed
+        if len(predictions)!=len(chunk) or prediction_elapsed>=allotted:
+            statuses.append('BUDGET_EXHAUSTED');continue
+        building=time.perf_counter()
         try:
-            plan=solve(snapshot,workflows,predictions,allocation,seed,completed=completed,running=running)
+            plan=solve(snapshot,chunk,predictions,allotted-prediction_elapsed,seed,
+                       reserved=combined,timings=timings)
         except PlanningBudgetExceeded:
-            break
-        check_plan(snapshot,workflows,predictions,plan)
-        attempts.append({"budget":budget,"admitted":sum(plan.admitted.values()),"status":plan.status,
-                         "elapsed":plan.elapsed,"prediction_seconds":sum(p.timing.get("total",0) for p in predictions)})
-        objective=plan.diagnostics.get("objective")
-        # 评分：先比接纳数，再比目标值（越小越好）
-        score=(sum(plan.admitted.values()),-objective if objective is not None else -float("inf"))
-        best_objective=best.diagnostics.get("objective") if best is not None else None
-        best_score=(-1,-float("inf")) if best is None else (sum(best.admitted.values()),-best_objective if best_objective is not None else -float("inf"))
-        if score>best_score:
-            best,best_preds=plan,predictions
-        if all(plan.admitted.values()):
-            break
-        if exhausted:
-            break
-    if best is None:
-        # 预算耗尽仍未得到方案：返回全拒绝的空方案
-        best=Plan([],[],{w.id:False for w in workflows},"BUDGET_EXHAUSTED",time.perf_counter()-started,
-                  {w.id:"prediction_budget_exhausted" for w in workflows})
-        best_preds=[]
-    best.elapsed=time.perf_counter()-started
-    best.diagnostics["expansion"]=attempts
-    best.diagnostics["predictions"]=[{"workflow":p.workflow_id,"timing":p.timing,"diagnostics":p.diagnostics} for p in best_preds]
-    return best,best_preds
+            timings['constraint_build_s']+=time.perf_counter()-building
+            statuses.append('BUDGET_EXHAUSTED');continue
+        statuses.append(plan.status)
+        combined.assignments.extend(plan.assignments);combined.transfers.extend(plan.transfers)
+        combined.admitted.update(plan.admitted);combined.reasons.update(plan.reasons)
+    combined.status=(statuses[0] if len(chunks)==1 and statuses else
+                     'BATCH_FEASIBLE' if all(combined.admitted.values()) else
+                     'PARTIAL' if any(combined.admitted.values()) else
+                     'BUDGET_EXHAUSTED' if 'BUDGET_EXHAUSTED' in statuses or len(statuses)<len(chunks) else
+                     'BATCH_NO_ADMISSION')
+    combined.elapsed=time.perf_counter()-started
+    return combined

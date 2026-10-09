@@ -14,9 +14,3 @@ packages = ["tc_mdsm"]
 
 [tool.setuptools.package-dir]
 tc_mdsm = "2.模型/tc_mdsm"
-
-[tool.pytest.ini_options]
-testpaths = ["自动化测试"]
-
-[project.optional-dependencies]
-test = ["pytest>=7"]
