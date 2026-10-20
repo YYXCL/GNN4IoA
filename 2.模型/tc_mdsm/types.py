@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from typing import Any
+from collections import deque
 
 # 四类异构图对象的单步状态特征维度：
 # A=智能体(Agent)，C=算力节点(Compute)，E=网络边(Edge)，R=可靠性(Reliability)
@@ -25,6 +26,9 @@ class ModelConfig:
     dropout: float = 0.05           # dropout 比例
     ablation: str = "none"          # 消融开关（none/no_gates/no_history/no_dag/no_edges）
     prediction_mode: str = "residual"  # 预测模式：residual（残差）或 absolute（绝对）
+    deadline_policy: str = "hard"   # hard:预测截止硬约束；evaluate:实际执行后判断迟到
+    solver_start: str = "serial"    # serial:可行串行初始提示；reject:原全部拒绝提示，用于对照
+    execution_policy: str = "ready" # ready:实际就绪启动；planned:计划时刻作为启动下界
 
     @property
     def state_dimension_budget(self):
@@ -37,15 +41,21 @@ class ModelConfig:
             raise ValueError("candidate budget and planning batch size must be positive")
         if self.hidden % self.heads or self.top_b > self.hidden:
             raise ValueError("hidden must divide heads and top_b must not exceed hidden")
+        if self.deadline_policy not in ("hard","evaluate"):
+            raise ValueError("deadline_policy must be hard or evaluate")
+        if self.solver_start not in ("serial","reject"):
+            raise ValueError("solver_start must be serial or reject")
+        if self.execution_policy not in ("ready","planned"):
+            raise ValueError("execution_policy must be ready or planned")
 
 
 @dataclass
 class Snapshot:
     """决策时刻的环境快照，是模型的唯一输入（不含未来信息）。"""
-    time: float                             # 快照时间戳
-    observed_at: list[float]                # 每条历史观测的时间戳（需按时间升序）
+    time: float                        # 快照时间戳
+    observed_at: list[float]           # 每条历史观测的时间戳（需按时间升序）
     states: dict[str, list]                 # 各对象组状态 [对象数, 历史长度, 特征维度]
-    missing: dict[str, list]                # 各状态缺失掩码，形状同 states
+    missing: dict[str, list]                # 整步缺失掩码 [对象数, 历史长度]
     skills: list[list[str]]                 # 每个智能体拥有的技能
     tools: list[list[str]]                  # 每个智能体可用的工具 API
     knowledge: list[list[str]]              # 每个智能体接入的知识库
@@ -54,7 +64,7 @@ class Snapshot:
     capacities: list[list[int]]             # 算力节点容量：GPU 槽位、内存 GiB、显存 GiB
     links: list[list[int]]                  # 物理连边端点：先是智能体，再是算力节点
     bandwidth: list[int]                    # 每条链路带宽（Mbps），每次传输固定预留
-    available: list[float]                  # 各智能体的可用时间
+    available: list[float]             # 各智能体的可用时间
     revision: str = ""                      # 快照修订号，用于状态与路径缓存
     agent_profiles: list[dict] = field(default_factory=list)  # 各智能体的仿真行为参数
 
@@ -69,21 +79,42 @@ class Snapshot:
     def path(self, source: int, target: int) -> list[int] | None:
         """返回智能体 source 到 target 经过的物理链路下标序列；不可达返回 None。
 
-        路径固定为 source -> 所属算力节点 -> 目标算力节点 -> target。
+        优先使用直连；无直连时按最少跳数经过其他智能体中转。
+        端点也可为算力节点（编号从智能体数起）；算力节点不能作为中转。
         """
         if source == target:
             return []
         n = len(self.skills)
-        a, b = self.agent_compute[source] + n, self.agent_compute[target] + n
         # 同一修订号内拓扑不变；拓扑更新改变 revision 时缓存失效。
         cache_key=(id(self.links),len(self.links),self.revision)
         if getattr(self,"_path_cache_key",None)!=cache_key:
             self._path_lookup={tuple(sorted(edge)): i for i, edge in enumerate(self.links)}
+            self._path_adjacency={}
+            for index,(left,right) in enumerate(self.links):
+                self._path_adjacency.setdefault(left,[]).append((right,index))
+                self._path_adjacency.setdefault(right,[]).append((left,index))
+            self._paths={}
             self._path_cache_key=cache_key
         lookup=self._path_lookup
-        edges = [(source, a)] + ([] if a == b else [(a, b)]) + [(b, target)]
-        result = [lookup.get(tuple(sorted(e))) for e in edges]
-        return None if any(i is None for i in result) else result
+        direct=lookup.get(tuple(sorted((source,target))))
+        if direct is not None:return [direct]
+        pair=(source,target)
+        if pair in self._paths:return self._paths[pair]
+        queue=deque([source]);previous={source:None}
+        while queue and target not in previous:
+            vertex=queue.popleft()
+            for neighbor,edge in self._path_adjacency.get(vertex,[]):
+                if neighbor in previous or (neighbor>=n and neighbor!=target):continue
+                previous[neighbor]=(vertex,edge);queue.append(neighbor)
+        result=None
+        if target in previous:
+            result=[];vertex=target
+            while vertex!=source:
+                vertex,edge=previous[vertex];result.append(edge)
+            result.reverse()
+        self._paths[pair]=result
+        self._paths[target,source]=None if result is None else list(reversed(result))
+        return result
 
 
 @dataclass

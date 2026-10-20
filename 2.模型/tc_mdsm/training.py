@@ -76,47 +76,48 @@ def summary(rows):
 
 def train(train_cases,val_cases,output,method,config,seed=7,epochs=100,patience=10,lr=.001,
           device="cpu",resume=False,validation_limit=0,time_limit=30.):
-    output=Path(output);output.mkdir(parents=True,exist_ok=True)
-    seed_everything(seed)
-    model=Predictor(config,method).to(device);model.fit_normalizers(train_cases)
-    optimizer=torch.optim.Adam(model.parameters(),lr=lr)
-    first=0;history=[];best_score=(-1.,-float("inf"));stale=0
-    last=output/"last.pt";best=output/"best.pt"
-    if resume and last.exists():
+    #训练样本集、验证样本集、输出目录、预测方法名、ModelConfig、全局随机种子、最大训练轮数、早停容忍度、Adam 优化器学习率、训练设备、是否从`last.pt` 断点续训、每轮只用验证集前 N 条评估、验证执行时 CP-SAT 调度求解的单样本时间上限
+    output=Path(output);output.mkdir(parents=True,exist_ok=True)    # 创建输出目录 output。
+    seed_everything(seed)   # 设置随机种子，保证可复现。
+    model=Predictor(config,method).to(device);model.fit_normalizers(train_cases)    # 构建模型 Predictor并放到指定设备（CPU/GPU）。用训练数据拟合归一化器。
+    optimizer=torch.optim.Adam(model.parameters(),lr=lr)        # 定义优化器 Adam。lr是学习率
+    first=0;history=[];best_score=(-1.,-float("inf"));stale=0   # 初始化训练状态：起始 epoch、历史记录、最佳分数、早停计数。
+    last=output/"last.pt";best=output/"best.pt"                 # 定义保存路径 last.pt（最新模型）和 best.pt（最佳模型）。
+    if resume and last.exists():        # 如果有断点就从断点处继续训练
         ck=torch.load(last,map_location=device,weights_only=False)
         model.load_state_dict(ck["model"]);optimizer.load_state_dict(ck["optimizer"])
         first=ck["epoch"];history=ck["history"];best_score=tuple(ck["best_score"]);stale=ck["stale"]
-    if method=="Rule-Latency":
+    if method=="Rule-Latency":          # 如果 method == "Rule-Latency"，不进行梯度训练，直接保存模型并返回空历史。
         torch.save({"config":asdict(config),"method":method,"model":model.state_dict(),"seed":seed},best)
         return model,[]
-    for epoch in range(first,epochs):
-        if stale>=patience and epoch>=7:break
-        started=time.perf_counter();model.train();model._state_cache=None;model._index_cache=None
-        order=list(range(len(train_cases)));random.shuffle(order);losses=[]
-        sparse_weight=.01*min(1.,max(0.,(epoch-1)/5))
-        for index in order:
+    for epoch in range(first,epochs):   # 对每个 epoch：
+        if stale>=patience and epoch>=7:break       # 早停判断：若 早停计数>= 10 且 epoch ≥ 7，则提前停止。
+        started=time.perf_counter();model.train();model._state_cache=None;model._index_cache=None   # 模型开始训练
+        order=list(range(len(train_cases)));random.shuffle(order);losses=[]     #打乱训练样本顺序。
+        sparse_weight=.01*min(1.,max(0.,(epoch-1)/5))       #计算稀疏权重 sparse_weight（随 epoch 逐渐增大）
+        for index in order:     # 对每个样本计算损失 (observed_loss函数在model.py文件里)。
             optimizer.zero_grad(set_to_none=True)
             loss,_=observed_loss(model,train_cases[index],sparse_weight)
-            loss.backward();torch.nn.utils.clip_grad_norm_(model.parameters(),1.)
-            optimizer.step();losses.append(float(loss.detach()))
-        calibrate(model,val_cases)
-        selected=val_cases[:validation_limit] if validation_limit else val_cases
-        metrics=summary(evaluate_examples(model,selected,seed,time_limit))
-        score=(metrics["on_time"],-metrics["penalized_s"])
+            loss.backward();torch.nn.utils.clip_grad_norm_(model.parameters(),1.)   # 反向传播、梯度裁剪
+            optimizer.step();losses.append(float(loss.detach()))    # 更新参数
+        calibrate(model,val_cases)      # 校准：用验证集调用 calibrate。
+        selected=val_cases[:validation_limit] if validation_limit else val_cases    # 若设置了 validation_limit，只取前若干条验证样本。
+        metrics=summary(evaluate_examples(model,selected,seed,time_limit))  # 调用evaluate_examples(第62行)得到指标，再用 summary(第70行)汇总。
+        score=(metrics["on_time"],-metrics["penalized_s"])      # 评分标准：即准时率越高越好、惩罚时间越少越好。
         improved=score>best_score
-        if improved:best_score=score;stale=0
-        else:stale+=1
+        if improved:best_score=score;stale=0        # 若分数提升，更新 best_score
+        else:stale+=1                               # 若分数没有提升，早停次数加1
         record={"epoch":epoch+1,"loss":float(np.mean(losses)),"seconds":time.perf_counter()-started,"validation":metrics}
-        history.append(record)
+        history.append(record)      # 保存当前 epoch 的 loss、耗时、验证指标。
         ck={"config":asdict(config),"method":method,"model":model.state_dict(),"seed":seed,
             "optimizer":optimizer.state_dict(),"epoch":epoch+1,"history":history,"best_score":best_score,"stale":stale}
-        torch.save(ck,last)
-        if improved:torch.save(ck,best)
-        save_json(output/"history.json",history)
-        print(f"{method} seed={seed} epoch={epoch+1}/{epochs} loss={record['loss']:.4f} val={metrics['on_time']:.3f} seconds={record['seconds']:.1f}",flush=True)
-    ck=torch.load(best,map_location=device,weights_only=False)
-    model.load_state_dict(ck["model"]);model.eval();model._state_cache=None;model._index_cache=None
-    return model,history
+        torch.save(ck,last)         # 保存检查点：始终保存最新模型
+        if improved:torch.save(ck,best)     # 若当前最佳，额外保存 best.pt
+        save_json(output/"history.json",history)        # 同时保存 history.json。
+        print(f"{method} seed={seed} epoch={epoch+1}/{epochs} loss={record['loss']:.4f} val={metrics['on_time']:.3f} seconds={record['seconds']:.1f}",flush=True)       # 打印日志：输出 epoch、loss、验证准时率、耗时。
+    ck=torch.load(best,map_location=device,weights_only=False)      # 训练结束后，加载 best.pt 中的最佳模型参数。
+    model.load_state_dict(ck["model"]);model.eval();model._state_cache=None;model._index_cache=None     # 设为评估模式，清空缓存。
+    return model,history        # 返回训练好的模型和完整历史记录。
 
 
 def load_model(path,device="cpu"):

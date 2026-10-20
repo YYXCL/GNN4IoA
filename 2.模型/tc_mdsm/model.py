@@ -115,7 +115,7 @@ class Predictor(nn.Module):
         self._index_cache = None
 
     def encode_state(self, snapshot):
-        """编码快照中的四组状态，返回 (每组当前状态向量 z, 每组完整序列)。"""
+        """编码四组状态；推理分块处理，只有GMATANN保留所需的A/C/R序列。"""
         if not bool(self.normalizers_fitted):
             raise RuntimeError("fit training-only normalization before inference")
         cache_key = (id(snapshot), snapshot.revision, tuple(p._version for p in self.parameters()))
@@ -125,6 +125,23 @@ class Predictor(nn.Module):
         # 是否使用时序建模（TC-MDSM/Full-State/GMATANN 且未做 no_history 消融）
         temporal = self.method in ("TC-MDSM", "Full-State", "GMATANN") and self.config.ablation != "no_history"
         for g in GROUP_DIMS:
+            if not self.training and not torch.is_grad_enabled():
+                current, history = [], []
+                keep_history = self.method == "GMATANN" and g != "E"
+                for start in range(0, len(snapshot.states[g]), 512):
+                    x = torch.as_tensor(np.asarray(snapshot.states[g][start:start+512], dtype=np.float32), device=self.device)
+                    missing = torch.as_tensor(np.asarray(snapshot.missing[g][start:start+512], dtype=bool), device=self.device)
+                    x = (x - getattr(self, f"mean_{g}")) / getattr(self, f"std_{g}")
+                    x = torch.where(missing[..., None], torch.zeros_like(x), x)
+                    if temporal or keep_history:
+                        sequence = F.gelu(self.encoders[g](torch.cat([x, missing[..., None].float()], -1)))
+                        current.append(self.grus[g](sequence)[1][-1] if temporal else sequence[:, -1])
+                        if keep_history:history.append(sequence)
+                    else:
+                        current.append(F.gelu(self.encoders[g](torch.cat([x[:, -1], missing[:, -1, None].float()], -1))))
+                z[g] = torch.cat(current)
+                if keep_history:sequences[g] = torch.cat(history)
+                continue
             x = torch.tensor(snapshot.states[g], dtype=torch.float32, device=self.device)
             missing = torch.tensor(snapshot.missing[g], dtype=torch.bool, device=self.device)
             x = (x - getattr(self, f"mean_{g}")) / getattr(self, f"std_{g}")
@@ -485,8 +502,8 @@ def observed_loss(model, example, sparse_weight=0.0, retrieval_weight=.1):
         pred = output[o.kind][maps[o.kind][key]]
         duration=decoded[o.kind][0][maps[o.kind][key]]
         success_logit=decoded[o.kind][2][maps[o.kind][key]]
-        # 对数时长损失平衡长短任务；成功率用带 logits 的二元交叉熵
-        losses.append(F.smooth_l1_loss(torch.log1p(duration), pred.new_tensor(math.log1p(o.duration)))
+        # 对数比值误差按相对偏差监督，避免短通信的严重低估被log1p弱化。
+        losses.append(F.smooth_l1_loss(torch.log(duration.clamp_min(.001)), pred.new_tensor(math.log(max(.001,o.duration))))
                       + F.binary_cross_entropy_with_logits(success_logit, pred.new_tensor(float(o.success))))
         if o.kind == "node" and o.success:
             # 检索对比损失：让真实选中的智能体在可行集合中得分最高

@@ -7,9 +7,12 @@ from scipy.stats import t
 import matplotlib
 matplotlib.use('Agg')  # 使用无界面的 Agg 后端，方便在服务器/脚本中直接出图
 import matplotlib.pyplot as plt
+from matplotlib.ticker import NullFormatter
 from tc_mdsm.types import METHODS
 
-def report(out):
+METHOD_LABELS = {"HM-MATAS": "TARGETNET"}
+
+def report(out, paper_style=False):
     out=Path(out);parameters=json.loads((out/'实验参数.json').read_text(encoding='utf-8'))
     records=[];decisions=[]  # records：逐请求（workflow）明细；decisions：逐批（一次决策）的耗时与状态
     for file in sorted((out/'逐实例结果').rglob('*.json')):
@@ -36,15 +39,24 @@ def report(out):
         # 时延：只统计按期成功（on_time==1）的请求；失败不记 0，直接排除
         latency=g[g.on_time==1].groupby('seed').completion_s.mean()
         rate,width=ci(first);seconds,error=ci(latency)
-        stats.append(dict(block=block,x=x,method=method,completion_rate=rate,completion_rate_ci=width,latency_s=seconds,latency_ci=error,latency_seeds=len(latency),successes=int(g.on_time.sum()),requests=len(g),penalized_s=g.groupby('seed').penalized_s.mean().mean()))
+        stats.append(dict(block=block,x=x,method=method,completion_rate=rate,completion_rate_ci=width,
+                          admitted_rate=g.groupby('seed').initial_admitted.mean().mean(),
+                          executed_completion_rate=g.groupby('seed').completed.mean().mean(),
+                          latency_s=seconds,latency_ci=error,latency_seeds=len(latency),successes=int(g.on_time.sum()),
+                          requests=len(g),penalized_s=g.groupby('seed').penalized_s.mean().mean()))
     summary=pd.DataFrame(stats);summary.to_csv(folder/'主结果统计.csv',index=False,encoding='utf-8-sig')
     # 中文字体设置，保证图中中文正常显示
     plt.rcParams.update({'font.sans-serif':['Microsoft YaHei','SimHei','DejaVu Sans'],'axes.unicode_minus':False,'font.size':11,'axes.spines.top':False,'axes.spines.right':False,'pdf.fonttype':42,'axes.prop_cycle':plt.cycler(color=['#0072B2','#E69F00','#009E73','#CC79A7','#D55E00','#56B4E9'])})
-    methods=list(METHODS)
+    if paper_style:
+        plt.rcParams.update({'font.family':'DejaVu Sans','font.sans-serif':['DejaVu Sans']})
+    methods=parameters['methods']
     markers=['o','s','^','D','v','P']
     # 两个核心指标：完成率、端到端平均完成时延
-    metrics=[('completion_rate','completion_rate_ci','任务完成率'),
+    metrics=[('completion_rate','completion_rate_ci','按期任务完成率'),
              ('latency_s','latency_ci','端到端平均完成时延（秒）')]
+    if paper_style:
+        metrics=[('completion_rate','completion_rate_ci','On-time completion rate'),
+                 ('latency_s','latency_ci','Average completion latency (s)')]
     def save(fig,name,top=1.):
         # 统一保存为 png 与 pdf 两种格式
         fig.tight_layout(rect=(0,0,1,top))
@@ -65,11 +77,12 @@ def report(out):
             # 仅限制误差条的显示范围，CSV保留原始区间。
             e=np.vstack([np.minimum(e,np.nan_to_num(y)),
                          np.minimum(e,np.nan_to_num(1-y)) if metric=='completion_rate' else e])
-            ax.bar(np.arange(len(xs))+(j-(len(methods)-1)/2)*width,y,width,
-                   yerr=e,capsize=2,error_kw={'elinewidth':1.1,'capthick':1.1},
-                   edgecolor='white',linewidth=.6,label=method)
-        ax.set_xticks(np.arange(len(xs)),['简单','中等','困难'])
-        ax.set_xlabel('任务复杂度');ax.set_ylabel(ylabel);ax.grid(axis='y',alpha=.2)
+            errors={} if paper_style else dict(yerr=e,capsize=2,error_kw={'elinewidth':1.1,'capthick':1.1})
+            ax.bar(np.arange(len(xs))+(j-(len(methods)-1)/2)*width,y,width,**errors,
+                   edgecolor='white',linewidth=.6,label=METHOD_LABELS.get(method,method))
+        ax.set_xticks(np.arange(len(xs)),(['Easy','Medium','Hard'] if paper_style else ['简单','中等','困难']))
+        ax.set_xlabel('Task complexity' if paper_style else '任务复杂度');ax.set_ylabel(ylabel);ax.grid(axis='y',alpha=.2)
+        ax.set_axisbelow(True)
         ax.legend(ncol=3,fontsize=9,loc='upper center',bbox_to_anchor=(.5,1.20),frameon=False)
         if metric=='completion_rate':ax.set_ylim(0,1.02)
         else:ax.set_ylim(bottom=0)
@@ -77,6 +90,8 @@ def report(out):
     # ===== 实验三/四：并发规模 / 系统规模（双栏折线图，横轴取对数） =====
     for number,block,xlabel,name in ((3,'concurrency','并行任务数量','并行场景的模型性能'),
                                       (4,'scale','智能体数量','模型随系统规模扩大的性能变化')):
+        if paper_style:
+            xlabel='Concurrent workflows' if block=='concurrency' else 'Number of agents'
         sub=summary[summary.block==block]
         xs=sorted(sub.x.unique())
         fig,axes=plt.subplots(1,2,figsize=(11,4.5))
@@ -87,28 +102,39 @@ def report(out):
                 e=np.nan_to_num(g[error].to_numpy(dtype=float),nan=0.)
                 e=np.vstack([np.minimum(e,np.nan_to_num(y)),
                              np.minimum(e,np.nan_to_num(1-y)) if metric=='completion_rate' else e])
-                ax.errorbar(xs,y,yerr=e,
-                            marker=markers[j],markersize=5,capsize=2,elinewidth=1,
-                            linewidth=2 if method=='TC-MDSM' else 1.3,
-                            label=method)
-            ax.set(xlabel=xlabel,ylabel=ylabel,xscale='log',xticks=xs)
-            ax.set_xticklabels([str(x) for x in xs]);ax.grid(alpha=.2)
+                line=dict(marker=markers[j],markersize=5,linewidth=2 if method=='TC-MDSM' else 1.3,label=METHOD_LABELS.get(method,method))
+                if paper_style:ax.plot(xs,y,**line)
+                else:ax.errorbar(xs,y,yerr=e,capsize=2,elinewidth=1,**line)
+            ax.set(xlabel=xlabel,ylabel=ylabel)
+            ax.set_xscale('log',base=2 if paper_style else 10);ax.set_xticks(xs)
+            ax.set_xticklabels([str(x) for x in xs]);ax.xaxis.set_minor_formatter(NullFormatter());ax.grid(alpha=.2)
+            if paper_style:
+                ax.minorticks_off();ax.set_axisbelow(True)
+                ax.grid(axis='x',visible=False)
             if metric=='completion_rate':ax.set_ylim(0,1.02)
             else:ax.set_ylim(bottom=0)
-            if block=='scale' and metric=='latency_s':
+            if block=='scale' and metric=='latency_s' and not paper_style:
                 # 少量种子的区间很宽，压缩高值以同时看清均值与完整上界。
                 ax.set_yscale('symlog',linthresh=20)
-                ax.set_yticks([0,20,50,100,200,500,1000])
-                ax.set_yticklabels(['0','20','50','100','200','500','1000'])
+                upper=ax.get_ylim()[1]
+                ticks=[value for value in [0,20,50,100,200,500,1000] if value<=upper]
+                ax.set_yticks(ticks)
+                ax.set_yticklabels([str(value) for value in ticks])
                 ax.set_ylabel('端到端平均完成时延（秒，非线性刻度）')
         handles,labels=axes[0].get_legend_handles_labels()
         fig.legend(handles,labels,loc='upper center',bbox_to_anchor=(.5,.97),ncol=3,fontsize=9,frameon=False)
         save(fig,f'{number}.{name}',top=.81)
 
+    display_note=(
+        '图中使用英文标注，分别输出两幅分组柱状图和两幅双栏折线图，每幅有独立图例，不显示误差条或阴影。'
+        'CSV保留种子均值的95% t区间；不显示区间不代表波动为零。折线横轴以2为底取对数，纵轴为线性刻度。\n\n'
+        if paper_style else
+        '误差条为种子均值的95%区间。完成率误差条只显示0到1范围，时延区间下界只显示非负部分，CSV保留原始t区间。'
+        '第四图时延纵轴使用非线性刻度（symlog，20秒内线性），同时显示均值与较宽区间上界。\n\n')
     (folder/'结果说明.md').write_text(
         '# 实验结果\n\n'
         f"种子：{parameters['seeds']}；每条件每种子 {parameters['instances']} 个实例；训练样本 {parameters['counts'][0]} 条；最多 {parameters['epochs']} 轮；规划预算 {parameters['seconds']} 秒。\n\n"
-        '完成率以整个工作流首次按期成功为准，拒绝、执行失败及迟到均计失败。时延只统计按期成功请求，零成功时留空，图中的缺失时延不是零时延。误差条为种子均值的95%区间；少于两个有效种子时不计算区间。少量种子和实例会产生较大波动。\n\n'
-        '完成率误差条只显示0到1范围，时延区间下界只显示非负部分，CSV保留原始t区间。第四图时延纵轴使用非线性刻度（symlog，20秒内线性），同时显示均值与较宽区间上界。\n\n'
+        '完成率以整个工作流首次按期成功为准，拒绝、执行失败及迟到均计失败。时延只统计按期成功请求，零成功时留空，图中的缺失时延不是零时延。少于两个有效种子时不计算区间。少量种子和实例会产生较大波动。\n\n'
+        +display_note+
         '图表来自动态仿真；本报告只汇总已有结果，运行规模见实验参数。\n',encoding='utf-8')
     print(str(folder),flush=True)

@@ -30,9 +30,14 @@ def execute_batch(model, examples, budgets=None, time_limit=30., seed=7):
         task=workflows[key[1]].tasks[key[2]]
         return [(f"agent:{row['agent']}",1)]+[(f"compute:{snapshot.agent_compute[row['agent']]}:{d}",v) for d,v in enumerate(task.demand)]
 
+    def earliest(key,row):
+        base=max(snapshot.time,workflows[key[1]].release,
+                 snapshot.available[row['agent']] if key[0]=='node' else snapshot.time)
+        return max(base,row['start']) if model.config.execution_policy=='planned' else base
+
     def ready(key,row):
         wid=key[1]
-        if failed[wid] or row["start"]>now+1e-8:
+        if failed[wid] or earliest(key,row)>now+1e-8:
             return False
         if key[0]=="edge":
             return (wid,row["parent"]) in finished
@@ -81,13 +86,17 @@ def execute_batch(model, examples, budgets=None, time_limit=30., seed=7):
             del pending[key];launched=True
         if launched:continue
         future=[heap[0][0]] if heap else []
-        future.extend(row["start"] for row in pending.values() if row["start"]>now+1e-8)
+        future.extend(earliest(key,row) for key,row in pending.items() if earliest(key,row)>now+1e-8)
         if not future:
             for key in pending:failed[key[1]]=True;reasons[key[1]]="blocked_dependency"
             break
         now=max(now,min(future))
     rows=[]
     for wid,w in workflows.items():
+        feasible_counts=[len(snapshot.feasible(t)) for t in w.tasks]
+        permission_counts=[sum(t.skill in skills and set(t.tools)<=set(snapshot.tools[i])
+                               and set(t.knowledge)<=set(snapshot.knowledge[i])
+                               for i,skills in enumerate(snapshot.skills)) for t in w.tasks]
         complete=all((wid,t.id) in finished for t in w.tasks) and not failed[wid]
         elapsed=last_finish[wid]-w.release if complete else None
         on_time=complete and last_finish[wid]<=w.deadline
@@ -96,5 +105,11 @@ def execute_batch(model, examples, budgets=None, time_limit=30., seed=7):
                      "on_time":int(on_time),"completed":int(complete),"completion_s":elapsed,
                      "penalized_s":elapsed if on_time else 2*(w.deadline-w.release),
                      "decision_s":plan.elapsed,"initial_admitted":int(plan.admitted[wid]),
-                     "first_failure_s":first_failure.get(wid),"failure_reason":reason,"solver_status":plan.status})
+                      "first_failure_s":first_failure.get(wid),"failure_reason":reason,"solver_status":plan.status,
+                      "tasks":len(w.tasks),"dependencies":len(w.edges),
+                      "permission_candidates_min":min(permission_counts),"feasible_candidates_min":min(feasible_counts),
+                      "assigned_tasks":sum(r['workflow']==wid for r in plan.assignments),
+                      "successful_tasks":sum((wid,t.id) in finished for t in w.tasks),
+                      "predicted_finish_s":max((r['end'] for r in plan.assignments if r['workflow']==wid),default=None),
+                      "deadline_s":w.deadline,"physical_links":len(snapshot.links)})
     return rows,events,[plan]

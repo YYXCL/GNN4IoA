@@ -23,6 +23,13 @@ Thumbs.db
 # Local scratch space and generated experiment artifacts
 tmp/
 /4.结果输出/
+**/4.结果输出/
+/3.实验评估/tc_mdsm_ideal_reference.py
+/3.实验评估/tc_mdsm_scale_reference.py
+/1.数据/**/*.csv
+/1.数据/**/*.json
+/1.数据/**/*.xlsx
+/1.数据/**/*.tar.gz
 *.pt
 *.log
 .coverage

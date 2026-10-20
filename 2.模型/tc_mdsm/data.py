@@ -43,7 +43,7 @@ class Foundation:
         load_path = root / "1.算力负载数据/compute_node_load_timeseries.csv"
         agents = json.loads(agent_path.read_text(encoding="utf-8-sig"))
         self.tasks = json.loads(task_path.read_text(encoding="utf-8-sig"))
-        self.types = [dict(a, all_skills=[s["id"] for s in a["skills"]]) for a in agents]
+        self.types = [dict(a, all_skills=[s["id"] for s in a["skills"]]) for a in agents]   # 从能力对象提取全部技能ID
         # 汇总"技能 -> 所需工具/知识库"的映射
         self.skill_requirements = {}
         for a in agents:
@@ -60,9 +60,9 @@ class Foundation:
                     float(r["显存剩余量(GB)"]), float(r["队列响应时间(ms)"]) / 1000,
                     float(r["服务器负载率代理"]),
                 ])
-        self.timestamps = sorted(by_time)
+        self.timestamps = sorted(by_time)   # 按时间形成 loads[时间,节点,5]
         self.loads = np.asarray([by_time[t] for t in self.timestamps], dtype=np.float32)
-        # 按"场景 x 难度"分层，再按确定性顺序切分 train/val/test
+        # 按"场景 x 难度"分层，再按确定性顺序切分 train/val/test。最后得到self.partitions
         self.partitions = {s: [] for s in ("train", "val", "test")}
         strata = defaultdict(list)
         for t in self.tasks:
@@ -75,6 +75,7 @@ class Foundation:
 
     def bounds(self, split, history=16):
         """返回某切分可用的时序窗口下标范围，并做 history 长度的隔离（purge）。"""
+        # 时间序列按75%、87.5%划界，并留出历史窗口隔离训练集、验证集、测试集
         n = len(self.timestamps)
         a, b = int(n * .75), int(n * .875)
         lo, hi = {"train": (0, a), "val": (a + history, b), "test": (b + history, n)}[split]
@@ -83,27 +84,26 @@ class Foundation:
         return lo, hi
 
     def episode(self, split, index, seed=7, agents=100, computes=None, history=16,
-                scenario=None, difficulty=None, stress="normal", severity=1.0, batch=1):
+                scenario=None, difficulty=None, stress="normal", severity=1.0, batch=1):    # stress：压力类型。severity：压力强度。batch：生成批次（没什么用）
         """生成一个（或一批）仿真样本：合成快照 + 工作流 + 日志策略产生的观测。"""
-        computes = computes or max(2, round(agents / 10))
-        rng = np.random.default_rng(seed_of(seed, split, index, agents, stress, severity))
-        lo, hi = self.bounds(split, history)
-        start = int(rng.integers(lo, hi - history + 1))
+        computes = computes or max(2, round(agents / 10))   # 计算节点数量
+        rng = np.random.default_rng(seed_of(seed, split, index, agents, stress, severity))      # 多个参数组合成一个确定性种子，保证同一条样本每次生成结果一致
+        lo, hi = self.bounds(split, history)        #  给出该划分允许的起止时间范围（防止 train/val/test数据的时间重叠）
+        start = int(rng.integers(lo, hi - history + 1))     # 在合法范围内选一个起点 start，保证能截取 history 步
         slots = rng.integers(0, self.loads.shape[1], computes)
-        loads = self.loads[start:start + history, slots].transpose(1, 0, 2).copy()
-        # 容量与 TFLOPS 换算属于显式合成假设，并非真实服务器测量值。
-        loads[:, :, 0] = 20 + 180 * loads[:, :, 0] / 4000
-        loads[:, :, 1] = 64 * np.clip(1 - loads[:, :, 4], .05, .95)
-        loads[:, :, 2] = 32 * np.clip(1 - loads[:, :, 4], .05, .95)
-        loads[:, :, 3] = np.clip(loads[:, :, 3], 0, 20)
+        loads = self.loads[start:start + history, slots].transpose(1, 0, 2).copy()      # 得到10个算力节点的16个时间窗口的算力负载
+        # 原始数据转换
+        loads[:, :, 0] = 20 + 180 * loads[:, :, 0] / 4000   # GPU算力剩余量(TFLOPS)
+        loads[:, :, 1] = 64 * np.clip(1 - loads[:, :, 4], .05, .95)     # 内存剩余量(GB)
+        loads[:, :, 2] = 32 * np.clip(1 - loads[:, :, 4], .05, .95)     # 显存剩余量(GB)
+        loads[:, :, 3] = np.clip(loads[:, :, 3], 0, 20)     # 队列响应时间(ms)
         if stress in ("compute", "combined"):
             # 算力压力：算力逐时间衰减，队列响应上升
             ramp = np.linspace(0, min(.8, .35 * severity), history)
             loads[:, :, :3] *= (1 - ramp)[None, :, None]
             loads[:, :, 3] += 8 * ramp
-        # 后台内存占用对请求不可见；此处保守的准入预算在本回合内保持固定。
-        capacities = [[4, int(loads[c, -1, 1]), int(loads[c, -1, 2])] for c in range(computes)]
-        agent_compute = balanced_hosts(agents, computes, rng)
+        capacities = [[4, int(loads[c, -1, 1]), int(loads[c, -1, 2])] for c in range(computes)]     # 每个算力节点的固定准入预算
+        agent_compute = balanced_hosts(agents, computes, rng)       # 把 agents 个智能体均衡分配到 computes 个计算节点上
         descriptions, skills, tools, knowledge, a_states, r_states = [], [], [], [], [], []
         for i in range(agents):
             source = self.types[i % len(self.types)]
@@ -116,18 +116,19 @@ class Foundation:
             # A 组状态：[上下文窗口, 占用率, 工具速率限制, 忙碌度, 速度, 熟练度]
             a_states.append(np.tile([source["上下文窗口总量(tokens)"], rng.uniform(.1, .7),
                                      source["工具API速率限制(次/分钟)"], busy, source.get("simulation_profile",{}).get("speed",1.), source.get("simulation_profile",{}).get("proficiency",.9)], (history, 1)))
+
             fail = rng.uniform(.01, .07)
             trend = rng.uniform(-.025, .025) * np.linspace(0, 1, history)
             if stress in ("tool", "combined"):
                 # 工具压力：失败率随时间上升
                 trend += np.linspace(0, .025 * severity, history)
-            failures = np.clip(fail + trend, .0002, .15)
+            failures = np.clip(fail + trend, .0002, .15)    # 可靠性状态——失败率
             # R 组状态：[成功率, 平均时延, 失败率, 调用计数]
             r_states.append(np.stack([1 - failures, np.full(history, rng.uniform(2, 10)), failures * .6,
                                       np.arange(history) + rng.integers(20, 200)], axis=-1))
-        # 物理连边：智能体到其所属算力节点，以及算力节点之间的全连接
+        # 接入边排在前面；智能体之间全互联，算力节点之间没有链路。
         links = [[i, agents + agent_compute[i]] for i in range(agents)]
-        links += [[agents + i, agents + j] for i in range(computes) for j in range(i + 1, computes)]
+        links += [[i,j] for i in range(agents) for j in range(i+1,agents)]
         e_states, bandwidth = [], []
         for _ in links:
             bw = int(rng.choice([100, 500, 1000, 2000]))
@@ -146,19 +147,19 @@ class Foundation:
         snapshot = Snapshot(0.0, [float(i - history + 1) for i in range(history)], states,
                             {g: [[False] * history for _ in values] for g, values in states.items()},
                             skills, tools, knowledge, descriptions, agent_compute, capacities, links, bandwidth,
-                            [float(loads[c, -1, 3]) for c in agent_compute], revision=f"{split}-{seed}-{index}-{agents}-{stress}-{severity}")
-        snapshot.agent_profiles = [dict(self.types[i % len(self.types)].get("simulation_profile",{})) for i in range(agents)]
+                            [float(loads[c, -1, 3]) for c in agent_compute], revision=f"{split}-{seed}-{index}-{agents}-{stress}-{severity}")   # 每个节点的初始队列长度。revision：可追溯的版本标识。
+        snapshot.agent_profiles = [dict(self.types[i % len(self.types)].get("simulation_profile",{})) for i in range(agents)]   # 每个智能体的仿真画像
         # 用同一 World 随机过程回填 R 组中的工具压力与算力相关时延，保证与执行环境一致
         from .world import World
         history_world=World(snapshot,seed_of(seed,split,index,"world"))
         for agent in range(agents):
-            speed=snapshot.agent_profiles[agent].get("speed",1.)
+            speed=snapshot.agent_profiles[agent].get("speed",1.)    # 运算速度？
             for h,observed in enumerate(snapshot.observed_at):
                 tool_pressure=float(np.mean([max(0.,history_world.wave(("tool",tool),observed)) for tool in tools[agent]])) if tools[agent] else 0.
                 snapshot.states["R"][agent][h][2]=.10*tool_pressure
                 snapshot.states["R"][agent][h][1]=400/max(4,loads[agent_compute[agent],h,0]*speed)
 
-        # 从目标分层里挑选工作流模板
+        # 从目标分层里挑选工作流模板（需要符合场景和任务难度）
         choices = [t for t in self.partitions[split] if (scenario is None or t["场景"] == scenario)
                    and (difficulty is None or t["难度级别"] == difficulty)]
         if not choices:
@@ -166,15 +167,15 @@ class Foundation:
         examples = []
         for b in range(batch):
             source = choices[int(rng.integers(len(choices)))]
-            task_rows = source["子任务"]
-            tasks = []
+            task_rows = source["子任务"]       # 子任务列表
+            tasks = []          # 子任务列表
             for k, row in enumerate(task_rows):
                 skill = row["必需的Skill id"]
                 requirement=self.skill_requirements.get(skill,{"tools":[],"knowledge":[]})
                 required_tools=requirement["tools"]
                 required_kb=requirement["knowledge"]
                 tasks.append(Task(k, row["任务具体提示词"], skill, required_tools, required_kb,
-                                  float(rng.uniform(150, 800)), [1, int(rng.choice([4, 8, 16])), int(rng.choice([2, 4, 8]))]))
+                                  float(rng.uniform(150, 800)), [1, int(rng.choice([4, 8, 16])), int(rng.choice([2, 4, 8]))]))      # 计算量；资源需求
             # 把源 DAG 边映射为任务下标，并赋随机传输大小
             task_ids = {r["任务id"]: i for i, r in enumerate(task_rows)}
             raw_edges = source["DAG"]["边"]
@@ -188,13 +189,13 @@ class Foundation:
                     edges.append([task_ids[parent], task_ids[child], float(rng.uniform(1, 40))])
             if len(tasks) > 1 and not edges:
                 raise ValueError(f"unrecognized source DAG: {raw_edges}")
-            deadline = float({"简单": 80, "中等": 160, "困难": 240}[source["难度级别"]])
-            workflow = Workflow(f"{split}-{seed}-{index}-{b}", tasks, edges, 0, deadline, .9,
-                                source["场景"], source["难度级别"], source["任务id"])
-            provenance = {"split": split, "world_seed": seed_of(seed, split, index, "world")}
-            example = Example(snapshot, workflow, [], provenance)
+            deadline = float({"简单": 80, "中等": 160, "困难": 240}[source["难度级别"]])      #任务的完成时限
+            workflow = Workflow(f"{split}-{seed}-{index}-{b}", tasks, edges, 0, deadline, .9,   # 每个任务的可靠性固定为0.9了？
+                                source["场景"], source["难度级别"], source["任务id"])        # 工作流建模：记录任务、边、起始时间、deadline、成功率阈值、场景、难度、源模板 id
+            provenance = {"split": split, "world_seed": seed_of(seed, split, index, "world")}   # 溯源信息（split + world 种子）
+            example = Example(snapshot, workflow, [], provenance)       #  把快照、工作流、空观测、溯源打包
             # 观测由日志策略（混合探索）生成
-            example.observations = logging_policy(example)
+            example.observations = logging_policy(example)      # 模型训练需要监督信号——即"在某个快照和工作流下，历史上选了哪些智能体、结果如何"。这里用固定的混合策略跑出日志，作为离线学习的训练数据。
             examples.append(example)
         return examples
 
@@ -202,11 +203,11 @@ class Foundation:
 def logging_policy(example):
     """日志策略：混合探索。只执行因果就绪的任务和被真实选择的传输。"""
     from .world import World
-    s, w = example.inputs()
-    world = World(s, example.provenance["world_seed"])
+    s, w = example.inputs()     # 取出快照 s 和工作流 w
+    world = World(s, example.provenance["world_seed"])  # 与 episode 同源的 World。与生成快照时的执行环境一致
     rng = np.random.default_rng(seed_of(example.provenance["world_seed"], w.id, "logging"))
-    chosen, finished, logs = {}, {}, []
-    for task in w.tasks:
+    chosen, finished, logs = {}, {}, []     # chosen：任务→所选智能体；finished：任务→完成时间；logs：观测日志
+    for task in w.tasks:    # 对每个任务，按顺序做：筛可行智能体 → 按概率选择 → 检查前驱 → 执行传输和任务。
         # 只保留硬可行性（权限 + 资源容量）都满足的智能体
         feasible = [i for i in s.feasible(task)
                     if all(d <= c for d, c in zip(task.demand, s.capacities[s.agent_compute[i]]))]
@@ -240,11 +241,12 @@ def logging_policy(example):
                 return logs
         if not valid:
             continue
+        # 执行任务本身
         duration, success = world.execute(w, task.id, agent, ready, 0)
         logs.append(Observation("node", task.id, agent, duration, success, ready, ready + duration,
                                 0, float(probability[position]), failure_reason=world.last_reason))
         chosen[task.id] = agent
-        if success:
+        if success:     # 成功时标记完成，失败时终止该请求日志
             finished[task.id] = ready + duration
         else:
             return logs

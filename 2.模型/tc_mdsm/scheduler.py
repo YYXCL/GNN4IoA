@@ -25,14 +25,23 @@ def risk(probability):
     return int(math.ceil(-math.log(max(1e-9,min(1.,probability)))*RISK_SCALE-1e-9))
 
 
-def solve(snapshot, workflows, predictions, time_limit=30., seed=7, workers=1, reserved=None, timings=None):
+def solve(snapshot, workflows, predictions, time_limit=30., seed=7, workers=1, reserved=None, timings=None,
+          deadline_policy="hard",solver_start="serial"):
     """用 CP-SAT 求解调度：先最大化接纳数，再最小化归一化完成时间与风险。"""
     started = time.perf_counter()
     timings = timings if timings is not None else {}
     horizon = max([ticks(w.deadline) for w in workflows]+[ticks(r['end']) for r in (reserved.assignments if reserved else [])])
+    if deadline_policy=="evaluate":
+        # 有限串行上界允许排队到截止时间以后；实际迟到仍在执行结果中计失败。
+        duration_sum=sum(max((ticks(p.nodes[t.id,i][0]) for i in p.candidates[t.id] if (t.id,i) in p.nodes),default=0)
+                         for w,p in zip(workflows,predictions) for t in w.tasks)
+        duration_sum+=sum(max((ticks(value[0]) for key,value in p.edges.items() if key[:2]==(int(a),int(b))),default=0)
+                          for w,p in zip(workflows,predictions) for a,b,_ in w.edges)
+        horizon+=ticks(max([snapshot.time,*snapshot.available,*[w.release for w in workflows]]))+duration_sum+1
     model = cp_model.CpModel()
     resources = defaultdict(list)   # 资源名 -> [(区间变量, 需求)]
     admissions, choices, starts, finishes, transfers, total_risks, secondary = {}, {}, {}, {}, {}, {}, []
+    workflow_aux={}
     # 各类资源的容量：智能体=1，算力节点按 [GPU槽位,内存,显存]，链路按带宽
     capacities = {f"agent:{i}": 1 for i in range(len(snapshot.skills))}
     capacities.update({f"compute:{c}:{d}": cap for c, caps in enumerate(snapshot.capacities) for d,cap in enumerate(caps)})
@@ -79,7 +88,8 @@ def solve(snapshot, workflows, predictions, time_limit=30., seed=7, workers=1, r
             model.add(sum(opts)==accept)   # 被接纳时恰好选一个候选
             model.add(st==0).only_enforce_if(accept.Not())
             model.add(en==0).only_enforce_if(accept.Not())
-            model.add(en<=int(math.floor(w.deadline*TICKS))).only_enforce_if(accept)   # 截止时间约束
+            if deadline_policy=="hard":
+                model.add(en<=int(math.floor(w.deadline*TICKS))).only_enforce_if(accept)
         for parent,child,mb in w.edges:
             # 依赖边：若父子分别选了 i、j，则需要一次传输区间，且子任务在传输结束后才能开始
             parent,child=int(parent),int(child)
@@ -125,9 +135,12 @@ def solve(snapshot, workflows, predictions, time_limit=30., seed=7, workers=1, r
         model.add_max_equality(finish,[finishes[w.id,t.id] for t in w.tasks])
         elapsed=model.new_int_var(0,horizon,"elapsed")
         model.add(elapsed==finish-ticks(w.release)*accept)
-        norm=model.new_int_var(0,1_000_000,"normalized_makespan")
+        denominator=max(1,ticks(w.deadline-w.release))
+        norm_bound=horizon*1_000_000//denominator
+        norm=model.new_int_var(0,norm_bound,"normalized_makespan")
         # 整数除法得到有界的次级目标；接纳数严格优先于它。
-        model.add_division_equality(norm,elapsed*1_000_000,max(1,ticks(w.deadline-w.release)))
+        model.add_division_equality(norm,elapsed*1_000_000,denominator)
+        workflow_aux[w.id]=(total,finish,elapsed,norm)
         secondary.append(norm+total)
     # 资源容量约束：智能体互斥（no_overlap），其余资源用累积约束（cumulative）
     for name,items in resources.items():
@@ -137,16 +150,59 @@ def solve(snapshot, workflows, predictions, time_limit=30., seed=7, workers=1, r
         else:
             model.add_cumulative(intervals,demands,capacities[name])
     # 目标：先最大化接纳数（权重远大于次级项），再最小化完成时间与风险
-    upper=sum(1_000_000+(len(w.tasks)+len(w.edges))*risk(1e-9)+1 for w in workflows)
+    upper=sum(horizon*1_000_000//max(1,ticks(w.deadline-w.release))
+              +(len(w.tasks)+len(w.edges))*risk(1e-9)+1 for w in workflows)
     model.minimize((upper+1)*sum(1-a for a in admissions.values())+sum(secondary))
-    # 全拒绝是一个合法初始解，避免搜索预算很小时返回 UNKNOWN；目标随后可提升接纳数。
+    # 先给所有变量默认值；串行方案仅作为同一个CP-SAT模型的初始提示，不绕过求解器。
+    hint={}
     for index,variable in enumerate(model.proto.variables):
         value=0 if variable.domain[0]<=0<=variable.domain[-1] else variable.domain[0]
-        model.add_hint(model.get_int_var_from_proto_index(index),value)
+        hint[index]=value
+    if solver_start=="serial":
+        cursor=max([ticks(snapshot.time)]+[ticks(r['end']) for r in (reserved.assignments if reserved else [])]
+                   +[ticks(r['end']) for r in (reserved.transfers if reserved else [])])
+        for w,p in zip(workflows,predictions):
+            local={};selected={};node_end={};position=max(cursor,ticks(w.release));total_risk=0;valid=True
+            for task in w.tasks:
+                parents=[int(a) for a,b,_ in w.edges if int(b)==task.id]
+                options=[i for i in p.candidates[task.id] if ((w.id,task.id),i) in choices
+                         and all(d<=c for d,c in zip(task.demand,snapshot.capacities[snapshot.agent_compute[i]]))
+                         and all(a in selected and (a,task.id,selected[a],i) in p.edges for a in parents)]
+                if not options:valid=False;break
+                agent=min(options,key=lambda i:(p.nodes[task.id,i][0]/max(.001,w.deadline-w.release)
+                                                +risk(p.nodes[task.id,i][1])/RISK_SCALE,i))
+                for parent in parents:
+                    edge=(parent,task.id,selected[parent],agent)
+                    y,st,en,path,_=transfers[w.id,edge]
+                    local[y.Index()]=1
+                    if path:
+                        local[st.Index()]=position
+                        position+=ticks(p.edges[edge][0]);local[en.Index()]=position
+                        total_risk+=risk(p.edges[edge][1])
+                position=max(position,ticks(snapshot.available[agent]))
+                key=(w.id,task.id)
+                local[starts[key].Index()]=position
+                position+=ticks(p.nodes[task.id,agent][0])
+                local[finishes[key].Index()]=position
+                local[choices[key,agent].Index()]=1
+                total_risk+=risk(p.nodes[task.id,agent][1]);selected[task.id]=agent;node_end[task.id]=position
+                if position>horizon or (deadline_policy=="hard" and position>math.floor(w.deadline*TICKS)):
+                    valid=False;break
+            if valid:
+                local[admissions[w.id].Index()]=1
+                total,finish,elapsed,norm=workflow_aux[w.id]
+                completion=max(node_end.values());duration=completion-ticks(w.release)
+                local[total.Index()]=total_risk;local[finish.Index()]=completion
+                local[elapsed.Index()]=duration
+                local[norm.Index()]=duration*1_000_000//max(1,ticks(w.deadline-w.release))
+                hint.update(local);cursor=position
+    for index,value in hint.items():model.add_hint(model.get_int_var_from_proto_index(index),value)
     solver=cp_model.CpSolver()
     build_elapsed=time.perf_counter()-started
     timings['constraint_build_s']=timings.get('constraint_build_s',0.)+build_elapsed
     solver.parameters.max_time_in_seconds=max(.001,time_limit-(time.perf_counter()-started))
+    # 短预算下保留完整可行提示，避免预处理耗尽预算后尚未进入搜索。
+    solver.parameters.cp_model_presolve=not (solver_start=="serial" and solver.parameters.max_time_in_seconds<=.5)
     solver.parameters.num_search_workers=workers
     solver.parameters.random_seed=seed
     solving=time.perf_counter()
@@ -169,10 +225,17 @@ def solve(snapshot, workflows, predictions, time_limit=30., seed=7, workers=1, r
                 tx.append({"workflow":wid,"parent":edge[0],"child":edge[1],"source":edge[2],"target":edge[3],
                            "start":solver.value(st)/TICKS,"end":solver.value(en)/TICKS,"path":path,"demand":demand})
     reasons={w.id:"" if admitted[w.id] else "solver_no_incumbent" if not valid
+             else "not_selected_within_budget" if status==cp_model.FEASIBLE
              else "combined_constraints_or_deadline" for w in workflows}
     for w,p in zip(workflows,predictions):
         if not admitted[w.id] and any(not p.candidates[t.id] for t in w.tasks):
-            reasons[w.id]="no_permission_candidate"
+            missing=[t for t in w.tasks if not p.candidates[t.id]]
+            permitted=lambda t:any(t.skill in skills and set(t.tools)<=set(snapshot.tools[i])
+                                   and set(t.knowledge)<=set(snapshot.knowledge[i])
+                                   for i,skills in enumerate(snapshot.skills))
+            reasons[w.id]=("no_permission_candidate" if any(not permitted(t) for t in missing)
+                           else "insufficient_capacity" if any(not snapshot.feasible(t) for t in missing)
+                           else "empty_retrieval_candidates")
     timings['solution_extract_s']=timings.get('solution_extract_s',0.)+time.perf_counter()-extracting
     return Plan(rows,tx,admitted,solver.status_name(status),time.perf_counter()-started,reasons)
 
@@ -206,7 +269,8 @@ def plan_workflows(model,snapshot,workflows,budgets=None,time_limit=30.,seed=7):
         building=time.perf_counter()
         try:
             plan=solve(snapshot,chunk,predictions,allotted-prediction_elapsed,seed,
-                       reserved=combined,timings=timings)
+                       reserved=combined,timings=timings,deadline_policy=model.config.deadline_policy,
+                       solver_start=model.config.solver_start)
         except PlanningBudgetExceeded:
             timings['constraint_build_s']+=time.perf_counter()-building
             statuses.append('BUDGET_EXHAUSTED');continue
